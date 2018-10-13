@@ -1,0 +1,9 @@
+MATCH (plt=Classroom('CSC451')) -> [route] -> (meetingPlace=Dorm('Woodbridge'))
+RETURN route.distance
+
+
+
+
+
+
+
