@@ -1,0 +1,45 @@
+
+ minDistance graph {
+    minValue = INF
+    min:Node
+
+    // Property satisfaction
+    for `a` in graph {
+        if (a.dist < minValue && a.visited == false) {
+            minValue = a.dist
+            min = a 
+        }
+    }
+
+    return min
+}
+
+
+edge.in
+edge.out
+
+// edges are functions!!
+// nodes are anything else
+
+// dijstra
+d = in -> out {
+    return [1,2];
+}
+
+// tree edge
+t = parent -> child {
+    get nodes!
+}
+
+d = a -> b {
+    return 1;
+}
+
+// edge with int
+d = node -i> othernode {
+    return i;
+}
+
+graph = d[
+    "Hi" -d(i)> "Woah" -d(i)> "What's up"
+]
