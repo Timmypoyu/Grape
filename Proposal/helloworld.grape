@@ -1,0 +1,140 @@
+// GRAPE
+
+/*
+    1. wrap everything in the node type
+    2. edges as first=class objects
+    3. edges contain functions. args = in, output = out
+
+    functions are edges. 
+    
+    edge.args
+    edge.return any type
+
+*/
+
+a = "hello" // node, string type
+
+4 // anonymous node, int type
+
+b = (a -3- 4) // edge (list of 2 nodes)
+
+c = "Hello" -- "World" // string type nodes, int type edge
+
+// is the same
+// x = {foo:1} {bar:3}
+x = {foo:1} -> {bar:3}
+
+// Compilation error! Edge to edge
+a = -- -- -- 
+
+// Node to itself
+james -- james
+
+// Similar edges
+james -1- james
+james -0- james
+
+// Same thing
+b = james -{foo:1}> 1
+
+// TODO: Undirected Edges
+
+b.to == james
+b.from == 1
+
+// Dictionary, directed edge
+z = {
+    flavor: "chocolate",
+    amount: 10
+} -> {
+    flavor: "vanilla",
+    amount: 30
+}
+    
+james = "James"
+
+// Type reference
+`(Str) -- (Str)` in friends // anonymous graph slice
+
+/*
+returns [ "James" -- "Bill", "Bill" -- "India" ]
+*/
+
+friends = [
+    james -1- "Bill" -3- "India",
+    "Jake" -2- 10 -- james,
+] //graph (list of 4 edges)
+
+myFriends = `james -- (*)` in friends
+
+myTallFriends = `james -- (*.height>72)` in myFriends
+// returns []
+
+myGoodFriends = `james -(<5)- (*)` in myFriends
+
+func push graph edge {
+    graph = [...graph edge]
+}
+
+// Function definition
+func make10Friends socialite graph {
+    for i = [0..9] {
+        newFriend = "Sal " + Str(i)
+        push graph (socialite -i- newFriend)
+    }
+}
+
+make10Friends james friends
+
+for `a -> *` in ["Hello " -> "World" -> ()] {
+    print a
+}
+
+"HELLO WORLD" == String = [(Start) -> 'H' -> 'E' -> 'L' -> 'L' -> 'O' -> ' ' -> 'W' -> 'O' -> 'R' -> 'L' -> 'D' -> (End)]
+
+/* SLICING
+
+format: `node edge node edge node ...`
+
+(condition)
+
+
+`*` any type
+
+`--` edge
+
+`-(<5)-`
+
+`(Str) -- (*.property==value)`
+
+*/
+
+// graph isomorphism, returns True
+
+// for loop over graph
+
+// Path calculation
+
+fun minValue <graph> {
+
+    minValue = INF
+    minNode
+
+    // Property search
+    for <(aNode::[value < minValue])> in graph {
+        minNode = aNode
+        minValue = aNode.value
+    }
+
+    return minNode
+}
+
+fun bfs <tree> {
+    for <tree.root -> (b) -> * > in tree {
+        bfs 
+    }
+}
+
+tree = <
+    (root:4) -> b, c, 
+>
