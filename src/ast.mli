@@ -1,17 +1,20 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq |
-          And | Or
+type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | And | Or
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void
+type typ = Int | Bool | Void | Node | Edge | Graph
 
+(* variable type declaration *)
 type bind = typ * string
 
 type expr =
     Literal of int
   | BoolLit of bool
+  | NodeLit of expr
+  | EdgeLit of expr * expr * expr
+  | GraphLit of expr list * expr list
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -25,7 +28,6 @@ type stmt =
   | Return of expr
   | If of expr * stmt * stmt
   | For of expr * expr * expr * stmt
-  | While of expr * stmt
 
 type func_decl = {
     typ : typ;
@@ -35,7 +37,7 @@ type func_decl = {
     body : stmt list;
   }
 
-type program = bind list * func_decl list
+type program = bind list * func_decl list * stmt list
 
 (* Pretty-printing functions *)
 
