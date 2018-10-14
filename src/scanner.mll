@@ -2,6 +2,11 @@
 
 { open Parser }
 
+let digit = ['0'-'9']
+let letter = ['A'-'Z' 'a'-'z']
+let quote = '\"'
+(* TODO: Floats *)
+
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
 | "/*"     { comment lexbuf }           (* Comments *)
@@ -31,12 +36,16 @@ rule token = parse
 | "while"  { WHILE }
 | "return" { RETURN }
 | "int"    { INT }
+| "Node"   { NODE }
+| "Graph"  { GRAPH }
 | "bool"   { BOOL }
 | "void"   { VOID }
 | "true"   { TRUE }
 | "false"  { FALSE }
-| ['0'-'9']+ as lxm { LITERAL(int_of_string lxm) }
-| ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as lxm { ID(lxm) }
+| digit+ as lxm { INT_LIT(int_of_string lxm) }
+| letter (letter | digit | '_')* as lxm { ID(lxm) }
+| '\"' [^'\"']* as lxm '\"' { STR_LIT(lxm) }
+| []
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
