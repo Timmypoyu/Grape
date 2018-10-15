@@ -5,8 +5,6 @@
 let digit = ['0'-'9']
 let letter = ['A'-'Z' 'a'-'z']
 let lowerLetter = ['a'-'z']
-let dQuote = '\"' 
-let sQuote = "\'"
 (* TODO: Floats *)
 
 rule token = parse
@@ -17,6 +15,8 @@ rule token = parse
 | '{'      { LBRACE }
 | '}'      { RBRACE }
 | ';'      { SEMI }
+| "'"	   { SQUOT }
+| '"'      { DQUOT }
 | ','      { COMMA }
 | '+'      { PLUS }
 | '-'      { MINUS }
@@ -26,6 +26,8 @@ rule token = parse
 | "=="     { EQ }
 | "!="     { NEQ }
 | '<'      { LT }
+| "<<"     { GRAPS }
+| ">>"     { GRAPE }
 | "<="     { LEQ }
 | ">"      { GT }
 | ">="     { GEQ }
@@ -44,9 +46,9 @@ rule token = parse
 | "Bool"   { BOOL }
 | "True"   { TRUE }
 | "False"  { FALSE }
-| digit+ as lxm { INT_LIT(int_of_string lxm) }
-| lowerLetter (letter | digit | '_')* as lxm { ID(lxm) }
+| digit+ as lxm             { INT_LIT(int_of_string lxm) }
 | '\"' [^'\"']* as lxm '\"' { STR_LIT(lxm) }
+| lowerLetter (letter | digit | '_')* as lxm { ID(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
