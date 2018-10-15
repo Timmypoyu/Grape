@@ -4,7 +4,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | An
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | Node | Edge | Graph
+type typ = Int | Bool | Void | Str | Node | Edge | Graph
 
 (* variable type declaration *)
 type bind = typ * string
@@ -15,6 +15,7 @@ type expr =
   | NodeLit of expr
   | EdgeLit of expr * expr * expr
   | GraphLit of expr list * expr list
+  | StrLit of string
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
@@ -27,7 +28,8 @@ type stmt =
   | Expr of expr
   | Return of expr
   | If of expr * stmt * stmt
-  | For of expr * expr * expr * stmt
+  | Each of expr * stmt
+  | While of expr * stmt
 
 type func_decl = {
     typ : typ;
@@ -37,7 +39,7 @@ type func_decl = {
     body : stmt list;
   }
 
-type program = bind list * func_decl list * stmt list
+type program = bind list * func_decl list
 
 (* Pretty-printing functions *)
 

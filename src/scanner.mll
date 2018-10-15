@@ -4,12 +4,13 @@
 
 let digit = ['0'-'9']
 let letter = ['A'-'Z' 'a'-'z']
+let lowerLetter = ['a'-'z']
 let quote = '\"'
 (* TODO: Floats *)
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
-| "///"     { comment lexbuf }           (* Comments *)
+| "///"    { comment lexbuf }           (* Comments *)
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }
@@ -27,25 +28,24 @@ rule token = parse
 | "<="     { LEQ }
 | ">"      { GT }
 | ">="     { GEQ }
-| "&&"     { AND }
-| "||"     { OR }
-| "!"      { NOT }
+| "and"    { AND }
+| "or"     { OR }
+| "not"    { NOT }
 | "if"     { IF }
 | "else"   { ELSE }
-| "for"    { FOR }
+| "each"   { EACH }
 | "while"  { WHILE }
 | "return" { RETURN }
-| "int"    { INT }
+| "Int"    { INT }
 | "Node"   { NODE }
 | "Graph"  { GRAPH }
-| "bool"   { BOOL }
-| "void"   { VOID }
-| "true"   { TRUE }
-| "false"  { FALSE }
+| "String" { STR }
+| "Bool"   { BOOL }
+| "True"   { TRUE }
+| "False"  { FALSE }
 | digit+ as lxm { INT_LIT(int_of_string lxm) }
-| letter (letter | digit | '_')* as lxm { ID(lxm) }
+| lowerLetter (letter | digit | '_')* as lxm { ID(lxm) }
 | '\"' [^'\"']* as lxm '\"' { STR_LIT(lxm) }
-| []
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 

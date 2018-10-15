@@ -7,8 +7,10 @@ open Ast
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE FOR WHILE INT BOOL VOID
+%token RETURN IF ELSE EACH WHILE
+%token INT NODE EDGE GRAPH STR BOOL VOID
 %token <int> INT_LIT
+%token <string> STR_LIT
 %token <string> ID
 %token EOF
 
@@ -54,7 +56,7 @@ formal_list:
 
 typ:
     INT { Int }
-  | STRING { Str }
+  | STR { Str }
   | BOOL { Bool }
   | VOID { Void }
 
@@ -76,8 +78,8 @@ stmt:
   | LBRACE stmt_list RBRACE { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | FOR LPAREN expr_opt SEMI expr SEMI expr_opt RPAREN stmt
-     { For($3, $5, $7, $9) }
+  | EACH LPAREN expr RPAREN stmt
+     { Each($3, $5) }
   | WHILE LPAREN expr RPAREN stmt { While($3, $5) }
 
 expr_opt:
@@ -86,6 +88,7 @@ expr_opt:
 
 expr:
     INT_LIT          { IntLit($1) }
+  | STR_LIT          { StrLit($1) }
   | TRUE             { BoolLit(true) }
   | FALSE            { BoolLit(false) }
   | ID               { Id($1) }
