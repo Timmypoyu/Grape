@@ -134,4 +134,8 @@ graph_opt:
 
 graph_list:
     nodeExpr { [$1] }
-  | graph_list edgeExpr nodeExpr { $3 :: $2 :: $1} 
+  | graph_list COMMA path_list { $2 :: $1} 
+
+path_list:
+    nodeExpr { [$1] }
+  | path_list edgeExpr nodeExpr { $3 :: $2 :: $1} 
