@@ -115,6 +115,7 @@ expr:
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
 
+(* List with commas separating the elements *) 
 actuals_opt:
     /* nothing */ { [] }
   | actuals_list { List.rev $1 }
@@ -122,3 +123,11 @@ actuals_opt:
 actuals_list:
     expr { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
+
+graph_opt: 
+  /* nothing */ {[]}
+  | graph_list { List.rev $1 }
+
+graph_list:
+    nodeExpr { [$1] }
+  | graph_list edgeExpr nodeExpr { $3 :: $2 :: $1} 
