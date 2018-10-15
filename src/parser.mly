@@ -38,6 +38,7 @@ decls:
  | decls vdecl { ($2 :: fst $1), snd $1 }
  | decls fdecl { fst $1, ($2 :: snd $1) }
 
+(* DO ALL Variable Declarations have to come before all STATEMENTS? *)
 fdecl:
    typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
      { { typ = $1;
@@ -67,7 +68,7 @@ vdecl_list:
   | vdecl_list vdecl { $2 :: $1 }
 
 vdecl:
-   typ ID SEMI { ($1, $2) }
+    typ ID { ($1, $2) }
 
 stmt_list:
     /* nothing */  { [] }
@@ -108,6 +109,7 @@ expr:
   | expr OR     expr        { Binop($1, Or,    $3) }
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
+  | vdecl ASSIGN expr       { Assign(snd $1, $3)}
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
