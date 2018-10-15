@@ -5,7 +5,8 @@
 let digit = ['0'-'9']
 let letter = ['A'-'Z' 'a'-'z']
 let lowerLetter = ['a'-'z']
-let quote = '\"'
+let dQuote = '\"' 
+let sQuote = "\'"
 (* TODO: Floats *)
 
 rule token = parse
