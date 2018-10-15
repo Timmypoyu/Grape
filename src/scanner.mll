@@ -9,7 +9,8 @@ let lowerLetter = ['a'-'z']
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
-| "///"    { comment lexbuf }           (* Comments *)
+| "///"    { mComment lexbuf }           (* Comments *)
+| "//"     { sComment lexbuf }
 | '('      { LPAREN }
 | ')'      { RPAREN }
 | '{'      { LBRACE }
@@ -52,6 +53,10 @@ rule token = parse
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
-and comment = parse
-  "///" { token lexbuf }
-| _    { comment lexbuf }
+and mComment = parse
+| "///" { token lexbuf }
+| _ { mComment lexbuf }
+
+and sComment = parse
+  '\n' { token lexbuf }
+| _    { sComment lexbuf }
