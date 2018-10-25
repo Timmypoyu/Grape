@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE 
 %token PLUS MINUS TIMES DIVIDE ASSIGN NOT
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE EACH WHILE
@@ -62,6 +62,7 @@ typ:
   | EDGE    { Edge }
   | GRAPH   { Graph }
   | BOOL    { Bool }
+  | LIST    { List }
 
 vdecl_list:
     /* nothing */    { [] }
