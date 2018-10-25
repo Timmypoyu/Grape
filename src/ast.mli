@@ -4,7 +4,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | An
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | Str | Node | Edge | Graph
+type typ = Int | Bool | Void | Str | Node of typ | Edge of typ | Graph of typ | List of typ
 
 (* variable type declaration *)
 type bind = typ * string
