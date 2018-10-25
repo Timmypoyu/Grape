@@ -114,11 +114,11 @@ expr:
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
 
-nodeExpr:
+edgeExpr:
     MINUS expr MINUS GT     { DirEdgeLit($1) }      (* Directed Edge *)
   | MINUS expr MINUS        { EdgeLit($2) }         (* Undirected Edge *)
 
-edgeExpr: 
+nodeExpr: 
     SQUOT expr SQUOT        { NodeLit($2) }         (* Node *)
 
 (* List with commas separating the elements *) 
