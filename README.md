@@ -2,20 +2,20 @@
 
 ### AST 
 ### Scanner 
-List brackets
-Floats 
-Dictionary 
-modulo operator 
-exponent 
-ampersand "&" : graph union (in scanner already)
-for 
-in 
+1. List brackets
+2. Floats 
+3. Dictionary 
+4. modulo operator 
+5. exponent 
+6. ampersand "&" : graph union (in scanner already)
+7. for 
+8. in 
 
 ### Parser 
-Implements List
-template searching 
-function stuff 
-dictionary stuff 
+1. Implements List
+2. template searching 
+3. function stuff 
+4. dictionary stuff 
 
 
 ### Semant.mll
