@@ -1,6 +1,6 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | And | Or
+type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | And | Or | Exp | Mod
 
 type uop = Neg | Not
 
@@ -13,14 +13,15 @@ type expr =
     IntLit of int
   | BoolLit of bool
   | NodeLit of expr
-  | EdgeLit of expr * expr * expr
-  | GraphLit of expr list * expr list
+  | EdgeLit of expr
+  | GraphLit of expr list
   | StrLit of string
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
+  | Template of expr * string 
   | Noexpr
 
 type stmt =

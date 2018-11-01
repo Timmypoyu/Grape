@@ -2,6 +2,7 @@
 
 { open Parser }
 
+(*Hello*)
 let digit = ['0'-'9']
 let letter = ['A'-'Z' 'a'-'z']
 let lowerLetter = ['a'-'z']
@@ -18,13 +19,16 @@ rule token = parse
 | '['	   { LBRACK }
 | ']'      { RBRACK }
 | ';'      { SEMI }
+| ':'	   { COLON }	
 | "'"      { SQUOT }
 | '"'      { DQUOT }
 | ','      { COMMA }
 | '+'      { PLUS }
 | '-'      { MINUS }
 | '*'      { TIMES }
+| "**" 	   { EXP }	
 | '/'      { DIVIDE }
+| '%' 	   { MOD }
 | '='      { ASSIGN }
 | "=="     { EQ }
 | "!="     { NEQ }
@@ -35,17 +39,21 @@ rule token = parse
 | "<="     { LEQ }
 | ">"      { GT }
 | ">="     { GEQ }
+| "fun"	   { FUN }	
 | "and"    { AND }
 | "or"     { OR }
 | "not"    { NOT }
 | "if"     { IF }
+| "in"	   { IN }
 | "else"   { ELSE }
 | "each"   { EACH }
+| "for"	   { FOR }
 | "while"  { WHILE }
 | "return" { RETURN }
 | "Int"    { INT }
 | "Node"   { NODE }
 | "Graph"  { GRAPH }
+| "List"   { LIST }
 | "String" { STR }
 | "Bool"   { BOOL }
 | "True"   { TRUE }

@@ -4,10 +4,10 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT
-%token PLUS MINUS TIMES DIVIDE ASSIGN NOT
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT COLON
+%token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE EACH WHILE
+%token RETURN IF ELSE EACH WHILE FOR IN FUN 
 %token INT NODE EDGE GRAPH STR BOOL LIST
 %token <int> INT_LIT
 %token <string> STR_LIT
@@ -22,7 +22,8 @@ open Ast
 %left EQ NEQ
 %left LT GT LEQ GEQ
 %left PLUS MINUS
-%left TIMES DIVIDE
+%left TIMES DIVIDE MOD
+%left EXP 
 %right NOT NEG
 
 %start program
@@ -69,7 +70,8 @@ vdecl_list:
   | vdecl_list vdecl { $2 :: $1 }
 
 vdecl:
-    typ ID SEMI { ($1, $2) }
+    typ ID SEMI{ ($1, $2) }
+  | typ ID ASSIGN expr { ($1, $2, $3)} 
 
 stmt_list:
     /* nothing */  { [] }
@@ -95,7 +97,7 @@ expr:
   | TRUE                    { BoolLit(true) }
   | FALSE                   { BoolLit(false) }
   | ID                      { Id($1) }
-  | GRAPS actuals_opt GRAPE { GraphLit($2) }        (* Graph *)
+  | GRAPS graph_opt GRAPE { GraphLit($2) }        (* Graph *)
   | expr PLUS   expr        { Binop($1, Add,   $3) }
   | expr MINUS  expr        { Binop($1, Sub,   $3) }
   | expr TIMES  expr        { Binop($1, Mult,  $3) }
@@ -108,12 +110,16 @@ expr:
   | expr GEQ    expr        { Binop($1, Geq,   $3) }
   | expr AND    expr        { Binop($1, And,   $3) }
   | expr OR     expr        { Binop($1, Or,    $3) }
+  | expr EXP    expr        { Binop($1, Exp,    $3)}
+  | expr MOD    expr        { Binop($1, Mod,    $3)} 
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
   | vdecl ASSIGN expr       { Assign(snd $1, $3)}
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
+  | DIVIDE graph_template DIVIDE IN ID { Template($2, $5) }
+
 
 edgeExpr:
     MINUS expr MINUS GT     { DirEdgeLit($1) }      (* Directed Edge *)
@@ -132,7 +138,7 @@ actuals_list:
   | actuals_list COMMA expr { $3 :: $1 }
 
 graph_opt: 
-  /* nothing */ {[]}
+  /* nothing */ { [] }
   | graph_list { List.rev $1 }
 
 graph_list:
@@ -142,3 +148,7 @@ graph_list:
 path_list:
     nodeExpr { [$1] }
   | path_list edgeExpr nodeExpr { $3 :: $2 :: $1} 
+
+graph_template:
+    edgeExpr {$1}
+  | path_list { List.rev $1}
