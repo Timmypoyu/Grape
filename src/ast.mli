@@ -14,6 +14,7 @@ type expr =
   | BoolLit of bool
   | NodeLit of expr
   | EdgeLit of expr
+  | DirEdgeLit of expr 
   | GraphLit of expr list
   | StrLit of string
   | Id of string

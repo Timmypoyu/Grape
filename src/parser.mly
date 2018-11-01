@@ -16,7 +16,7 @@ open Ast
 
 %nonassoc NOELSE
 %nonassoc ELSE
-%right ASSIGN SEMI
+%right ASSIGN
 %left OR
 %left AND
 %left EQ NEQ
@@ -71,25 +71,32 @@ vdecl_list:
 
 vdecl:
     typ ID SEMI{ ($1, $2) }
-  | typ ID ASSIGN expr SEMI{ ($1 , Assign($2, $4))}  
+  | typ ID ASSIGN allExpr SEMI{ ($1 , Assign($2, $4))}   
 
 stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
 stmt:
-    expr SEMI                               { Expr $1 }
-  | RETURN SEMI                             { Return Noexpr }
-  | RETURN expr SEMI                        { Return $2 }
+    allExpr SEMI                               { Expr $1 }
+  (* | RETURN expr_opt SEMI                    { Return $2} *)
+  | RETURN SEMI                             { Return Noexpr } 
+  | RETURN allExpr SEMI                        { Return $2 } 
   | LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
-  | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
-  | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | EACH LPAREN expr RPAREN stmt            { Each($3, $5) }
-  | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
+  | IF LPAREN allExpr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
+  | IF LPAREN allExpr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
+  | EACH LPAREN allExpr RPAREN stmt            { Each($3, $5) }
+  | WHILE LPAREN allExpr RPAREN stmt           { While($3, $5) }
+
+allExpr:
+  | expr { $1 }
+  | edgeExpr { $1 }
+  | nodeExpr { $1 }
+  | templateExpr { $1 }
 
 expr_opt:
     /* nothing */ { Noexpr }
-  | expr          { $1 }
+  | allExpr          { $1 } 
 
 expr:
     INT_LIT                 { IntLit($1) }
@@ -118,15 +125,18 @@ expr:
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
- (* | DIVIDE graph_template DIVIDE IN ID { Template($2, $5) }*)
 
+templateExpr:
+    DIVIDE graph_template DIVIDE IN ID { Template($2, $5) }    
 
 edgeExpr:
-    MINUS expr MINUS GT     { DirEdgeLit($1) }      (* Directed Edge *)
-  | MINUS expr MINUS        { EdgeLit($2) }         (* Undirected Edge *)
+    MINUS allExpr MINUS GT     { DirEdgeLit($2) }      (* Directed Edge *)
+  | MINUS allExpr MINUS        { EdgeLit($2) }         (* Undirected Edge *)
+  | MINUS MINUS GT             { DirEdgeLit(Noexpr) } 
+  | MINUS MINUS                { EdgeLit(Noexpr) } 
 
 nodeExpr: 
-    SQUOT expr SQUOT        { NodeLit($2) }         (* Node *)
+    SQUOT allExpr SQUOT        { NodeLit($2) }         (* Node *)
 
 (* List with commas separating the elements *) 
 actuals_opt:
