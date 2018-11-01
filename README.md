@@ -2,7 +2,7 @@
 
 ### AST 
 ### Scanner 
-1. List brackets
+1. List brackets (done)
 2. Floats 
 3. Dictionary 
 4. modulo operator (done)
@@ -14,11 +14,10 @@
 10. fun (done)
 
 ### Parser 
-1. Implements List
-2. template searching 
-3. function stuff 
-4. dictionary stuff 
-5. Template 
+1. Implements List (done)
+2. template searching (working for nodes not for edges)
+3. function stuff (not done)
+4. dictionary stuff (not done)
 
 
 ### Semant.mll

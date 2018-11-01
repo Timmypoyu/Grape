@@ -16,6 +16,7 @@ type expr =
   | EdgeLit of expr
   | DirEdgeLit of expr 
   | GraphLit of expr list
+  | ListLit of expr list 
   | StrLit of string
   | Id of string
   | Binop of expr * op * expr

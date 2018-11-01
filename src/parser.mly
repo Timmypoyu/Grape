@@ -125,6 +125,7 @@ expr:
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
+  | LBRACK actuals_opt RBRACK { ListLit($2) }
 
 templateExpr:
     DIVIDE graph_template DIVIDE IN ID { Template($2, $5) }    
@@ -144,8 +145,8 @@ actuals_opt:
   | actuals_list { List.rev $1 }
 
 actuals_list:
-    expr { [$1] }
-  | actuals_list COMMA expr { $3 :: $1 }
+    allExpr { [$1] }
+  | actuals_list COMMA allExpr { $3 :: $1 }
 
 graph_opt: 
   /* nothing */ { [] }
