@@ -71,7 +71,7 @@ vdecl_list:
 
 vdecl:
     typ ID SEMI{ ($1, $2) }
-  | typ ID ASSIGN expr { ($1, $2, $3)} 
+  | typ ID ASSIGN expr SEMI{ ($1 , Assign($2, $4))}  
 
 stmt_list:
     /* nothing */  { [] }
@@ -118,7 +118,7 @@ expr:
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
-  | DIVIDE graph_template DIVIDE IN ID { Template($2, $5) }
+ (* | DIVIDE graph_template DIVIDE IN ID { Template($2, $5) }*)
 
 
 edgeExpr:
