@@ -16,7 +16,7 @@ open Ast
 
 %nonassoc NOELSE
 %nonassoc ELSE
-%right ASSIGN SEMI
+%right ASSIGN 
 %left OR
 %left AND
 %left EQ NEQ
