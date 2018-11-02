@@ -71,32 +71,26 @@ vdecl_list:
 
 vdecl:
     typ ID SEMI{ ($1, $2) }
-  | typ ID ASSIGN allExpr SEMI{ ($1 , Assign($2, $4))}   
+  | typ ID ASSIGN expr SEMI{ ($1 , Assign($2, $4))}   
 
 stmt_list:
     /* nothing */  { [] }
   | stmt_list stmt { $2 :: $1 }
 
 stmt:
-    allExpr SEMI                               { Expr $1 }
+    expr SEMI                               { Expr $1 }
   (* | RETURN expr_opt SEMI                    { Return $2} *)
   | RETURN SEMI                             { Return Noexpr } 
-  | RETURN allExpr SEMI                        { Return $2 } 
+  | RETURN expr SEMI                        { Return $2 } 
   | LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
-  | IF LPAREN allExpr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
-  | IF LPAREN allExpr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
-  | EACH LPAREN allExpr RPAREN stmt            { Each($3, $5) }
-  | WHILE LPAREN allExpr RPAREN stmt           { While($3, $5) }
-
-allExpr:
-  | expr { $1 }
-  | edgeExpr { $1 }
-  | nodeExpr { $1 }
-  | templateExpr { $1 }
+  | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
+  | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
+  | EACH LPAREN expr RPAREN stmt            { Each($3, $5) }
+  | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
 
 expr_opt:
     /* nothing */ { Noexpr }
-  | allExpr          { $1 } 
+  | expr          { $1 } 
 
 expr:
     INT_LIT                 { IntLit($1) }
@@ -126,18 +120,17 @@ expr:
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
-
-templateExpr:
-    DIVIDE graph_template DIVIDE IN ID { Template($2, $5) }    
+  | DIVIDE graph_template DIVIDE IN ID {Template($2, $5)}
+  | edgeExpr { $1 }  
+  | nodeExpr { $1 }
+ 
 
 edgeExpr:
-    MINUS allExpr MINUS GT     { DirEdgeLit($2) }      (* Directed Edge *)
-  | MINUS allExpr MINUS        { EdgeLit($2) }         (* Undirected Edge *)
-  | MINUS MINUS GT             { DirEdgeLit(Noexpr) } 
-  | MINUS MINUS                { EdgeLit(Noexpr) } 
+   MINUS expr MINUS %prec NOELSE GT { DirEdgeLit($2) }      (* Directed Edge *)
+  | MINUS expr MINUS %prec NOELSE   { EdgeLit($2) }         (* Undirected Edge *)
 
 nodeExpr: 
-    SQUOT allExpr SQUOT        { NodeLit($2) }         (* Node *)
+    SQUOT expr SQUOT        { NodeLit($2) }         (* Node *)
 
 (* List with commas separating the elements *) 
 actuals_opt:
@@ -145,8 +138,8 @@ actuals_opt:
   | actuals_list { List.rev $1 }
 
 actuals_list:
-    allExpr { [$1] }
-  | actuals_list COMMA allExpr { $3 :: $1 }
+    expr { [$1] }
+  | actuals_list COMMA expr { $3 :: $1 }
 
 graph_opt: 
   /* nothing */ { [] }
@@ -161,5 +154,5 @@ path_list:
   | path_list edgeExpr nodeExpr { $3 :: $2 :: $1} 
 
 graph_template:
-    edgeExpr {$1}
+    edgeExpr { $1 }
   | path_list { List.rev $1}
