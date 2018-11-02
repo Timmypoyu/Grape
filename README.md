@@ -1,23 +1,29 @@
 # PLTProject
 
+
+### INFRA
+- [ ] Makefile
+- [X] Dockerfile
+- [ ] Test cases
+
 ### AST 
 ### Scanner 
-1. List brackets (done)
-2. Floats 
-3. Dictionary 
-4. modulo operator (done)
-5. exponent (done)
-6. ampersand "&" : graph union (done)
-7. for (done)
-8. in  (done)
-9. Colon (for dictionary)
-10. fun (done)
+- [X] List brackets
+- [ ] Floats 
+- [ ] Dictionary 
+- [X] modulo operator
+- [X] exponent
+- [ ] ampersand "&" : graph union
+- [X] for
+- [X] in
+- [ ] Colon (for dictionary)
+- [X] fun
 
 ### Parser 
-1. Implements List (done)
-2. template searching (working for nodes not for edges)
-3. function stuff (not done)
-4. dictionary stuff (not done)
+- [X] Implements List 
+- [ ] template searching (working for nodes not for edges)
+- [ ] function stuff
+- [ ] dictionary stuff 
 
 
 ### Semant.mll

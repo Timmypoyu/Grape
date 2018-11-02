@@ -3,6 +3,9 @@ DIST = ../build
 
 .PHONY : grape
 grape : scanner.ml parser.ml parser.mli
+	mv scanner.ml $(BUILD)
+	mv parser.ml $(BUILD)
+	mv parser.mli $(BUILD)
 
 scanner.ml : scanner.mll
 	ocamllex scanner.mll
