@@ -10,18 +10,18 @@
 ### Scanner 
 - [X] List brackets
 - [ ] Floats 
-- [ ] Dictionary 
+- [X] Dictionary 
 - [X] modulo operator
 - [X] exponent
-- [ ] ampersand "&" : graph union
+- [X] ampersand "&" : graph union
 - [X] for
 - [X] in
-- [ ] Colon (for dictionary)
+- [X] Colon (for dictionary)
 - [X] fun
 
 ### Parser 
 - [X] Implements List 
-- [ ] template searching (working for nodes not for edges)
+- [ ] template searching (working for nodes not for edges, because edge notation conflicts with `MINUS expr`)
 - [ ] function stuff
 - [ ] dictionary stuff 
 

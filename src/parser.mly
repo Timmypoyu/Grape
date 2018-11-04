@@ -21,7 +21,7 @@ open Ast
 %left AND
 %left EQ NEQ
 %left LT GT LEQ GEQ
-%left PLUS MINUS
+%left PLUS MINUS SQUOT
 %left TIMES DIVIDE MOD
 %left EXP 
 %right NOT NEG
@@ -71,7 +71,7 @@ vdecl_list:
 
 vdecl:
     typ ID SEMI{ ($1, $2) }
-  | typ ID ASSIGN expr SEMI{ ($1 , Assign($2, $4))}   
+  | typ ID ASSIGN expr SEMI{ ($1 , Assign($2, $4))}
 
 stmt_list:
     /* nothing */  { [] }
@@ -126,11 +126,11 @@ expr:
  
 
 edgeExpr:
-   MINUS expr MINUS %prec NOELSE GT { DirEdgeLit($2) }      (* Directed Edge *)
-  | MINUS expr MINUS %prec NOELSE   { EdgeLit($2) }         (* Undirected Edge *)
+(*   MINUS expr MINUS GT  { DirEdgeLit($2) }      (* Directed Edge *)*)
+   MINUS expr MINUS    { EdgeLit($2) }         (* Undirected Edge *)
 
 nodeExpr: 
-    SQUOT expr SQUOT        { NodeLit($2) }         (* Node *)
+    SQUOT expr SQUOT       { NodeLit($2) }         (* Node *)
 
 (* List with commas separating the elements *) 
 actuals_opt:
@@ -154,5 +154,5 @@ path_list:
   | path_list edgeExpr nodeExpr { $3 :: $2 :: $1} 
 
 graph_template:
-    edgeExpr { $1 }
+    edgeExpr  { [$1] }
   | path_list { List.rev $1}
