@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT COLON
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT UNDS COLON
 %token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE EACH WHILE FOR IN FUN 
@@ -21,7 +21,7 @@ open Ast
 %left AND
 %left EQ NEQ
 %left LT GT LEQ GEQ
-%left PLUS MINUS SQUOT
+%left PLUS MINUS
 %left TIMES DIVIDE MOD
 %left EXP 
 %right NOT NEG
@@ -127,7 +127,7 @@ expr:
 
 edgeExpr:
 (*   MINUS expr MINUS GT  { DirEdgeLit($2) }      (* Directed Edge *)*)
-   MINUS expr MINUS    { EdgeLit($2) }         (* Undirected Edge *)
+   UNDS expr UNDS    { EdgeLit($2) }         (* Undirected Edge *)
 
 nodeExpr: 
     SQUOT expr SQUOT       { NodeLit($2) }         (* Node *)

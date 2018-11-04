@@ -38,6 +38,7 @@ rule token = parse
 | ">>"     { GRAPE }
 | "<="     { LEQ }
 | ">"      { GT }
+| "_"      { UNDS }
 | ">="     { GEQ }
 | "fun"	   { FUN }	
 | "and"    { AND }
