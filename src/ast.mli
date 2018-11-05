@@ -4,19 +4,26 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | An
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | Str | Node of typ | Edge of typ | Graph of typ | List of typ
+type typ = Int | Float | Bool | Void | Str 
+	| Node of typ 
+	| Edge of typ 
+	| Graph of typ 
+	| List of typ 
+	| Dist of typ 
 
 (* variable type declaration *)
 type bind = typ * string
 
 type expr =
-    IntLit of int 
+    IntLit of int
+  | FloatLit of float  
   | BoolLit of bool
   | NodeLit of expr
   | EdgeLit of expr
   | DirEdgeLit of expr 
   | GraphLit of list
-  | ListLit of expr list 
+  | ListLit of expr list
+  | DistLit of expr list  
   | StrLit of string
   | Id of string
   | Binop of expr * op * expr

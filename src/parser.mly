@@ -114,7 +114,7 @@ expr:
   | expr OR     expr        { Binop($1, Or,    $3) }
   | expr EXP    expr        { Binop($1, Exp,    $3)}
   | expr MOD    expr        { Binop($1, Mod,    $3)} 
-  | expr AMP    expr        { Binop($1, Mod,    $3)} 
+  | expr AMP    expr        { Binop($1, Amp,    $3)} 
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
   | vdecl ASSIGN expr       { Assign(snd $1, $3)}
