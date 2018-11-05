@@ -1,0 +1,14 @@
+graph<int> foo() {
+    graph<int> g = [A:1 -- B:2];
+    return g;
+}
+
+int main() {
+    int i;
+    graph<int> c;
+    for(i = 0; i < 5; i = i + 1)
+    {
+        c = foo();
+    }
+    return 0;   
+}
