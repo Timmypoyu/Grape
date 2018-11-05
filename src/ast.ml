@@ -1,16 +1,22 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | And | Or | Exp | Mod
+type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | And | Or | Exp | Mod | Amp 
 
 type uop = Neg | Not
 
-type typ = Int | Bool | Void | Str | Node of typ | Edge of typ | Graph of typ | List of typ
+type typ = Int | Float | Bool | Void | Str 
+	| Node of typ 
+	| Edge of typ 
+	| Graph of typ 
+	| List of typ 
+	| Dist of typ 
 
 (* variable type declaration *)
 type bind = typ * string
 
 type expr =
     IntLit of int
+  | FloatLit of float  
   | BoolLit of bool
   | NodeLit of expr
   | EdgeLit of expr
@@ -18,13 +24,14 @@ type expr =
   | GraphLit of expr list
   | ListLit of expr list 
   | DictLit of (string * expr) list
+  | DistLit of expr list  
   | StrLit of string
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
-  | Call of string * expr list
-  | Template of expr * string 
+  | Call of string * expr list 
+  | Template of expr list * string 
   | Noexpr
 
 type stmt =
@@ -44,10 +51,9 @@ type func_decl = {
   }
 
 type program = bind list * func_decl list
-
+(*
 (* Pretty-printing functions *)
 
-(*
 let string_of_op = function
     Add -> "+"
   | Sub -> "-"

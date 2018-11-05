@@ -1,0 +1,88 @@
+void augment(wedigraph<string> flow, wedigraph<string> path) {
+	!~ Get bottleneck capacity of path. ~!
+	int min = -1;
+	for_edge (e : path) {
+		if (min > e.weight() || min == -1) {
+			min = e.weight();
+		}
+	}
+
+	!~ Augment flow. ~!
+	for_edge (e : path) {
+		if (flow.has_edge(e.from(), e.to())) {
+			int current_flow = flow.get_edge_weight(e.from(), e.to());
+			!~ Add bottleneck capacity to current flow. ~!
+			flow.set_edge_weight(e.from(), e.to(), current_flow + min);
+		} else {
+			int current_flow = flow.get_edge_weight(e.to(), e.from());
+			!~ Subtract bottleneck capacity from current flow. ~!
+			flow.set_edge_weight(e.to(), e.from(), current_flow - min);
+		}
+	}
+	return;
+}
+
+wedigraph<string> make_residual_graph(wedigraph<string> flow, wedigraph<string> network) {
+	wedigraph<string> residual_graph = [];
+	for_edge (e : flow) {
+		int forward = network.get_edge_weight(e.from(), e.to()) - e.weight();
+		int backward = e.weight();
+		if (forward > 0) {
+			residual_graph.add_edge(e.from(), e.to(), forward);
+		}
+		if (backward > 0) {
+			residual_graph.add_edge(e.to(), e.from(), backward);
+		}
+	}
+	return residual_graph;
+}
+
+wedigraph<string> edmonds_karp(wedigraph<string> network, node<string> source, node<string> sink) {
+	!~ The argument “network” contains the capacities as weights on edges.
+	   Flow is represented with a graph exactly equivalent to network, but 
+	   with the flow on each edge as the weight instead of the capacity.
+	   First, set up initial flow of 0 on every edge. ~!
+	wedigraph<string> flow = [];
+	for_edge (e : network) {
+		flow.add_edge(e.from(), e.to(), 0);
+	}
+	bool has_path = true;
+	while (has_path) {
+		wedigraph<string> residual = make_residual_graph(flow, network);
+		map<node<string>> parents;
+		!~ Find shortest s-t path with BFS. ~!
+		bfs (n : residual ; source) {
+			for_node (neighbor : residual.neighbors(n)) {
+				if (!parents.contains(neighbor)) {
+					parents.put(neighbor, n);
+				}
+			}
+		}
+		!~ If we didn’t reach the sink, there is no s-t path in residual ~!
+		if (!parents.contains(sink)) {
+			has_path = false;
+		} else {
+			wedigraph<string> path = [];
+			node<string> i = sink;
+			while (i != source) {
+				path.add_edge(parents.get(i), i, residual.get_edge_weight(parents.get(i), i));
+				i = parents.get(i);
+			}
+			augment(flow, path);
+		}
+	}
+	return flow;
+}
+
+int main() {
+	wedigraph<string> network = [s:"s" -{20}-> u:"u" -{10}-> t:"t" <-{20}- v:"v" <-{10}- s ;
+	                             u -{30}-> v];
+	prints("network");
+	network.print();
+
+	wedigraph<string> max_flow = edmonds_karp(network, s, t);
+	prints("max flow");
+	max_flow.print();
+
+	return 0;
+}

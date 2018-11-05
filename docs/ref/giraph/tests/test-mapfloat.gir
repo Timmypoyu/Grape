@@ -1,0 +1,22 @@
+int main() {
+	graph<float> g = [A:1.0 -- B:2.0];
+	map<float> m;
+	for_node(n : g) {
+		m.put(n, n.data());
+	}
+
+	!~ i know comparing floats is a no-no but i couldn't get
+	   a print float function to work and it's not important ~!
+	if (m.get(A) == 1.0) {
+		prints("yay");
+	} else {
+		prints("boo");
+	}
+	if (m.get(B) == 2.0) {
+		prints("yay");
+	} else {
+		prints("boo");
+	}
+	
+	return 0;
+}

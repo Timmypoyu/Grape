@@ -1,0 +1,16 @@
+int main() {
+	digraph<int> g = [A:1 -> B:2 -> C:3 -> D:4];
+	map<node<int>> parents;
+
+	node<int> parent = A;
+	bfs(n : g ; A) {
+		parents.put(n, parent);
+		parent = n;
+	}
+
+	print(parents.get(B).data());
+	print(parents.get(C).data());
+	print(parents.get(D).data());
+
+	return 0;
+}
