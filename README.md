@@ -1,5 +1,15 @@
 # PLTProject
 
+### Development Environment
+
+How to compile:
+```
+$ ./scripts/env-boot.sh
+$ ./scripts/bootstrap.sh
+$ cd src
+$ make grape
+```
+
 
 ### INFRA
 - [ ] Makefile
