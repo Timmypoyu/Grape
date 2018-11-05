@@ -40,7 +40,8 @@ decls:
  | decls vdecl { ($2 :: fst $1), snd $1 }
  | decls fdecl { fst $1, ($2 :: snd $1) }
 
-(* DO ALL Variable Declarations have to come before all STATEMENTS? *)
+/* DO ALL Variable Declarations have to come before all STATEMENTS? */
+
 fdecl:
    typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
      { { typ = $1;
@@ -80,9 +81,9 @@ stmt_list:
 
 stmt:
     expr SEMI                               { Expr $1 }
-  | RETURN expr_opt SEMI                    { Return $2}
-(*  | RETURN SEMI                             { Return Noexpr }*) 
-(*  | RETURN expr SEMI                        { Return $2 }*) 
+  /* | RETURN expr_opt SEMI                    { Return $2} */
+  | RETURN SEMI                             { Return Noexpr } 
+  | RETURN expr SEMI                        { Return $2 } 
   | LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
@@ -99,7 +100,7 @@ expr:
   | TRUE                    { BoolLit(true) }
   | FALSE                   { BoolLit(false) }
   | ID                      { Id($1) }
-  | GRAPS graph_opt GRAPE { GraphLit($2) }        (* Graph *)
+  | GRAPS graph_opt GRAPE { GraphLit($2) }        /* Graph */
   | expr PLUS   expr        { Binop($1, Add,   $3) }
   | expr MINUS  expr        { Binop($1, Sub,   $3) }
   | expr TIMES  expr        { Binop($1, Mult,  $3) }
@@ -128,18 +129,13 @@ expr:
  
 
 edgeExpr:
-  (*  MINUS edgeExpr2 { $2 } *) 
-     UNDS expr UNDS GT  { DirEdgeLit($2) }      (* Directed Edge *)
-   | UNDS expr UNDS    { EdgeLit($2) }         (* Undirected Edge *)
-
-(*edgeExpr2:
-    expr MINUS      { EdgeLit($1) }
-  | expr MINUS GT   { DirEdgeLit($2) }
-*)
+  /*  MINUS edgeExpr2 { $2 } */
+     UNDS expr UNDS GT  { DirEdgeLit($2) }      /* Directed Edge */
+   | UNDS expr UNDS    { EdgeLit($2) }         /* Undirected Edge */
 nodeExpr: 
-    SQUOT expr SQUOT       { NodeLit($2) }         (* Node *)
+    SQUOT expr SQUOT       { NodeLit($2) }         /* Node */
 
-(* List with commas separating the elements *) 
+/* List with commas separating the elements */
 actuals_opt:
     /* nothing */ { [] }
   | actuals_list { List.rev $1 }
@@ -154,7 +150,7 @@ graph_opt:
 
 graph_list:
     nodeExpr { [$1] }
-  | graph_list COMMA path_list { $2 :: $1} 
+  | graph_list COMMA path_list { $3 :: $1} 
 
 path_list:
     nodeExpr { [$1] }
