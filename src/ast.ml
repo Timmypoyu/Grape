@@ -22,7 +22,8 @@ type expr =
   | EdgeLit of expr
   | DirEdgeLit of expr 
   | GraphLit of expr list
-  | ListLit of expr list
+  | ListLit of expr list 
+  | DictLit of (string * expr) list
   | DistLit of expr list  
   | StrLit of string
   | Id of string
