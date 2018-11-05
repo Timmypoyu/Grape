@@ -44,7 +44,7 @@ decls:
 /* DO ALL Variable Declarations have to come before all STATEMENTS? */
 
 fdecl:
-   FUN typ ID LPAREN formals_opt RPAREN LBRACE vdecl stmt RBRACE
+   FUN typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
      { { typ = $2;
 	 fname = $3;
 	 formals = $5;
