@@ -1,0 +1,22 @@
+graph<int> foo(graph<int> g) {
+	node<int> n;
+	n.set_data(6);
+	g.add_node(n);
+	return g;
+}
+
+graph<int> bar(graph<int> g1, graph<int> g2) {
+	for_node(n : g2) {
+		g1.add_node(n);
+	}
+	return g1;
+}
+
+int main() {
+	!~ graph<int> g = foo([E:7]); ~!
+	for_node(n : bar(foo([A:5 -- B:3]), [C:7 -- D:8])) {
+		print(n.data());
+	}
+
+	return 0;
+}

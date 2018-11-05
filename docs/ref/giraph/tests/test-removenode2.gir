@@ -1,0 +1,11 @@
+int main() {
+	graph<int> g = [A:1 -- B:2];
+	node<int> C;
+	g.remove_node(C); !~ should do nothing ~!
+
+	for_node(n : g) {
+		print(n.data());
+	}
+
+	return 0;
+}

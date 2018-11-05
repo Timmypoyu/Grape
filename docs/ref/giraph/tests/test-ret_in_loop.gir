@@ -1,0 +1,24 @@
+graph<int> foo() {
+    graph<int> g = [A:1 -- B:2];
+    return g;
+}
+
+int main() {
+    int i = 0;
+    for_node(n: foo())
+    {
+        int y = 0;
+        while (y < 5)
+        {
+            graph<int> c;
+            print(i);
+            c = foo();
+            y = y + 1;
+            return 0;
+        }
+        return y;
+    }
+    i = i + 1;
+    return 0;   
+
+}

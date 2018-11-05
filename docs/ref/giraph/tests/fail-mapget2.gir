@@ -1,0 +1,6 @@
+int main() {
+	node<int> n;
+	map<int> m;
+	string s = m.get(n);
+	return 0;
+}

@@ -1,0 +1,6 @@
+int main() {
+	node<int> n;
+	map<int> m;
+	int i = m.contains(n);
+	return 0;
+}

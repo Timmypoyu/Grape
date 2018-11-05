@@ -38,6 +38,7 @@ rule token = parse
 | ">>"     { GRAPE }
 | "<="     { LEQ }
 | ">"      { GT }
+| "_"      { UNDS }
 | ">="     { GEQ }
 | "fun"	   { FUN }	
 | "and"    { AND }
@@ -51,7 +52,9 @@ rule token = parse
 | "while"  { WHILE }
 | "return" { RETURN }
 | "Int"    { INT }
+| "Edge"   { EDGE }
 | "Node"   { NODE }
+| "Dict"   { DICT }
 | "Graph"  { GRAPH }
 | "List"   { LIST }
 | "String" { STR }

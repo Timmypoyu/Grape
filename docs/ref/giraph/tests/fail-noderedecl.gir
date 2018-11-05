@@ -1,0 +1,11 @@
+int main(){
+
+     node<int> n;
+     graph<int> g = [A:1 -- B:3 -- n];
+     n.set_data(5);
+    node<int> B;
+
+    return 0;
+
+
+}

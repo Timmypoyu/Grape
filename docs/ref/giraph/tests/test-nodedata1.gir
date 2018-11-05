@@ -1,0 +1,6 @@
+int main() {
+	node<int> n;
+	n.set_data(3);
+	print(n.data());
+	return 0;
+}

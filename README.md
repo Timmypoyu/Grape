@@ -1,24 +1,39 @@
 # PLTProject
 
+### Development Environment
+
+How to compile:
+```
+$ ./scripts/env-boot.sh
+$ ./scripts/bootstrap.sh
+$ cd src
+$ make grape
+```
+
+
+### INFRA
+- [ ] Makefile
+- [X] Dockerfile
+- [ ] Test cases
+
 ### AST 
 ### Scanner 
-1. List brackets
-2. Floats 
-3. Dictionary 
-4. modulo operator (done)
-5. exponent (done)
-6. ampersand "&" : graph union (done)
-7. for (done)
-8. in  (done)
-9. Colon (for dictionary)
-10. fun (done)
+- [X] List brackets
+- [ ] Floats 
+- [X] Dictionary 
+- [X] modulo operator
+- [X] exponent
+- [X] ampersand "&" : graph union
+- [X] for
+- [X] in
+- [X] Colon (for dictionary)
+- [X] fun
 
 ### Parser 
-1. Implements List
-2. template searching 
-3. function stuff 
-4. dictionary stuff 
-5. Template 
+- [X] Implements List 
+- [ ] template searching (working for nodes not for edges, because edge notation conflicts with `MINUS expr`)
+- [ ] function stuff
+- [ ] dictionary stuff 
 
 
 ### Semant.mll
