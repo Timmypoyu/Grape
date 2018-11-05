@@ -77,7 +77,8 @@ vdecl:
   | typ ID ASSIGN expr SEMI{ ($1 , Assign($2, $4))}
 
 stmt_list:
-    /* nothing */  { [] }
+    /* nothing   { [] }*/
+    stmt { [$1] }
   | stmt_list stmt { $2 :: $1 }
 
 stmt:
@@ -119,7 +120,7 @@ expr:
   | expr AMP    expr        { Binop($1, Amp,    $3)} 
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
-  | vdecl ASSIGN expr       { Assign(snd $1, $3)}
+  /*| typ ID ASSIGN expr       { Assign(snd $1, $4)} */
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
@@ -148,12 +149,12 @@ actuals_list:
   | actuals_list COMMA expr { $3 :: $1 }
 
 dict_opt:
-    /* nothing */ { [] }
-  | dict_list { $1 }
+    /* nothing  { [] }
+  | */ dict_list { $1 } 
 
 dict_list:
-    ID COLON expr { [ $1 , $3 ] }
-  | dict_list COMMA ID COLON expr { [ $3 , $5 ] :: $1 }
+    STR_LIT COLON expr { [ $1 , $3 ] }
+  | dict_list COMMA STR_LIT COLON expr { [ $3 , $5 ] :: $1 }
 
 graph_opt: 
   /* nothing */ { [] }

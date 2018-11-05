@@ -37,4 +37,10 @@ $ make grape
 
 
 ### Semant.mll
+node, graph, type
 
+
+TO DO: 
+1. We can't have empty block stmt
+2. UNDS UNDS GT
+3. Dictionaries now used STR_LIT as keys 
