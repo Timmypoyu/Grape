@@ -10,6 +10,7 @@ open Ast
 %token RETURN IF ELSE EACH WHILE FOR IN FUN 
 %token INT NODE EDGE GRAPH STR BOOL LIST DICT
 %token <int> INT_LIT
+%token <string> FLOAT_LIT
 %token <string> STR_LIT
 %token <string> ID
 %token EOF
@@ -97,6 +98,7 @@ expr_opt:
 
 expr:
     INT_LIT                 { IntLit($1) }
+    FLOAT_LIT               { FLoatLit($1) }
   | STR_LIT                 { StrLit($1) }
   | TRUE                    { BoolLit(true) }
   | FALSE                   { BoolLit(false) }

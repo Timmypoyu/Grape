@@ -61,9 +61,9 @@ rule token = parse
 | "Bool"   { BOOL }
 | "True"   { TRUE }
 | "False"  { FALSE }
+| [-\+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)? as lxm { FLOAT_LIT(lxm) }
 | digit+ as lxm             { INT_LIT(int_of_string lxm) }
 | '\"' [^'\"']* as lxm '\"' { STR_LIT(lxm) }
-| digit+ as lxm
 | lowerLetter (letter | digit | '_')* as lxm { ID(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
