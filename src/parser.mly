@@ -132,7 +132,7 @@ expr:
 edgeExpr:
   /*  MINUS edgeExpr2 { $2 } */
      UNDS expr UNDS GT  { DirEdgeLit($2) }      /* Directed Edge */
-   | UNDS expr UNDS    { EdgeLit($2) }         /* Undirected Edge */
+   | UNDS expr UNDS     { EdgeLit($2) }         /* Undirected Edge */
 
 nodeExpr: 
     SQUOT expr SQUOT       { NodeLit($2) }         /* Node */

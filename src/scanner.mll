@@ -63,6 +63,7 @@ rule token = parse
 | "False"  { FALSE }
 | digit+ as lxm             { INT_LIT(int_of_string lxm) }
 | '\"' [^'\"']* as lxm '\"' { STR_LIT(lxm) }
+| digit+ as lxm
 | lowerLetter (letter | digit | '_')* as lxm { ID(lxm) }
 | eof { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
