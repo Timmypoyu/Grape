@@ -5,7 +5,7 @@ open Ast
 %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT UNDS COLON
-%token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD 
+%token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD AMP 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE EACH WHILE FOR IN FUN 
 %token INT NODE EDGE GRAPH STR BOOL LIST
@@ -21,6 +21,7 @@ open Ast
 %left AND
 %left EQ NEQ
 %left LT GT LEQ GEQ
+%left AMP
 %left PLUS MINUS
 %left TIMES DIVIDE MOD
 %left EXP 
@@ -79,9 +80,9 @@ stmt_list:
 
 stmt:
     expr SEMI                               { Expr $1 }
-  (* | RETURN expr_opt SEMI                    { Return $2} *)
-  | RETURN SEMI                             { Return Noexpr } 
-  | RETURN expr SEMI                        { Return $2 } 
+  | RETURN expr_opt SEMI                    { Return $2}
+(*  | RETURN SEMI                             { Return Noexpr }*) 
+(*  | RETURN expr SEMI                        { Return $2 }*) 
   | LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
@@ -113,6 +114,7 @@ expr:
   | expr OR     expr        { Binop($1, Or,    $3) }
   | expr EXP    expr        { Binop($1, Exp,    $3)}
   | expr MOD    expr        { Binop($1, Mod,    $3)} 
+  | expr AMP    expr        { Binop($1, Mod,    $3)} 
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
   | vdecl ASSIGN expr       { Assign(snd $1, $3)}
@@ -126,9 +128,14 @@ expr:
  
 
 edgeExpr:
-(*   MINUS expr MINUS GT  { DirEdgeLit($2) }      (* Directed Edge *)*)
-   UNDS expr UNDS    { EdgeLit($2) }         (* Undirected Edge *)
+  (*  MINUS edgeExpr2 { $2 } *) 
+     UNDS expr UNDS GT  { DirEdgeLit($2) }      (* Directed Edge *)
+   | UNDS expr UNDS    { EdgeLit($2) }         (* Undirected Edge *)
 
+(*edgeExpr2:
+    expr MINUS      { EdgeLit($1) }
+  | expr MINUS GT   { DirEdgeLit($2) }
+*)
 nodeExpr: 
     SQUOT expr SQUOT       { NodeLit($2) }         (* Node *)
 

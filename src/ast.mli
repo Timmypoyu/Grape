@@ -1,6 +1,6 @@
 (* Abstract Syntax Tree and functions for printing it *)
 
-type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | And | Or | Exp | Mod
+type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | And | Or | Exp | Mod | Amp 
 
 type uop = Neg | Not
 
@@ -10,12 +10,12 @@ type typ = Int | Bool | Void | Str | Node of typ | Edge of typ | Graph of typ | 
 type bind = typ * string
 
 type expr =
-    IntLit of int
+    IntLit of int 
   | BoolLit of bool
   | NodeLit of expr
   | EdgeLit of expr
   | DirEdgeLit of expr 
-  | GraphLit of expr list
+  | GraphLit of list
   | ListLit of expr list 
   | StrLit of string
   | Id of string
@@ -23,7 +23,7 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list
-  | Template of expr * string 
+  | Template of expr list * string 
   | Noexpr
 
 type stmt =
@@ -38,7 +38,7 @@ type func_decl = {
     typ : typ;
     fname : string;
     formals : bind list;
-    locals : bind list;
+    locals : bind lis
     body : stmt list;
   }
 
