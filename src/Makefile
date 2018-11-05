@@ -1,5 +1,8 @@
 OBJS = parser.cmo scanner.cmo
 
+.PHONY : menhir
+menhir : scanner.ml parser.ml
+
 .PHONY : grape
 grape : grape.cmo scanner.ml parser.ml semant.ml ast.ml
 	ocamlopt -o grape scanner.ml parser.ml semant.ml ast.ml

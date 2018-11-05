@@ -16,13 +16,14 @@ type bind = typ * string
 
 type expr =
     IntLit of int
-  | FloatLit of float  
+  | FloatLit of string  
   | BoolLit of bool
   | NodeLit of expr
   | EdgeLit of expr
   | DirEdgeLit of expr 
   | GraphLit of expr list
-  | ListLit of expr list
+  | ListLit of expr list 
+  | DictLit of (string * expr) list
   | DistLit of expr list  
   | StrLit of string
   | Id of string
@@ -50,7 +51,7 @@ type func_decl = {
   }
 
 type program = bind list * func_decl list
-(*
+
 (* Pretty-printing functions *)
 
 let string_of_op = function
@@ -73,6 +74,7 @@ let string_of_uop = function
 
 let rec string_of_expr = function
     IntLit(l) -> string_of_int l
+    FloatLit(l) -> l
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
@@ -115,4 +117,3 @@ let string_of_fdecl fdecl =
 let string_of_program (vars, funcs) =
   String.concat "" (List.map string_of_vdecl vars) ^ "\n" ^
   String.concat "\n" (List.map string_of_fdecl funcs)
-*)

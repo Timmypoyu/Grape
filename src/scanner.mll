@@ -4,6 +4,7 @@
 
 (*Hello*)
 let digit = ['0'-'9']
+let decimal = (digit+ '.' digit*)
 let letter = ['A'-'Z' 'a'-'z']
 let lowerLetter = ['a'-'z']
 (* TODO: Floats *)
@@ -61,6 +62,7 @@ rule token = parse
 | "Bool"   { BOOL }
 | "True"   { TRUE }
 | "False"  { FALSE }
+| decimal as lxm            { FLOAT_LIT(lxm) }
 | digit+ as lxm             { INT_LIT(int_of_string lxm) }
 | '\"' [^'\"']* as lxm '\"' { STR_LIT(lxm) }
 | lowerLetter (letter | digit | '_')* as lxm { ID(lxm) }

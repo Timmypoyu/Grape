@@ -8,8 +8,9 @@ open Ast
 %token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD AMP 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE EACH WHILE FOR IN FUN 
-%token INT NODE EDGE GRAPH STR BOOL LIST
+%token INT NODE EDGE GRAPH STR BOOL LIST DICT
 %token <int> INT_LIT
+%token <string> FLOAT_LIT
 %token <string> STR_LIT
 %token <string> ID
 %token EOF
@@ -66,6 +67,7 @@ typ:
   | GRAPH   { Graph }
   | BOOL    { Bool }
   | LIST    { List }
+  | DICT    { Dict }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -81,8 +83,9 @@ stmt_list:
 
 stmt:
     expr SEMI                               { Expr $1 }
-  | RETURN SEMI                             { Return Noexpr } 
-  | RETURN expr SEMI                        { Return $2 } 
+  | RETURN expr_opt SEMI                    { Return $2} 
+/*  | RETURN SEMI                             { Return Noexpr } */
+/*  | RETURN expr SEMI                        { Return $2 } */
   | LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
@@ -95,6 +98,7 @@ expr_opt:
 
 expr:
     INT_LIT                 { IntLit($1) }
+  | FLOAT_LIT               { FLoatLit($1) }
   | STR_LIT                 { StrLit($1) }
   | TRUE                    { BoolLit(true) }
   | FALSE                   { BoolLit(false) }
@@ -122,6 +126,7 @@ expr:
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
+  | LBRACE dict_opt RBRACE { DictLit($2) }
   | DIVIDE graph_template DIVIDE IN ID {Template($2, $5)}
   | edgeExpr { $1 }  
   | nodeExpr { $1 }
@@ -130,7 +135,7 @@ expr:
 edgeExpr:
   /*  MINUS edgeExpr2 { $2 } */
      UNDS expr UNDS GT  { DirEdgeLit($2) }      /* Directed Edge */
-   | UNDS expr UNDS    { EdgeLit($2) }         /* Undirected Edge */
+   | UNDS expr UNDS     { EdgeLit($2) }         /* Undirected Edge */
 
 nodeExpr: 
     SQUOT expr SQUOT       { NodeLit($2) }         /* Node */
@@ -143,6 +148,14 @@ actuals_opt:
 actuals_list:
     expr { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
+
+dict_opt:
+    /* nothing */ { [] }
+  | dict_list { $1 }
+
+dict_list:
+    ID COLON expr { [ $1 , $3 ] }
+  | dict_list COMMA ID COLON expr { [ $3 , $5 ] :: $1 }
 
 graph_opt: 
   /* nothing */ { [] }
