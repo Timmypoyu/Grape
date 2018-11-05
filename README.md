@@ -32,15 +32,15 @@ $ make grape
 ### Parser 
 - [X] Implements List 
 - [ ] template searching (working for nodes not for edges, because edge notation conflicts with `MINUS expr`)
-- [ ] function stuff
-- [ ] dictionary stuff 
+- [X] function declaration
+- [X] dictionary declaration
+- [ ] Edge declaration (shift/reduce with GT)
 
 
 ### Semant.mll
 node, graph, type
 
 
-TO DO: 
+### LRM Changes: 
 1. We can't have empty block stmt
-2. UNDS UNDS GT
 3. Dictionaries now used STR_LIT as keys 
