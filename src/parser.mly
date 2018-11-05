@@ -81,7 +81,6 @@ stmt_list:
 
 stmt:
     expr SEMI                               { Expr $1 }
-  /* | RETURN expr_opt SEMI                    { Return $2} */
   | RETURN SEMI                             { Return Noexpr } 
   | RETURN expr SEMI                        { Return $2 } 
   | LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
@@ -100,7 +99,7 @@ expr:
   | TRUE                    { BoolLit(true) }
   | FALSE                   { BoolLit(false) }
   | ID                      { Id($1) }
-  | GRAPS graph_opt GRAPE { GraphLit($2) }        /* Graph */
+  | GRAPS graph_opt GRAPE   { GraphLit($2) }
   | expr PLUS   expr        { Binop($1, Add,   $3) }
   | expr MINUS  expr        { Binop($1, Sub,   $3) }
   | expr TIMES  expr        { Binop($1, Mult,  $3) }
@@ -132,6 +131,7 @@ edgeExpr:
   /*  MINUS edgeExpr2 { $2 } */
      UNDS expr UNDS GT  { DirEdgeLit($2) }      /* Directed Edge */
    | UNDS expr UNDS    { EdgeLit($2) }         /* Undirected Edge */
+
 nodeExpr: 
     SQUOT expr SQUOT       { NodeLit($2) }         /* Node */
 
@@ -154,7 +154,7 @@ graph_list:
 
 path_list:
     nodeExpr { [$1] }
-  | path_list edgeExpr nodeExpr { $3 :: $2 :: $1} 
+  | path_list edgeExpr nodeExpr { $3 :: ($2, $1)} 
 
 graph_template:
     edgeExpr  { [$1] }
