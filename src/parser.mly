@@ -130,8 +130,7 @@ expr:
   | LBRACE dict_opt RBRACE { DictLit($2) }
   | DIVIDE graph_template DIVIDE IN ID {Template($2, $5)}
   | edgeExpr { $1 }  
-  | nodeExpr { $1 }
- 
+  | nodeExpr { $1 } 
 
 edgeExpr:
     UNDS expr UNDS GT { DirEdgeLit($2)}        /* Directed Edge */ 
