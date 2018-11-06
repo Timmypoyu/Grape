@@ -134,9 +134,9 @@ expr:
  
 
 edgeExpr:
-    UNDS expr UNDS { EdgeLit($2) }      /* Undirected Edge */
-  | UNDS expr GT { DirEdgeLit($2)}        /* Directed Edge */
-
+    UNDS expr UNDS GT { DirEdgeLit($2)}        /* Directed Edge */ 
+  | UNDS expr UNDS LT {EdgeLit($2) }
+   
 nodeExpr: 
     SQUOT expr SQUOT       { NodeLit($2) }         /* Node */
 
