@@ -74,7 +74,7 @@ let string_of_uop = function
 
 let rec string_of_expr = function
     IntLit(l) -> string_of_int l
-    FloatLit(l) -> l
+  | FloatLit(l) -> l
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
