@@ -9,7 +9,7 @@ type typ = Int | Float | Bool | Void | Str
 	| Edge of typ 
 	| Graph of typ 
 	| List of typ 
-	| Dist of typ 
+	| Dict of typ 
 
 (* variable type declaration *)
 type bind = typ * string
@@ -24,7 +24,6 @@ type expr =
   | GraphLit of expr list
   | ListLit of expr list 
   | DictLit of (string * expr) list
-  | DistLit of expr list  
   | StrLit of string
   | Id of string
   | Binop of expr * op * expr
