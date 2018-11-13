@@ -12,6 +12,14 @@ and sx =
   | SUnop of uop * sexpr
   | SAssign of string * sexpr
   | SCall of string * sexpr list
+  | SNodeLit of sexpr 
+  | SEdgeLit of sexpr
+  | SDirEdgeLit of sexpr 
+  | SGraphLit of sexpr list 
+  | SListLit of sexpr list 
+  | SDictLit of (string * sexpr) list
+  | SStrLit of string
+  | STemplate of sexpr list * string 
   | SNoexpr
 
 type sstmt =
