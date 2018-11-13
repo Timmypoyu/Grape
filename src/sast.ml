@@ -19,7 +19,6 @@ and sx =
   | SListLit of sexpr list 
   | SDictLit of (string * sexpr) list
   | SStrLit of string
-  | STemplate of sexpr list * string 
   | SNoexpr
 
 type sstmt =
@@ -27,7 +26,7 @@ type sstmt =
   | SExpr of sexpr
   | SReturn of sexpr
   | SIf of sexpr * sstmt * sstmt
-  | SFor of sexpr * sexpr * sexpr * sstmt
+  | SEach of sexpr * sstmt
   | SWhile of sexpr * sstmt
 
 type sfunc_decl = {
@@ -48,12 +47,14 @@ let rec string_of_sexpr (t, e) =
   | SFloatLit(l) -> l
   | SBoolLit(true) -> "true"
   | SBoolLit(false) -> "false"
-  | SNodeLit(s) -> "'" ^ string_of_sexpr s ^ "'" 
-  | SListLit(s) -> "[" ^ String.concat "," (List.map string_of_sexpr s) ^ "]"
-  | SDictLit(s) -> "{" ^ String.concat " " 
-  | SDirEdgeLit(s) -> 
-  | SStrLit(s) ->  
-  | SId(s) -> s
+  | SNodeLit(e) -> "'" ^ string_of_sexpr e ^ "'" 
+  | SListLit(e) -> "[" ^ String.concat "," (List.map string_of_sexpr e) ^ "]"
+  | SDictLit(e) -> "{" ^ String.concat ", " (List.map (function (k, v) -> k ^ ":" ^ string_of_sexpr v) e) ^ "}"
+  | SDirEdgeLit(e) -> "_" ^ string_of_sexpr e ^ "_>"
+  | SEdgeLit(e) -> "_" ^ string_of_sexpr e ^ "_<"
+  | SGraphLit(e) -> "<<" ^ String.concat ", " (List.map string_of_sexpr e) ^ ">>"
+  | SStrLit(e) -> e
+  | SId(e) -> e
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
   | SUnop(o, e) -> string_of_uop o ^ string_of_sexpr e
@@ -72,10 +73,8 @@ let rec string_of_sstmt = function
       "if (" ^ string_of_sexpr e ^ ")\n" ^ string_of_sstmt s
   | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^
       string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
-  | SFor(e1, e2, e3, s) ->
-      "for (" ^ string_of_sexpr e1  ^ " ; " ^ string_of_sexpr e2 ^ " ; " ^
-      string_of_sexpr e3  ^ ") " ^ string_of_sstmt s
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
+  | SEach(e, s) -> "each (" ^ string_of_sexpr e ^ ")" ^ string_of_sstmt s
 
 let string_of_sfdecl fdecl =
   string_of_typ fdecl.styp ^ " " ^
