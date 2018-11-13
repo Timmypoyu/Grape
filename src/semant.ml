@@ -95,7 +95,12 @@ let check (globals, functions) =
         IntLit  l  -> (Int, SIntLit l)
       | FloatLit l -> (Float, SFloatLit l)
       | BoolLit l  -> (Bool, SBoolLit l)
-      | StrLit s   -> (string, SStrLit s)
+      | StrLit s   -> (Str, SStrLit s)
+      | NodeLit s -> (Node, SNodeLit s)
+      | ListLit s -> (List, SListLit s) 
+      | DictLit s -> (Dict, SDictLit s)
+      | DirEdgeLit s -> (Edge, SDirEdgeLit s)
+      | EdgeLit s -> (Edge, EdgeLit s) 
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
