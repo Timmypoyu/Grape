@@ -95,6 +95,7 @@ let check (globals, functions) =
         IntLit  l  -> (Int, SIntLit l)
       | FloatLit l -> (Float, SFloatLit l)
       | BoolLit l  -> (Bool, SBoolLit l)
+      | StrLit s   -> (string, SStrLit s)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 

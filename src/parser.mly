@@ -7,7 +7,7 @@ open Ast
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT UNDS COLON
 %token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD AMP 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE EACH WHILE FOR IN FUN 
+%token RETURN IF ELSE EACH WHILE FOR FUN 
 %token INT NODE EDGE GRAPH STR BOOL LIST DICT
 %token <int> INT_LIT
 %token <string> FLOAT_LIT
@@ -128,7 +128,6 @@ expr:
   | LPAREN expr RPAREN      { $2 }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
   | LBRACE dict_opt RBRACE { DictLit($2) }
-  | DIVIDE graph_template DIVIDE IN ID {Template($2, $5)}
   | edgeExpr { $1 }  
   | nodeExpr { $1 } 
 
@@ -167,7 +166,3 @@ graph_list:
 path_list:
     nodeExpr { [$1] }
   | path_list edgeExpr nodeExpr { $3 :: ($2, $1)} 
-
-graph_template:
-    edgeExpr  { [$1] }
-  | path_list { List.rev $1}

@@ -30,7 +30,6 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list 
-  | Template of expr list * string 
   | Noexpr
 
 type stmt =
