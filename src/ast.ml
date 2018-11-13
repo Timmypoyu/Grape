@@ -59,6 +59,9 @@ let string_of_op = function
   | Div -> "/"
   | Equal -> "=="
   | Neq -> "!="
+  | Mod -> "%"
+  | Exp -> "**"
+  | Amp -> "&"
   | Less -> "<"
   | Leq -> "<="
   | Greater -> ">"
@@ -80,7 +83,14 @@ let rec string_of_expr = function
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
-  | Call(f, el) ->
+  | NodeLit(e) -> "'" ^ string_of_expr e ^ "'"
+  | EdgeLit(e) -> "_" ^ string_of_expr e ^ "_<"
+  | DirEdgeLit(e) -> "_" ^ string_of_expr e ^ "_>"
+  | GraphLit(e) -> "<<" ^ String.concat ", " (List.map string_of_expr e) ^ ">>"
+  | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr e) ^ "]" 
+  | DictLit(e) -> "{" ^ String.concat ", " (List.map (function (k, v) -> k ^ ":" ^ string_of_expr v) e) ^ "}"
+  | StrLit(e) -> e
+  | Call(f, el) -> 
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
   | Noexpr -> ""
 
@@ -93,11 +103,19 @@ let rec string_of_stmt = function
   | If(e, s1, s2) ->  "if (" ^ string_of_expr e ^ ")\n" ^
       string_of_stmt s1 ^ "else\n" ^ string_of_stmt s2
   | While(e, s) -> "while (" ^ string_of_expr e ^ ") " ^ string_of_stmt s
+  | Each(e, s) -> "each (" ^ string_of_expr e ^ ")" ^ string_of_stmt s
 
-let string_of_typ = function
-    Int -> "int"
-  | Bool -> "bool"
-  | Void -> "void"
+let rec string_of_typ = function
+    Int -> "Int"
+  | Bool -> "Bkool"
+  | Void -> "Void"
+  | Float -> "Float"
+  | Str -> "String"
+  | Node(t) -> "Node<" ^ string_of_typ t ^ ">" 
+  | Edge(t) -> "Edge<" ^ string_of_typ t ^ ">"
+  | Graph(t) -> "Graph<" ^ string_of_typ t ^ ">"
+  | List(t) -> "List<" ^ string_of_typ t ^ ">"
+  | Dict(t) -> "Dict<" ^ string_of_typ t ^ ">"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
