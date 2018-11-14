@@ -90,14 +90,14 @@ let check (globals, functions) =
       with Not_found -> raise (Failure ("undeclared identifier " ^ s))
     in
 
-    let constant_type lst getType fail = 
-        let rec helper typ fail = function
-            [] -> (typ)
+    let constant_type lst getType =
+        let rec helper typ  = function
+            [] -> typ
           | e1 :: e2 :: _ when fst (getType e1) != fst (getType e2) ->
-          raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
-          | _ :: t -> helper t
-        in
-        helper (getType (fst lst)) lst fail
+          raise (Failure ("Typing inconsistency with list "))
+          | _ :: t -> helper typ t
+      in
+        helper (getType (fst lst)) lst 
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
@@ -107,7 +107,7 @@ let check (globals, functions) =
       | BoolLit l  -> (Bool, SBoolLit l)
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit s ->  let t = expr s in (Node (fst t), SNodeLit t)
-      | ListLit s -> constant_type s expr (function -> raise (Failure ("duplicate " ^ kind ^ " " ^ n1)))
+      | ListLit s -> let t = constant_type s expr in (List (fst t), SListLit t) 
       | DictLit s ->  let t = expr s in (Dict (fst t), SDictLit s)
       | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
       | EdgeLit s -> let t = expr s in (Edge (fst t), EdgeLit t)  
