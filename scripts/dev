@@ -1,5 +1,6 @@
 #!/bin/bash
 
-CONTAINER=$(docker ps -a | grep grape-dev | head -1 | awk "{print $1;}")
+
+CONTAINER=$(docker ps -a | grep grape-dev | head -1 | cut -d' ' -f1)
 docker start $CONTAINER
 docker attach $CONTAINER

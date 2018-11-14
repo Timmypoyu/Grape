@@ -1,4 +1,4 @@
 #!/bin/sh
 
-docker build -t grape-dev ..
+docker build -t grape-dev .
 docker run -it -v --pid=host grape-dev
