@@ -99,6 +99,16 @@ let check (globals, functions) =
       in
         helper (getType (List.hd lst)) [] lst 
     in
+       
+    let constant_type_dict dict getType =
+        let rec helper_dict typ tlist= function
+            [] -> (typ, tlist)
+          | hd :: tl when fst (getType (snd hd)) != fst typ ->
+          	raise (Failure ("Typing inconsistency with list "))
+          | hd :: tl -> helper_dict typ ((getType (snd hd))::tlist) tl
+      in
+        helper_dict (getType (snd (List.hd dict))) [] dict 
+    in
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
@@ -108,10 +118,10 @@ let check (globals, functions) =
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit s ->  let t = expr s in (Node (fst t), SNodeLit t)
       | ListLit s -> let t = constant_type s expr in (List (fst (fst t)), SListLit (snd t)) 
-      | DictLit s ->  let t = expr s in (Dict (fst t), SDictLit s)
+      | DictLit s ->  let t = constant_type_dict s expr in (Dict (fst (fst t)), SDictLit (snd t)) (*shouldn't dict take in a list of (string*sexpr) *)
       | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
       | EdgeLit s -> let t = expr s in (Edge (fst t), SEdgeLit t)  
-      | GraphLit s -> let t = expr s in (Graph, SGraphLit (fst t))
+      | GraphLit(str, e) -> let t = expr s in (Graph, SGraphLit (fst t))
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
@@ -173,8 +183,7 @@ let check (globals, functions) =
     let rec check_stmt = function
         Expr e -> SExpr (expr e)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
-      | For(e1, e2, e3, st) ->
-	    SFor(expr e1, check_bool_expr e2, expr e3, check_stmt st)
+      | Each(p, s) -> SEach(expr p, check_stmt s)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
       | Return e -> let (t, e') = expr e in
         if t = func.typ then SReturn (t, e') 

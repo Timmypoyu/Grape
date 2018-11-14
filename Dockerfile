@@ -10,7 +10,7 @@ RUN apt-get -yq update && \
     llvm-6.0-dev \
     m4 \
     git \
-    vim-gtk \
+    vim \
     aspcud \
     ca-certificates \
     python2.7 \
