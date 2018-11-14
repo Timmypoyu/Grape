@@ -32,9 +32,11 @@ let translate (globals, functions) =
   and str_t      = L.pointer_type (L.i8_type context)
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
-  and void_t     = L.void_type   context in
-  let graph_t    = L.
+  and void_t     = L.void_type   context
+  and obj_ptr_t  = L.pointer_type (L.i8_type context)
+  in
 
+  (* TODO: Make pointers type-dependent? *)
   (* Return the LLVM type for a Grape type *)
   let ltype_of_typ = function
       A.Int   -> i32_t
@@ -42,11 +44,11 @@ let translate (globals, functions) =
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Void  -> void_t
-    | A.Graph -> 
-    | A.Node  ->
-    | A.Edge  ->
-    | A.List  ->
-    | A.Dict  ->
+    | A.Graph -> obj_ptr_t
+    | A.Node(_)  -> obj_ptr_t
+    | A.Edge(_)  -> obj_ptr_t
+    | A.List(_)  -> obj_ptr_t
+    | A.Dict(_)  -> obj_ptr_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -134,6 +136,9 @@ let translate (globals, functions) =
 	  | A.Sub     -> L.build_fsub
 	  | A.Mult    -> L.build_fmul
 	  | A.Div     -> L.build_fdiv 
+	  | A.Exp     -> L.build
+	  | A.Mod     -> L.build
+      | A.Amp     -> L.build
 	  | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
 	  | A.Neq     -> L.build_fcmp L.Fcmp.One
 	  | A.Less    -> L.build_fcmp L.Fcmp.Olt
