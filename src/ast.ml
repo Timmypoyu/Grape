@@ -7,7 +7,7 @@ type uop = Neg | Not
 type typ = Int | Float | Bool | Void | Str 
 	| Node of typ 
 	| Edge of typ 
-	| Graph of typ 
+	| Graph of typ
 	| List of typ 
 	| Dict of typ 
 
