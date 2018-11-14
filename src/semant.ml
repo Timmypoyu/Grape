@@ -97,7 +97,7 @@ let check (globals, functions) =
           raise (Failure ("Typing inconsistency with list "))
           | _ :: t -> helper typ t
       in
-        helper (getType (fst lst)) lst 
+        helper (getType (List.hd lst)) lst 
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
