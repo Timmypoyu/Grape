@@ -110,7 +110,7 @@ let check (globals, functions) =
       | ListLit s -> let t = constant_type s expr in (List (fst t), SListLit t) 
       | DictLit s ->  let t = expr s in (Dict (fst t), SDictLit s)
       | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
-      | EdgeLit s -> let t = expr s in (Edge (fst t), EdgeLit t)  
+      | EdgeLit s -> let t = expr s in (Edge (fst t), SEdgeLit t)  
       | GraphLit s -> let t = expr s in (Graph, SGraphLit (fst t))
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
