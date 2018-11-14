@@ -4,10 +4,9 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | An
 
 type uop = Neg | Not
 
-type typ = Int | Float | Bool | Void | Str 
+type typ = Int | Float | Bool | Void | Str | Graph
 	| Node of typ 
 	| Edge of typ 
-	| Graph of typ
 	| List of typ 
 	| Dict of typ 
 
@@ -113,7 +112,7 @@ let rec string_of_typ = function
   | Str -> "String"
   | Node(t) -> "Node<" ^ string_of_typ t ^ ">" 
   | Edge(t) -> "Edge<" ^ string_of_typ t ^ ">"
-  | Graph(t) -> "Graph<" ^ string_of_typ t ^ ">"
+  | Graph -> "Graph"
   | List(t) -> "List<" ^ string_of_typ t ^ ">"
   | Dict(t) -> "Dict<" ^ string_of_typ t ^ ">"
 
