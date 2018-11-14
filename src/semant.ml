@@ -91,13 +91,13 @@ let check (globals, functions) =
     in
 
     let constant_type lst getType =
-        let rec helper typ  = function
-            [] -> typ
-          | e1 :: e2 :: _ when fst (getType e1) != fst (getType e2) ->
-          raise (Failure ("Typing inconsistency with list "))
-          | _ :: t -> helper typ t
+        let rec helper typ tlist= function
+            [] -> (typ, tlist)
+          | hd :: tl when fst (getType hd) != fst typ ->
+          	raise (Failure ("Typing inconsistency with list "))
+          | hd :: tl -> helper typ ((getType hd)::tlist) tl
       in
-        helper (getType (List.hd lst)) lst 
+        helper (getType (List.hd lst)) [] lst 
     in
 
     (* Return a semantically-checked expression, i.e., with a type *)
@@ -107,7 +107,7 @@ let check (globals, functions) =
       | BoolLit l  -> (Bool, SBoolLit l)
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit s ->  let t = expr s in (Node (fst t), SNodeLit t)
-      | ListLit s -> let t = constant_type s expr in (List (fst t), SListLit t) 
+      | ListLit s -> let t = constant_type s expr in (List (fst (fst t)), SListLit (snd t)) 
       | DictLit s ->  let t = expr s in (Dict (fst t), SDictLit s)
       | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
       | EdgeLit s -> let t = expr s in (Edge (fst t), SEdgeLit t)  
