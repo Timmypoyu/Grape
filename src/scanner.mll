@@ -46,7 +46,6 @@ rule token = parse
 | "or"     { OR }
 | "not"    { NOT }
 | "if"     { IF }
-| "in"	   { IN }
 | "else"   { ELSE }
 | "each"   { EACH }
 | "for"	   { FOR }
