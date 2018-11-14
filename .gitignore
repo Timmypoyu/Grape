@@ -4,4 +4,5 @@
 ./src/*.cmo
 ./src/*.cmx
 ./src/*.output
+_build/
 *.swp

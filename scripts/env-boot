@@ -1,3 +1,0 @@
-#!/bin/sh
-
-docker run -it -v `pwd`:/home/grape -w /home/grape columbiasedwards/plt

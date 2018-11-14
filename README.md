@@ -1,22 +1,26 @@
-# PLTProject
+# The Grape Programming Language
 
 ### Development Environment
 
-How to compile:
+# Setting up environment
+This could take a while, be patient!
 ```
-$ ./scripts/env-boot.sh
-$ ./scripts/bootstrap.sh
-$ cd src
-$ make grape
+$ ./run init
+$ ./run dev
+```
+
+# Compilation (in VM)
+```
+$ ./run test
+$ ./run build
 ```
 
 
 ### INFRA
-- [ ] Makefile
+- [X] Makefile
 - [X] Dockerfile
 - [ ] Test cases
 
-### AST 
 ### Scanner 
 - [X] List brackets
 - [ ] Floats 
