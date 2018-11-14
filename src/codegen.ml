@@ -33,6 +33,7 @@ let translate (globals, functions) =
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
   and void_t     = L.void_type   context in
+  let graph_t    = L.
 
   (* Return the LLVM type for a Grape type *)
   let ltype_of_typ = function
@@ -41,6 +42,11 @@ let translate (globals, functions) =
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Void  -> void_t
+    | A.Graph -> 
+    | A.Node  ->
+    | A.Edge  ->
+    | A.List  ->
+    | A.Dict  ->
   in
 
   (* Create a map of global variables after creating each *)
@@ -78,8 +84,8 @@ let translate (globals, functions) =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
     let builder = L.builder_at_end context (L.entry_block the_function) in
 
-    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder in
-    let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
+    let int_format_str = L.build_global_stringptr "%d\n" "fmt" builder
+    and str_format_str = L.build_global_stringptr "%s\n" "fmt" builder
     and float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
 
     (* Construct the function's "locals": formal arguments and locally
@@ -107,15 +113,15 @@ let translate (globals, functions) =
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
     let lookup n = try StringMap.find n local_vars
-                   with Not_found -> StringMap.find n global_vars
+        with Not_found -> StringMap.find n global_vars
     in
 
     (* Construct code for an expression; return its value *)
     let rec expr builder ((_, e) : sexpr) = match e with
-	SLiteral i  -> L.const_int i32_t i
-      | SStrLit s   -> L.build_global_stringtr s "string" builder
+	    SIntLit i  -> L.const_int i32_t i
+      | SStrLit s   -> L.build_global_stringptr s "string" builder
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
-      | SFliteral l -> L.const_float_of_string float_t l
+      | SFloatLit l -> L.const_float_of_string float_t l
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
