@@ -95,16 +95,13 @@ let check (globals, functions) =
         IntLit  l  -> (Int, SIntLit l)
       | FloatLit l -> (Float, SFloatLit l)
       | BoolLit l  -> (Bool, SBoolLit l)
-      | StrLit l   -> (Str, SStrLit l)
-      | NodeLit e -> (Node, SNodeList (expr e) )
-     (* | Float -> 
-      | Bool -> 
- 
-	 (Node , SNodeLits e )
-      | ListLit e -> (List, SListLit e) 
-      | DictLit e -> (Dict, SDictLit e)
-      | DirEdgeLit e -> (Edge, SDirEdgeLit e)
-      | EdgeLit e -> (Edge, EdgeLit e) *)
+      | StrLit s   -> (Str, SStrLit s)
+      | NodeLit s ->  let t = expr s in (Node (fst t), SNodeLit t)
+      | ListLit s ->  let t = expr s in (List (fst t), SListLit t) 
+      | DictLit s ->  (Dict, SDictLit s)
+      | DirEdgeLit s -> (Edge, SDirEdgeLit s)
+      | EdgeLit s ->  (Edge, EdgeLit s) 
+      | GraphLit s -> ()
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
@@ -167,7 +164,7 @@ let check (globals, functions) =
         Expr e -> SExpr (expr e)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | For(e1, e2, e3, st) ->
-	  SFor(expr e1, check_bool_expr e2, expr e3, check_stmt st)
+	    SFor(expr e1, check_bool_expr e2, expr e3, check_stmt st)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
       | Return e -> let (t, e') = expr e in
         if t = func.typ then SReturn (t, e') 
