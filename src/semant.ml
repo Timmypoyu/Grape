@@ -121,7 +121,7 @@ let check (globals, functions) =
       | DictLit s ->  let t = constant_type_dict s expr in (Dict (fst (fst t)), SDictLit (snd t)) (*shouldn't dict take in a list of (string*sexpr) *)
       | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
       | EdgeLit s -> let t = expr s in (Edge (fst t), SEdgeLit t)  
-      | GraphLit(str, e) -> let t = expr s in (Graph, SGraphLit (fst t))
+      | GraphLit(str, e) -> raise(Failuer("Typing inconsistency with list"))(*let t = expr s in (Graph, SGraphLit (fst t))*)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
