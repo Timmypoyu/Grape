@@ -75,7 +75,6 @@ vdecl_list:
 
 vdecl:
     typ ID SEMI{ ($1, $2) }
-  | typ ID ASSIGN expr SEMI{ ($1 , Assign($2, $4))}
 
 stmt_list:
     /* nothing   { [] }*/
@@ -92,6 +91,7 @@ stmt:
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
   | EACH LPAREN expr RPAREN stmt            { Each($3, $5) }
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
+  | typ ID ASSIGN expr SEMI                 { DecAsn($1 , $2,  Assign($2, $4))}
 
 expr_opt:
     /* nothing */ { Noexpr }

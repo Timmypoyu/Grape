@@ -38,6 +38,7 @@ type stmt =
   | If of expr * stmt * stmt
   | Each of expr * stmt
   | While of expr * stmt
+  | DecAsn of typ * string * expr
 
 type func_decl = {
     typ : typ;
