@@ -128,6 +128,12 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
+      | SNodeLit i -> raise (Failure "Unimplemented")
+      | SEdgeLit i -> raise (Failure "Unimplemented")
+      | SDirEdgeLit i -> raise (Failure "Umnimplemented")
+      | SGraphLit i -> raise (Failure "Unimplemented")
+      | SListLit i -> raise (Failure "Unimplemented")
+      | SDictLit i -> raise (Failure "Unimplemented")
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in
@@ -154,8 +160,11 @@ let translate (globals, functions) =
 	  (match op with
 	    A.Add     -> L.build_add
 	  | A.Sub     -> L.build_sub
+      | A.Exp     -> raise(Failure "Unimplemented")
+      | A.Mod     -> raise(Failure "Unimplemented")
+      | A.Amp     -> raise(Failure "Unimplemented")
 	  | A.Mult    -> L.build_mul
-          | A.Div     -> L.build_sdiv
+      | A.Div     -> L.build_sdiv
 	  | A.And     -> L.build_and
 	  | A.Or      -> L.build_or
 	  | A.Equal   -> L.build_icmp L.Icmp.Eq
@@ -206,7 +215,8 @@ let translate (globals, functions) =
 
     let rec stmt builder = function
 	SBlock sl -> List.fold_left stmt builder sl
-      | SExpr e -> ignore(expr builder e); builder 
+      | SExpr e -> ignore(expr builder e); builder
+      | SEach (e, f) -> raise(Failure "Unimplemented") 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder 
@@ -245,8 +255,7 @@ let translate (globals, functions) =
 	  L.builder_at_end context merge_bb
 
       (* Implement for loops as while loops *)
-      | SFor (e1, e2, e3, body) -> stmt builder
-	    ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3]) ] )
+     
     in
 
     (* Build the code for each statement in the function *)
