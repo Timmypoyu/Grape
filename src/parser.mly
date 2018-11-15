@@ -99,7 +99,7 @@ expr_opt:
 
 expr:
     INT_LIT                 { IntLit($1) }
-  | FLOAT_LIT               { FLoatLit($1) }
+  | FLOAT_LIT               { FloatLit($1) }
   | STR_LIT                 { StrLit($1) }
   | TRUE                    { BoolLit(true) }
   | FALSE                   { BoolLit(false) }

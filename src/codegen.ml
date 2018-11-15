@@ -254,8 +254,6 @@ let translate (globals, functions) =
 	  ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
 	  L.builder_at_end context merge_bb
 
-      (* Implement for loops as while loops *)
-     
     in
 
     (* Build the code for each statement in the function *)

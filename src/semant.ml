@@ -116,12 +116,22 @@ let check (globals, functions) =
       | FloatLit l -> (Float, SFloatLit l)
       | BoolLit l  -> (Bool, SBoolLit l)
       | StrLit s   -> (Str, SStrLit s)
+      | NodeLit _ -> raise (Failure ("Unimplemented")) 
+      | ListLit _ -> raise (Failure ("Unimplemented"))
+      | DictLit _ -> raise (Failure ("Unimplemented"))
+      | DirEdgeLit _ -> raise (Failure ("Unimplemented"))
+      | EdgeLit _ -> raise (Failure ("Unimplemented"))
+      | GraphLit _ -> raise (Failure ("Unimplemented"))
+
+      (* TODO: Implement object types
       | NodeLit s ->  let t = expr s in (Node (fst t), SNodeLit t)
       | ListLit s -> let t = constant_type s expr in (List (fst (fst t)), SListLit (snd t)) 
       | DictLit s ->  let t = constant_type_dict s expr in (Dict (fst (fst t)), SDictLit (snd t)) (*shouldn't dict take in a list of (string*sexpr) *)
       | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
       | EdgeLit s -> let t = expr s in (Edge (fst t), SEdgeLit t)  
-      | GraphLit(str, e) -> raise(Failure ("Typing inconsistency with list"))(*let t = expr s in (Graph, SGraphLit (fst t))*)
+      | GraphLit(str, e) -> raise(Failure ("Typing inconsistency with list"))
+      *)
+
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
