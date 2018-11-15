@@ -10,4 +10,4 @@ grape.native :
 
 .PHONY : clean
 clean :
-	rm -f *.o grape.native
+	rm -rf _build grape.native
