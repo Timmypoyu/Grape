@@ -136,9 +136,9 @@ let translate (globals, functions) =
 	  | A.Sub     -> L.build_fsub
 	  | A.Mult    -> L.build_fmul
 	  | A.Div     -> L.build_fdiv 
-	  | A.Exp     -> L.build
-	  | A.Mod     -> L.build
-      | A.Amp     -> L.build
+	  | A.Exp     -> raise (Failure "Unimplemented")
+	  | A.Mod     -> raise (Failure "Unimplemented")
+      | A.Amp     -> raise (Failure "Unimplemented")
 	  | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
 	  | A.Neq     -> L.build_fcmp L.Fcmp.One
 	  | A.Less    -> L.build_fcmp L.Fcmp.Olt
@@ -180,7 +180,7 @@ let translate (globals, functions) =
 	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
 	    "printf" builder
       | SCall ("prints", [e]) ->
-          L.build_call print_func [| str_format_str ; (expr builder e) |]
+          L.build_call printf_func [| str_format_str ; (expr builder e) |]
             "prints" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in

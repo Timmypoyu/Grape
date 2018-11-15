@@ -60,14 +60,14 @@ formal_list:
   | formal_list COMMA typ ID { ($3,$4) :: $1 }
 
 typ:
-    INT     { Int }
-  | STR     { Str }
-  | NODE    { Node }
-  | EDGE    { Edge }
-  | GRAPH   { Graph }
-  | BOOL    { Bool }
-  | LIST    { List }
-  | DICT    { Dict }
+    INT               { Int }
+  | STR               { Str }
+  | NODE LT typ GT    { Node($3) }
+  | EDGE LT typ GT    { Edge($3) }
+  | GRAPH             { Graph }
+  | BOOL              { Bool }
+  | LIST LT typ GT    { List($3) }
+  | DICT LT typ GT    { Dict($3) }
 
 vdecl_list:
     /* nothing */    { [] }
