@@ -11,6 +11,7 @@ RUN apt-get -yq update && \
     m4 \
     git \
     vim \
+    merlin \
     aspcud \
     ca-certificates \
     python2.7 \

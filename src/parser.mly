@@ -152,8 +152,8 @@ dict_opt:
   | */ dict_list { $1 } 
 
 dict_list:
-    STR_LIT COLON expr { [ $1 , $3 ] }
-  | dict_list COMMA STR_LIT COLON expr { [ $3 , $5 ] :: $1 }
+    STR_LIT COLON expr { [ ( $1 , $3 ) ] }
+  | dict_list COMMA STR_LIT COLON expr { ( $3 , $5 ) :: $1 }
 
 graph_opt: 
   /* nothing */ { [] }
@@ -164,5 +164,5 @@ graph_list:
   | graph_list COMMA path_list { $3 :: $1} 
 
 path_list:
-    nodeExpr { [$1] }
-  | path_list edgeExpr nodeExpr { $3 :: ($2, $1)} 
+    nodeExpr { [($1, _)] }
+  | path_list edgeExpr nodeExpr { ($2, $3) :: $1} 
