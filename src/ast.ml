@@ -20,7 +20,7 @@ type expr =
   | NodeLit of expr
   | EdgeLit of expr
   | DirEdgeLit of expr 
-  | GraphLit of expr list
+  | GraphLit of (expr * expr * expr) list
   | ListLit of expr list 
   | DictLit of (string * expr) list
   | StrLit of string
@@ -86,7 +86,7 @@ let rec string_of_expr = function
   | NodeLit(e) -> "'" ^ string_of_expr e ^ "'"
   | EdgeLit(e) -> "_" ^ string_of_expr e ^ "_<"
   | DirEdgeLit(e) -> "_" ^ string_of_expr e ^ "_>"
-  | GraphLit(e) -> "<<" ^ String.concat ", " (List.map string_of_expr e) ^ ">>"
+  | GraphLit(e) -> raise (Failure("Unimplemented"))
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr e) ^ "]" 
   | DictLit(e) -> "{" ^ String.concat ", " (List.map (function (k, v) -> k ^ ":" ^ string_of_expr v) e) ^ "}"
   | StrLit(e) -> e

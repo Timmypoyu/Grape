@@ -160,9 +160,14 @@ graph_opt:
   | graph_list { List.rev $1 }
 
 graph_list:
-    nodeExpr { [$1] }
-  | graph_list COMMA path_list { $3 :: $1} 
+  | nodeExpr edgeExpr nodeExpr { [($1, $2, $3)] } 
+
+  /*
+graph_list:
+    path_list { [$1] }
+  | graph_list COMMA path_list { $3 :: $1 } 
 
 path_list:
-    nodeExpr { [($1, _)] }
-  | path_list edgeExpr nodeExpr { ($2, $3) :: $1} 
+    nodeExpr { [(Noexpr, $1)] }
+  | path_list edgeExpr nodeExpr {($2, $3) :: $1} 
+  */
