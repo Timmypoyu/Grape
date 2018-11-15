@@ -1,4 +1,3 @@
 #!/bin/sh
 
-docker build -t grape-dev .
-docker run -it -v `pwd`:/home/grape -w /home/grape --pid=host columbiasedwards/plt
+docker run -it -v `pwd`:/home/grape -w /home/grape columbiasedwards/plt
