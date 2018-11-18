@@ -86,7 +86,7 @@ let rec string_of_expr = function
   | NodeLit(e) -> "'" ^ string_of_expr e ^ "'"
   | EdgeLit(e) -> "_" ^ string_of_expr e ^ "_<"
   | DirEdgeLit(e) -> "_" ^ string_of_expr e ^ "_>"
-  | GraphLit(e) -> raise (Failure("Unimplemented"))
+  | GraphLit(e) -> "<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) -> string_of_expr k ^ " " ^ string_of_expr v) lst ))e) ^ ">" 
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr e) ^ "]" 
   | DictLit(e) -> "{" ^ String.concat ", " (List.map (function (k, v) -> k ^ ":" ^ string_of_expr v) e) ^ "}"
   | StrLit(e) -> e

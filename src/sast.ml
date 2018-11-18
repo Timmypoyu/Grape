@@ -52,7 +52,7 @@ let rec string_of_sexpr (t, e) =
   | SDictLit(e) -> "{" ^ String.concat ", " (List.map (function (k, v) -> k ^ ":" ^ string_of_sexpr v) e) ^ "}"
   | SDirEdgeLit(e) -> "_" ^ string_of_sexpr e ^ "_>"
   | SEdgeLit(e) -> "_" ^ string_of_sexpr e ^ "_<"
-  | SGraphLit(e) -> "<<" ^ String.concat ", " (List.map string_of_sexpr e) ^ ">>"
+  | SGraphLit(e) -> "<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) ->  string_of_sexpr k ^ " " ^ string_of_sexpr v) lst ))e) ^ ">"  
   | SStrLit(e) -> e
   | SId(e) -> e
   | SBinop(e1, o, e2) ->
