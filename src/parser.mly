@@ -172,5 +172,3 @@ graph_list:
 path_list:
     nodeExpr { [(Noexpr, $1)] }
   | path_list edgeExpr nodeExpr {($2, $3) :: $1} 
-
-

@@ -106,7 +106,7 @@ let check (globals, functions) =
             [] -> (typ, tlist)
           | hd :: tl when fst (getType (snd hd)) != fst typ ->
           	raise (Failure ("Typing inconsistency with dict "))
-          | hd :: tl -> helper_dict typ (getType (snd hd)::tlist) tl
+          | hd :: tl -> helper_dict typ ((fst hd, getType (snd hd))::tlist) tl
       in
         helper_dict (getType (snd (List.hd dict))) [] dict 
     in
