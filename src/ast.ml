@@ -20,7 +20,7 @@ type expr =
   | NodeLit of expr
   | EdgeLit of expr
   | DirEdgeLit of expr 
-  | GraphLit of (expr * expr * expr) list
+  | GraphLit of ((expr * expr) list) list 
   | ListLit of expr list 
   | DictLit of (string * expr) list
   | StrLit of string

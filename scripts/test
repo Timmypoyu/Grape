@@ -1,6 +1,6 @@
 #!/bin/bash
 
-GRAPE="./src/grape.native"
+GRAPE="../src/grape.native"
 
 COMPARE() {
     generatedfiles="$generatedfiles $3"
@@ -18,8 +18,8 @@ RUN() {
     }
 }
 
-files="tests/hello-world.grp"
-ref="tests/hello-world.grp.out"
+files="../tests/hello-world.grp"
+ref="../tests/hello-world.grp.out"
 
 
 for file in $files

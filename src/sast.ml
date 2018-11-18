@@ -15,7 +15,7 @@ and sx =
   | SNodeLit of sexpr 
   | SEdgeLit of sexpr
   | SDirEdgeLit of sexpr 
-  | SGraphLit of sexpr list 
+  | SGraphLit of ((sexpr * sexpr) list)list 
   | SListLit of sexpr list 
   | SDictLit of (string * sexpr) list
   | SStrLit of string
