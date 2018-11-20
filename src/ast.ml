@@ -107,7 +107,7 @@ let rec string_of_stmt = function
 
 let rec string_of_typ = function
     Int -> "Int"
-  | Bool -> "Bkool"
+  | Bool -> "Bool"
   | Void -> "Void"
   | Float -> "Float"
   | Str -> "String"

@@ -43,8 +43,14 @@ $ ./run build
 
 ### Semant.mll
 node, graph, type
+- [ ] Don't assign types to empty lists, make new type: (List<>)
+- [ ] Add types for graph 
 
+### Codegen
+- [ ] Link C library for lists
+- [ ] Link C library for Node
+- [ ] Link C library for Graph
 
 ### LRM Changes: 
-1. We can't have empty block stmt
-3. Dictionaries now used STR_LIT as keys 
+- [ ] We can't have empty block stmt
+- [ ] Dictionaries now used STR_LIT as keys 

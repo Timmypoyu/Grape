@@ -11,6 +11,8 @@ RUN apt-get -yq update && \
     m4 \
     git \
     vim \
+    tmux \
+    ssh \
     merlin \
     aspcud \
     ca-certificates \

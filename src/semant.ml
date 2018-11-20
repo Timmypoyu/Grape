@@ -130,7 +130,7 @@ let check (globals, functions) =
       | DictLit s -> let t = constant_type_dict s expr in (Dict(fst (fst t)), SDictLit (snd t))
       | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
-      | GraphLit s -> raise(Failure ("Typing inconsistency with list"))
+      | GraphLit s -> raise(Failure ("Unimplemented"))
 
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)

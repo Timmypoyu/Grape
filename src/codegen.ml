@@ -62,8 +62,12 @@ let translate (globals, functions) =
 
   let printf_t : L.lltype = 
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
+  (* Function signature / type *)
+
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
+  (* This must match the C library function name *)
+
   (*
   let prints_t : L.lltype =
       L.var_arg_function_type i32_t [| str_t |] in 
@@ -192,8 +196,8 @@ let translate (globals, functions) =
 	  L.build_call printbig_func [| (expr builder e) |] 
         "printbig" builder
       | SCall ("printf", [e]) -> 
-	  L.build_call printf_func [| float_format_str ; (expr builder e) |]
-	    "printf" builder
+	  L.build_call printf_func [| float_format_str ; (expr builder e) |] (* Links function to C *)
+	    "printf" builder (* LLVM Name *)
       | SCall ("prints", [e]) ->
       L.build_call printf_func [| str_format_str ; (expr builder e) |]
         "prints" builder

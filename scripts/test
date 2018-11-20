@@ -1,32 +1,20 @@
 #!/bin/bash
 
-GRAPE="../src/grape.native"
+TESTS="./tests/*.grp"
+GRAPE="./src/grape.native"
 
-COMPARE() {
-    generatedfiles="$generatedfiles $3"
-    cmp $1 $2 || {
-        SignalError "$1 differs"
-        echo "FAILED $1 difffers from $2" 1>&2
-    }
-}
-
-RUN() {
-    echo $* 1>&2
-    eval $* || {
-        SignalError "$1 failed on $*"
-        return 1;
-    }
-}
-
-files="../tests/hello-world.grp"
-ref="../tests/hello-world.grp.out"
-
-
-for file in $files
+for TEST in $TESTS 
 do
-    RUN $GRAPE $file ">" "hello-world.ll" &&
-    RUN "lli" "hello-world.ll" ">"  "test.out" &&
-    COMPARE "test.out" "hello-world.diff"
-    
+
+    RESULT=$(eval "$GRAPE $TEST | lli" 2>&1)
+    OUT="${TEST%.*}.out"
+
+    if [ ! -f $OUT ]; then
+        echo "NO OUTFILE" && echo "$RESULT" > $OUT
+    elif [ "$RESULT" == "$(cat $OUT)" ]; then
+        echo "PASS $TEST"
+    else
+        echo "FAIL $TEST differs from $OUT"
+    fi
 done
 exit

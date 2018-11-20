@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SCRIPTS="scripts/"
-MATCHES=$(ls -1a $SCRIPTS | grep "$1$" | wc -l)
+MATCHES=$(ls -1a $SCRIPTS | grep "${1:-noscript}$" | wc -l)
 
 if [ $MATCHES -gt 0 ]; then
     echo "running ./${SCRIPTS}${1}"
