@@ -1,0 +1,18 @@
+fun Int foo(Int a) {
+    return a + 5;
+}
+
+fun Int bar(Int a, Int b) {
+    return a * b;
+}
+
+fun Int main() { 
+    Int a;
+    Int b;
+    a = 4;
+    b = 1000;
+    
+    print(foo(a));
+    print(bar(a,b));
+}
+

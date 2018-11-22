@@ -6,15 +6,39 @@ GRAPE="./src/grape.native"
 for TEST in $TESTS 
 do
 
-    RESULT=$(eval "$GRAPE $TEST | lli" 2>&1)
-    OUT="${TEST%.*}.out"
+    RESULT=$(eval "$GRAPE $TEST | lli" 2>&1) 
+    AST_RESULT=$(eval "$GRAPE -a $TEST" 2>&1)
+    SAST_RESULT=$(eval "$GRAPE -s $TEST" 2>&1)
 
-    if [ ! -f $OUT ]; then
-        echo "NO OUTFILE" && echo "$RESULT" > $OUT
-    elif [ "$RESULT" == "$(cat $OUT)" ]; then
-        echo "PASS $TEST"
+    OUTFILE="${TEST%.*}.out"
+    AST_OUTFILE="${TEST%.*}.ast.out"
+    SAST_OUTFILE="${TEST%.*}.sast.out"
+
+    if [ ! -f $OUTFILE ]; then
+        echo "NO OUTFILE" && echo "$RESULT" > $OUTFILE;
     else
-        echo "FAIL $TEST differs from $OUT"
+        if [ "$RESULT" == "$(cat $OUTFILE)" ]; then
+            echo "PASS $OUTFILE";
+        else
+            echo "FAIL $TEST differs from $OUTFILE"; fi
+    fi
+
+    if [ ! -f $AST_OUTFILE ]; then
+        echo "NO AST OUTFILE" && echo "$AST_RESULT" > $AST_OUTFILE
+    else
+        if [ "$AST_RESULT" == "$(cat $AST_OUTFILE)" ]; then
+            echo "PASS $AST_OUTFILE";
+        else
+            echo "FAIL $TEST differs from $AST_OUTFILE"; fi
+    fi
+
+    if [ ! -f $SAST_OUTFILE ]; then
+        echo "NO SAST OUTFILE" && echo "$SAST_RESULT" > $SAST_OUTFILE
+    else
+        if [ "$SAST_RESULT" == "$(cat $SAST_OUTFILE)" ]; then
+            echo "PASS $SAST_OUTFILE";
+        else
+            echo "FAIL $TEST differs from $SAST_OUTFILE"; fi
     fi
 done
 exit

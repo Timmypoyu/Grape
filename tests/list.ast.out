@@ -1,0 +1,15 @@
+
+Int main()
+{
+if (false)
+{
+prints(sup);
+}
+else
+{
+prints(yo);
+}
+each ([1, 2, 3, 4]){
+printf(this);
+}
+}

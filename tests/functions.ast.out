@@ -1,0 +1,20 @@
+
+Int main()
+{
+Int a;
+Int b;
+a = 4;
+b = 1000;
+print(foo(a));
+print(bar(a, b));
+}
+
+Int bar(a, b)
+{
+return a * b;
+}
+
+Int foo(a)
+{
+return a + 5;
+}
