@@ -114,7 +114,7 @@ let rec string_of_typ = function
   | Str -> "String"
   | Node(t) -> "Node<" ^ string_of_typ t ^ ">" 
   | Edge(t) -> "Edge<" ^ string_of_typ t ^ ">"
-  | Graph -> "Graph"
+  | Graph(s,t) -> "Graph<" ^ string_of_typ s ^ string_of_typ t ^ ">"
   | List(t) -> "List<" ^ string_of_typ t ^ ">"
   | Dict(t) -> "Dict<" ^ string_of_typ t ^ ">"
 
