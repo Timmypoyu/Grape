@@ -92,7 +92,7 @@ let check (globals, functions) =
     in
 
     let constant_type lst getType =
-        let rec helper typ tlist= function
+        let rec helper typ tlist = function
             [] -> (typ, tlist)
           | hd :: tl when fst (getType hd) != fst typ ->
           	raise (Failure ("Typing inconsistency with list "))
@@ -102,7 +102,7 @@ let check (globals, functions) =
     in
        
     let constant_type_dict dict getType =
-        let rec helper_dict typ tlist= function
+        let rec helper_dict typ tlist = function
             [] -> (typ, tlist)
           | hd :: tl when fst (getType (snd hd)) != fst typ ->
           	raise (Failure ("Typing inconsistency with dict "))
@@ -111,9 +111,16 @@ let check (globals, functions) =
         helper_dict (getType (snd (List.hd dict))) [] dict 
     in
 
+
+    (* Do we need to check types of Graph? 
+    let graph_type graph getType =
+        let rec helper_graph typ tlist = function
+    *)
+    
+    
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
-        IntLit  l  -> (Int, SIntLit l)
+        IntLit l  -> (Int, SIntLit l)
       | FloatLit l -> (Float, SFloatLit l)
       | BoolLit l  -> (Bool, SBoolLit l)
       | StrLit s   -> (Str, SStrLit s)
@@ -130,8 +137,7 @@ let check (globals, functions) =
       | DictLit s -> let t = constant_type_dict s expr in (Dict(fst (fst t)), SDictLit (snd t))
       | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
-      | GraphLit s -> raise(Failure ("Unimplemented"))
-
+      | GraphLit s -> let t = expr s in (Graph (fst t), SGraphLit t)       
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign(var, e) as ex -> 
