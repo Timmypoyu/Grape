@@ -120,6 +120,7 @@ struct Node *addBack(struct List *list, void *data)
 
 /*
 
+functions that still need to be written
 
 struct List copy() { }
 
