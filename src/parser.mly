@@ -64,7 +64,7 @@ typ:
   | STR               { Str }
   | NODE LT typ GT    { Node($3) }
   | EDGE LT typ GT    { Edge($3) }
-  | GRAPH             { Graph }
+  | GRAPH LT typ COMMA typ GT             { Graph($3,$5) }
   | BOOL              { Bool }
   | LIST LT typ GT    { List($3) }
   | DICT LT typ GT    { Dict($3) }
