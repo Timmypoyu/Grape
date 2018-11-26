@@ -42,6 +42,22 @@ void traverseList(struct List *list, void (*f)(void *)) {
     }
 }
 
+void reverseList(struct List *list) {
+    struct Node *prv = NULL;
+    struct Node *cur = list->head;
+    struct Node *nxt;
+
+    while (cur) {
+		nxt = cur->next;
+		cur->next = prv;
+		prv = cur;
+		cur = nxt;
+    }
+
+    list->head = prv;
+}
+
+
 void *popFront(struct List *list) {
     if (isEmptyList(list)) {
 		return NULL;
@@ -105,10 +121,12 @@ struct Node *addBack(struct List *list, void *data)
 /*
 
 
-void switch() { }
+struct List copy() { }
 
 int size() { }
 
-void find() { }
+void insert(int x, void *y) { }
+
+void remove(void *x) { }
 
 */
