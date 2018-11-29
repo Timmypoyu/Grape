@@ -36,6 +36,11 @@ int GraphSize(struct Graph graph){
 	return 0;
 }
 
+struct GraphNode *GraphRoot(struct Graph *graph) {
+	
+	return NULL;
+}
+
 struct List *GraphLeaves(struct Graph graph) {
 	
 	return NULL;
