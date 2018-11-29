@@ -151,7 +151,8 @@ struct List copy(struct List *list) {
 		tmp->next = node->next;
 
 		node = node->next;
-    }
+	}
+	return new;
 	
 }
 int size (struct List *list){
@@ -221,7 +222,7 @@ bool isEqual(struct Node *a, struct Node *b){
 	return 0; 
 }
 
-struct List *list_emove(struct List *list, void *y){
+struct List *list_remove(struct List *list, void *y){
 	
 	if (isEmptyList(list)){
 		return NULL;
