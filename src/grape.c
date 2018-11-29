@@ -26,6 +26,41 @@ struct Graph {
 
 // functions
 
+struct Graph *GraphAddNode(struct Graph *graph, struct GraphNode *node) {
+	
+	return graph;
+}
+
+int GraphSize(struct Graph graph){
+	
+	return 0;
+}
+
+struct List *GraphLeaves(struct Graph graph) {
+	
+	return NULL;
+}
+
+struct List *GraphAdjacent(struct Graph graph, struct GraphNode node) {
+
+	return NULL;
+}
+
+struct List *GraphFind(struct Graph graph, void *value) {
+
+	return NULL;
+}
+
+bool GraphIsEmpty(struct Graph graph) {
+	
+	return 0;
+}
+
+void GraphSwitch(struct Graph *graph, struct GraphNode *node1, struct GraphNode *node2) {
+
+}
+
+
 
 
 
