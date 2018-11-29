@@ -10,7 +10,7 @@
 struct GraphNode {
 	void *nodeData;
 	struct List *edgeList;
-	initList(edgeList);
+	/* initList(edgeList); */
 };
 	
 struct GraphEdge {
@@ -21,7 +21,7 @@ struct GraphEdge {
 
 struct Graph {
 	struct List *nodeList;
-	initList(nodeList);
+	/* initList(nodeList); */
 };
 
 // functions
@@ -134,7 +134,7 @@ struct Node *addBack(struct List *list, void *data) {
 		list->head = node;
 		return node;
     }
-
+    struct Node *end = list->head;   
     while (end->next != NULL) {
 		end = end->next;
 	}
