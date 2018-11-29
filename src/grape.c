@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "mylist.h"
+#include <stdbool.h>
 
 struct nlist { /* table entry: */
     struct nlist *next; /* next entry in chain */
@@ -157,6 +157,7 @@ struct Node *addBack(struct List *list, void *data)
     if (node == NULL) {
 		return NULL;
 	}
+
     node->data = data;
     node->next = NULL;
 
@@ -174,6 +175,93 @@ struct Node *addBack(struct List *list, void *data)
 	return node;
 }
 
+
+int size (struct List *list){
+	
+	if (isEmptyList(list)){
+		return 0;
+	}	
+	
+	int i = 1;
+	struct Node *node = list->head;
+	
+	while(node->next){
+		i += 1;
+		node = node->next; 
+	} 
+	return i;	
+}
+
+struct List *insert (int x, struct List *list, void *y){
+	
+	if(isEmptyList(list)){
+		return list;
+	}
+
+	struct Node *node = (struct Node *) malloc(sizeof(struct Node));
+	
+	if (node == NULL){
+		return NULL;
+	}
+
+	struct Node *iter_node = list->head;
+	struct Node *insert_node = (struct Node *) y;   
+	
+	///size 
+	int i = size(list);
+
+	///if index is wrong, return original list 
+	if(size(list)-1 < x){
+		return list;
+	}
+
+	if (x > 0){
+		x -= 1;
+		iter_node = iter_node->next;			
+	}
+	
+	insert_node->data = iter_node->next->data; 
+	insert_node->next = iter_node->next;
+	iter_node->next = insert_node; 
+
+	return list; 			 
+}
+
+bool isEqual(struct Node *a, struct Node *b){
+
+	if (a == NULL || b == NULL){
+		return NULL;
+	}
+	
+	int *dataA = (int *) a->data;
+	int *dataB = (int *) b->data;
+	
+	if (*dataA == *dataB){
+		return 1;
+	}
+	
+	return 0; 
+}
+
+struct List *list_emove(struct List *list, void *y){
+	
+	if (isEmptyList(list)){
+		return NULL;
+	}
+
+	struct Node *node = list->head;
+	
+	while (!isEqual(node, y)){
+		node = node->next;
+	}
+	
+	if (node != NULL){
+		node->next = node->next->next;
+	}
+
+	return list;
+}
+	 
 /*
 
 functions that still need to be written
