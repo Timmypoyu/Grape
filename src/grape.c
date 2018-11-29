@@ -5,7 +5,20 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-// Graph and its functions
+/*
+=====================================================
+                   DATA TYPES
+=====================================================
+*/
+
+struct Node {
+    void *data;
+    struct Node *next;
+};
+
+struct List {
+    struct Node *head;
+};
 
 struct GraphNode {
 	void *nodeData;
@@ -24,59 +37,11 @@ struct Graph {
 	/* initList(nodeList); */
 };
 
-// functions
-
-struct Graph *GraphAddNode(struct Graph *graph, struct GraphNode *node) {
-	
-	return graph;
-}
-
-int GraphSize(struct Graph graph){
-	
-	return 0;
-}
-
-struct GraphNode *GraphRoot(struct Graph *graph) {
-	
-	return NULL;
-}
-
-struct List *GraphLeaves(struct Graph graph) {
-	
-	return NULL;
-}
-
-struct List *GraphAdjacent(struct Graph graph, struct GraphNode node) {
-
-	return NULL;
-}
-
-struct List *GraphFind(struct Graph graph, void *value) {
-
-	return NULL;
-}
-
-bool GraphIsEmpty(struct Graph graph) {
-	
-	return 0;
-}
-
-void GraphSwitch(struct Graph *graph, struct GraphNode *node1, struct GraphNode *node2) {
-
-}
-
-
-
-
-
-struct Node {
-    void *data;
-    struct Node *next;
-};
-
-struct List {
-    struct Node *head;
-};
+/*
+=====================================================
+                   LIST FUNCTIONS
+=====================================================
+*/
 
 void initList(struct List *list) {
     list->head = 0;
@@ -184,7 +149,6 @@ struct Node *addBack(struct List *list, void *data) {
 	return node;
 }
 
-
 struct List copy(struct List *list) {  
 	struct List *new = (struct List *)malloc(sizeof(struct List));
     struct Node *node = list->head;
@@ -282,5 +246,49 @@ struct List *list_remove(struct List *list, void *y) {
 
 	return list;
 }
-	 
 
+/*
+=====================================================
+                   GRAPH FUNCTIONS
+=====================================================
+*/
+
+struct Graph *GraphAddNode(struct Graph *graph, struct GraphNode *node) {
+	
+	return graph;
+}
+
+int GraphSize(struct Graph graph){
+	struct List 	
+	
+	return 0;
+}
+
+struct GraphNode *GraphRoot(struct Graph *graph) {
+	
+	return NULL;
+}
+
+struct List *GraphLeaves(struct Graph graph) {
+	
+	return NULL;
+}
+
+struct List *GraphAdjacent(struct Graph graph, struct GraphNode node) {
+
+	return NULL;
+}
+
+struct List *GraphFind(struct Graph graph, void *value) {
+
+	return NULL;
+}
+
+bool GraphIsEmpty(struct Graph graph) {
+	
+	return 0;
+}
+
+void GraphSwitch(struct Graph *graph, struct GraphNode *node1, struct GraphNode *node2) {
+
+}
