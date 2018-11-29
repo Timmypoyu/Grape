@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "mylist.h"
 
 struct Node {
 	
@@ -136,11 +135,24 @@ struct Node *addBack(struct List *list, void *data)
 	return node;
 }
 
+
+struct List copy(struct List *list) {  
+	struct List *new = (struct List *)malloc(sizeof(struct List));
+	initList(new)
+    struct Node *node = list->head;
+    while (node) {
+		struct Node *tmp = (struct Node *)malloc(sizeof(struct Node));
+		tmp->data = node->data;
+		tmp->next = node->next;
+
+		node = node->next;
+    }
+	
+}
 /*
 
 functions that still need to be written
 
-struct List copy() { }
 
 int size() { }
 
