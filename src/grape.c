@@ -1,18 +1,30 @@
+// Grape.c
+// C Library for Grape
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
+// Graph and its functions
 
-struct NodeList {
+struct GraphNode {
+	void *nodeData;
+	struct List *edgeList;
+	initList(edgeList);
+};
 	
-	
+struct GraphEdge {
+	void *weight; // should it be int*?
+	struct GraphNode *from;
+	struct GraphNode *to;
 };
 
+struct Graph {
+	struct List *nodeList;
+	initList(nodeList);
+};
 
-
-struct Edge {};
-
-struct Graph {};
+// functions
 
 
 
