@@ -1,13 +1,17 @@
-# TO DO for C Libraries
+## TO DO for C Libraries
 
 node:
-- [ ] A list of edges 
-- [ ] void pointer (data) 
+- [x] A list of edges 
+- [x] void pointer (data) 
 
 edge: 
-- [ ] void(int) pointer (data)
-- [ ] node pointer (from) 
-- [ ] ndoe pointer (to)
+- [x] void(int) pointer (data)
+- [x] node pointer (from) 
+- [x] ndoe pointer (to)
  
 graph: 
-- [ ] a list of node 
+- [x] a list of node 
+
+graph functions:
+- [x] function prototypes
+- [ ] finish writing functions 
