@@ -1,18 +1,12 @@
 #include <stdio.h>
 #include <stdlib.h>
-<<<<<<< HEAD
-=======
 #include <stdbool.h>
->>>>>>> e137a9c384a18b1b4a4dcd8e2111f74d7dad830b
 
-struct Node {
-	
-};
 
 struct NodeList {
 	
 	
-}
+};
 
 
 
@@ -20,7 +14,6 @@ struct Edge {};
 
 struct Graph {};
 
-struct 
 
 
 
@@ -116,8 +109,7 @@ struct Node *addAfter(struct List *list, struct Node *prevNode, void *data) {
 	return node;
 }
 
-struct Node *addBack(struct List *list, void *data)
-{
+struct Node *addBack(struct List *list, void *data) {
     struct Node *node = (struct Node *)malloc(sizeof(struct Node));
     if (node == NULL) {
 		return NULL;
@@ -143,43 +135,41 @@ struct Node *addBack(struct List *list, void *data)
 
 struct List copy(struct List *list) {  
 	struct List *new = (struct List *)malloc(sizeof(struct List));
-	initList(new)
     struct Node *node = list->head;
+	struct Node *newNode = NULL;
+	initList(new);
+	
     while (node) {
-		struct Node *tmp = (struct Node *)malloc(sizeof(struct Node));
-		tmp->data = node->data;
-		tmp->next = node->next;
-
+		newNode = addAfter(new, newNode, node->data);
 		node = node->next;
 	}
-	return new;
+	return *new;
 	
 }
-int size (struct List *list){
+
+int size(struct List *list) {
 	
-	if (isEmptyList(list)){
+	if (isEmptyList(list)) {
 		return 0;
 	}	
-	
 	int i = 1;
 	struct Node *node = list->head;
 	
-	while(node->next){
+	while(node->next) {
 		i += 1;
 		node = node->next; 
 	} 
 	return i;	
 }
 
-struct List *insert (int x, struct List *list, void *y){
-	
-	if(isEmptyList(list)){
+struct List *insert(int x, struct List *list, void *y) {	
+	if(isEmptyList(list)) {
 		return list;
 	}
 
-	struct Node *node = (struct Node *) malloc(sizeof(struct Node));
+	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
 	
-	if (node == NULL){
+	if (node == NULL) {
 		return NULL;
 	}
 
@@ -190,11 +180,11 @@ struct List *insert (int x, struct List *list, void *y){
 	int i = size(list);
 
 	///if index is wrong, return original list 
-	if(size(list)-1 < x){
+	if(size(list) - 1 < x) {
 		return list;
 	}
 
-	if (x > 0){
+	if (x > 0) {
 		x -= 1;
 		iter_node = iter_node->next;			
 	}
@@ -206,50 +196,39 @@ struct List *insert (int x, struct List *list, void *y){
 	return list; 			 
 }
 
-bool isEqual(struct Node *a, struct Node *b){
-
-	if (a == NULL || b == NULL){
+bool isEqual(struct Node *a, struct Node *b) {
+	
+	if (a == NULL || b == NULL) {
 		return NULL;
 	}
 	
 	int *dataA = (int *) a->data;
 	int *dataB = (int *) b->data;
 	
-	if (*dataA == *dataB){
+	if (*dataA == *dataB) {
 		return 1;
 	}
 	
 	return 0; 
 }
 
-struct List *list_remove(struct List *list, void *y){
+struct List *list_remove(struct List *list, void *y) {
 	
-	if (isEmptyList(list)){
+	if (isEmptyList(list)) {
 		return NULL;
 	}
 
 	struct Node *node = list->head;
 	
-	while (!isEqual(node, y)){
+	while (!isEqual(node, y)) {
 		node = node->next;
 	}
 	
-	if (node != NULL){
+	if (node != NULL) {
 		node->next = node->next->next;
 	}
 
 	return list;
 }
 	 
-/*
 
-functions that still need to be written
-
-
-int size() { }
-
-void insert(int x, void *y) { }
-
-void remove(void *x) { }
-
-*/
