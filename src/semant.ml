@@ -33,16 +33,16 @@ let check (globals, functions) =
 
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
-    let add_bind map (name, ty) = StringMap.add name {
-      typ = Void;
+    let add_bind map (name, frm, ret) = StringMap.add name {
+      typ = ret;
       fname = name; 
-      formals = [(ty, "x")];
+      formals = frm;
       locals = []; body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print", Int);
-			                         ("printb", Bool);
-			                         ("printf", Float);
-			                         ("prints", Str);
-			                         ("printbig", Int) ]
+    in List.fold_left add_bind StringMap.empty [ ("print",[(Int, "x")], Void);
+                                                 ("printb", [(Bool, "x")], Void);
+                                                 ("printf", [(Float, "x")], Void);
+                                                 ("prints", [(Str, "x")], Void);
+                                                 ("printbig", [(Int, "x")], Void) ]
   in
 
   (* Add function name to symbol table *)
@@ -133,7 +133,7 @@ let check (globals, functions) =
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit n ->  let t = expr n in (Node (fst t), SNodeLit t)
       | ListLit l -> let t = type_of_list l expr in (List (fst (fst t)), SListLit (snd t)) 
-      | GraphLit g -> let t = type_of_graph g expr in ((Graph (fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
+      | GraphLit g -> let t = type_of_graph g expr in (Graph ((fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
       | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
