@@ -102,16 +102,6 @@ let check (globals, functions) =
             helper (getType (List.hd lst)) [] lst 
     in
        
-    let type_of_dict dict getType =
-        let rec helper_dict typ tdict = function
-            [] -> (typ, tdict)
-          | hd :: tl when fst (getType (snd hd)) != fst typ ->
-          	raise (Failure ("Type inconsistency with dict "))
-          | hd :: tl -> helper_dict typ 
-            ((fst hd, getType (snd hd)) :: tdict) tl
-        in
-            helper_dict (getType (snd (List.hd dict))) [] dict 
-    in
 
     let type_of_graph graph getType = 
 
@@ -143,7 +133,6 @@ let check (globals, functions) =
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit n ->  let t = expr n in (Node (fst t), SNodeLit t)
       | ListLit l -> let t = type_of_list l expr in (List (fst (fst t)), SListLit (snd t)) 
-      | DictLit d -> let t = type_of_dict d expr in (Dict(fst (fst t)), SDictLit (snd t))
       | GraphLit g -> let t = type_of_graph g expr in ((Graph (fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
       | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)

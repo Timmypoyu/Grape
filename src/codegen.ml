@@ -170,8 +170,6 @@ let translate (globals, functions) =
 	  let lst = L.build_call list_init_f [||] "list_init" builder in 
 	  ignore(list_fill n lst i ); lst 
 	*)     
-      | SDictLit i -> raise (Failure "Unimplemented")
->>>>>>> e04ce99389f67fce7858fd83a622f3f3501dffcf
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in
