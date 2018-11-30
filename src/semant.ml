@@ -133,7 +133,7 @@ let check (globals, functions) =
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit n ->  let t = expr n in (Node (fst t), SNodeLit t)
       | ListLit l -> let t = type_of_list l expr in (List (fst (fst t)), SListLit (snd t)) 
-      | GraphLit g -> let t = type_of_graph g expr in ((Graph (fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
+      | GraphLit g -> let t = type_of_graph g expr in (Graph ((fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
       | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
