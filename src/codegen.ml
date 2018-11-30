@@ -48,7 +48,6 @@ let translate (globals, functions) =
     | A.Node(_)  -> obj_ptr_t
     | A.Edge(_)  -> obj_ptr_t
     | A.List(_)  -> obj_ptr_t
-    | A.Dict(_)  -> obj_ptr_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -142,7 +141,6 @@ let translate (globals, functions) =
       | SDirEdgeLit i -> raise (Failure "Umnimplemented")
       | SGraphLit i -> raise (Failure "Unimplemented")
       | SListLit i -> raise (Failure "Unimplemented")
-      | SDictLit i -> raise (Failure "Unimplemented")
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in

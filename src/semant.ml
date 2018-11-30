@@ -101,15 +101,6 @@ let check (globals, functions) =
         helper (getType (List.hd lst)) [] lst 
     in
        
-    let constant_type_dict dict getType =
-        let rec helper_dict typ tlist = function
-            [] -> (typ, tlist)
-          | hd :: tl when fst (getType (snd hd)) != fst typ ->
-          	raise (Failure ("Typing inconsistency with dict "))
-          | hd :: tl -> helper_dict typ ((fst hd, getType (snd hd))::tlist) tl
-      in
-        helper_dict (getType (snd (List.hd dict))) [] dict 
-    in
 
 
     (* Do we need to check types of Graph? 
@@ -127,14 +118,12 @@ let check (globals, functions) =
 
 (*      | NodeLit _ -> raise (Failure ("Unimplemented")) 
       | ListLit _ -> raise (Failure ("Unimplemented"))
-      | DictLit _ -> raise (Failure ("Unimplemented"))
       | DirEdgeLit _ -> raise (Failure ("Unimplemented"))
       | EdgeLit _ -> raise (Failure ("Unimplemented"))
       | GraphLit _ -> raise (Failure ("Unimplemented"))
 *)
       | NodeLit s ->  let t = expr s in (Node (fst t), SNodeLit t)
       | ListLit s -> let t = constant_type s expr in (List (fst (fst t)), SListLit (snd t)) 
-      | DictLit s -> let t = constant_type_dict s expr in (Dict(fst (fst t)), SDictLit (snd t))
       | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
       | GraphLit s -> let t = expr s in (Graph (fst t), SGraphLit t)       
