@@ -79,6 +79,11 @@ let translate (globals, functions) =
   let printbig_func : L.llvalue =
       L.declare_function "printbig" printbig_t the_module in
 
+(*list functions*)
+(*string functions*)
+(*graph functions*)
+
+
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -137,11 +142,35 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
-      | SNodeLit i -> raise (Failure "Unimplemented")
+      | SNodeLit (typ, sx) ->  raise (Failure "Unimplemented")
+	(* 
+	  let data_value = expr builder m (typ, sx) in 
+	  let data = L.build_malloc (ltype_of_typ typ) "data" builder in
+	  ignore ( L.build_store data_value data builder);
+	  let data = L.build_bitcast data void_ptr_t "data" builder in
+	  let node = L.build_call node_init_f [|data|] "node_init" builder in node   
+     	*)
       | SEdgeLit i -> raise (Failure "Unimplemented")
       | SDirEdgeLit i -> raise (Failure "Umnimplemented")
       | SGraphLit i -> raise (Failure "Unimplemented")
-      | SListLit i -> raise (Failure "Unimplemented")
+      | SListLit i ->  raise (Failure "Unimplemented")
+	(*
+	let rec fill_list n lst = function 
+	   [] -> lst
+	  | sx :: tail -> 
+		let (typ, _) = sx in 
+		let data = (match typ with 
+		  A.Node _ | A.DirEdge _ | A.Edge _ | A.List | A.Graph(_,_) | A.Dict _ -> expr builder n sx 
+		| _ -> let data = L.build_malloc (ltype_of_typ typ) "data" builder in
+                        let llvalue = expr builder n sx
+                        in ignore (L.build_store llvalue data builder); data)
+		in 
+		let data = L.build_bitcast data void_ptr_t "data" builder in 
+		ignore (L.build_call addBack_f [|lst, data|] "addBack" builder; fill_list n lst tail
+	  in
+	  let lst = L.build_call list_init_f [||] "list_init" builder in 
+	  ignore(list_fill n lst i ); lst 
+	*)     
       | SDictLit i -> raise (Failure "Unimplemented")
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
 	  let e1' = expr builder e1
