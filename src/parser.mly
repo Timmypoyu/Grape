@@ -148,15 +148,12 @@ actuals_list:
 graph_opt: 
   /* nothing */ { [] }
   | graph_list { List.rev $1 }
-/*
-graph_list:
-  | nodeExpr edgeExpr nodeExpr { [($1, $2, $3)] } 
-*/
+
 // The following block means that graph_list can be all nodes
 // as paht_list can be only a single node
  
 graph_list:
-    path_list { [$1] }
+    path_list { [List.rev $1] }
   | graph_list COMMA path_list { $3 :: $1 } 
 
 path_list:

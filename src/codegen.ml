@@ -44,7 +44,7 @@ let translate (globals, functions) =
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Void  -> void_t
-    | A.Graph -> obj_ptr_t
+    | A.Graph(_,_) -> obj_ptr_t 
     | A.Node(_)  -> obj_ptr_t
     | A.Edge(_)  -> obj_ptr_t
     | A.List(_)  -> obj_ptr_t
