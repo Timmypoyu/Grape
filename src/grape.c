@@ -11,30 +11,30 @@
 =====================================================
 */
 
-struct Node {
-    void *data;
-    struct Node *next;
-};
+
+struct ListNode {
+	struct ListNode *next;
+}
 
 struct List {
-    struct Node *head;
+	struct ListNode *head;
 };
 
-struct GraphNode {
-	void *nodeData;
-	struct List *edgeList;
-	/* initList(edgeList); */
+struct Node {
+	void *data;
+	struct List *edges
+};
+
+struct Edge {
+	void *data;
+	struct Node *to
+	struct Node *from
 };
 	
-struct GraphEdge {
-	void *weight; // should it be int*?
-	struct GraphNode *from;
-	struct GraphNode *to;
-};
-
 struct Graph {
-	struct List *nodeList;
-	/* initList(nodeList); */
+	struct List *nodes;
+	struct List *edges;
+	struct List *paths;
 };
 
 /*
@@ -254,7 +254,7 @@ struct List *list_remove(struct List *list, void *y) {
 */
 
 struct Graph *GraphAddNode(struct Graph *graph, struct GraphNode *node) {
-	
+
 	return graph;
 }
 
