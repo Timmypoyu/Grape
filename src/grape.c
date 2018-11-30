@@ -259,7 +259,7 @@ struct Graph *GraphAddNode(struct Graph *graph, struct GraphNode *node) {
 }
 
 int GraphSize(struct Graph graph){
-	struct List 	
+	struct List;
 	
 	return 0;
 }
