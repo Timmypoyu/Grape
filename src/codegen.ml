@@ -44,11 +44,10 @@ let translate (globals, functions) =
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Void  -> void_t
-    | A.Graph -> obj_ptr_t
+    | A.Graph(_,_) -> obj_ptr_t 
     | A.Node(_)  -> obj_ptr_t
     | A.Edge(_)  -> obj_ptr_t
     | A.List(_)  -> obj_ptr_t
-    | A.Dict(_)  -> obj_ptr_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -153,7 +152,7 @@ let translate (globals, functions) =
       | SEdgeLit i -> raise (Failure "Unimplemented")
       | SDirEdgeLit i -> raise (Failure "Umnimplemented")
       | SGraphLit i -> raise (Failure "Unimplemented")
-      | SListLit i ->  raise (Failure "Unimplemented")
+      | SListLit i -> raise (Failure "Unimplemented")
 	(*
 	let rec fill_list n lst = function 
 	   [] -> lst
@@ -171,7 +170,6 @@ let translate (globals, functions) =
 	  let lst = L.build_call list_init_f [||] "list_init" builder in 
 	  ignore(list_fill n lst i ); lst 
 	*)     
-      | SDictLit i -> raise (Failure "Unimplemented")
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
 	  let e1' = expr builder e1
 	  and e2' = expr builder e2 in

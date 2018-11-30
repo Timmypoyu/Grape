@@ -4,7 +4,7 @@
 open Ast
 %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT DQUOT UNDS COLON
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT DQUOT UNDS
 %token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD AMP 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE EACH WHILE FOR FUN 
@@ -67,7 +67,6 @@ typ:
   | GRAPH LT typ COMMA typ GT             { Graph($3,$5) }
   | BOOL              { Bool }
   | LIST LT typ GT    { List($3) }
-  | DICT LT typ GT    { Dict($3) }
 
 vdecl_list:
     /* nothing */    { [] }
@@ -127,7 +126,6 @@ expr:
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
-  | LBRACE dict_opt RBRACE { DictLit($2) }
   | edgeExpr { $1 }  
   | nodeExpr { $1 } 
 
@@ -147,26 +145,15 @@ actuals_list:
     expr { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
 
-dict_opt:
-    /* nothing  { [] }
-  | */ dict_list { $1 } 
-
-dict_list:
-    STR_LIT COLON expr { [ ( $1 , $3 ) ] }
-  | dict_list COMMA STR_LIT COLON expr { ( $3 , $5 ) :: $1 }
-
 graph_opt: 
   /* nothing */ { [] }
   | graph_list { List.rev $1 }
-/*
-graph_list:
-  | nodeExpr edgeExpr nodeExpr { [($1, $2, $3)] } 
-*/
+
 // The following block means that graph_list can be all nodes
 // as paht_list can be only a single node
  
 graph_list:
-    path_list { [$1] }
+    path_list { [List.rev $1] }
   | graph_list COMMA path_list { $3 :: $1 } 
 
 path_list:

@@ -20,7 +20,6 @@ rule token = parse
 | '['	   { LBRACK }
 | ']'      { RBRACK }
 | ';'      { SEMI }
-| ':'	   { COLON }	
 | "'"      { SQUOT }
 | '"'      { DQUOT }
 | ','      { COMMA }

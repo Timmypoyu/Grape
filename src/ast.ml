@@ -9,7 +9,6 @@ type typ = Int | Float | Bool | Void | Str
 	| Node of typ
 	| Edge of typ
 	| List of typ 
-	| Dict of typ 
 
 (* variable type declaration *)
 type bind = typ * string
@@ -23,7 +22,6 @@ type expr =
   | DirEdgeLit of expr 
   | GraphLit of ((expr * expr) list) list 
   | ListLit of expr list 
-  | DictLit of (string * expr) list
   | StrLit of string
   | Id of string
   | Binop of expr * op * expr
@@ -89,7 +87,6 @@ let rec string_of_expr = function
   | DirEdgeLit(e) -> "_" ^ string_of_expr e ^ "_>"
   | GraphLit(e) -> "<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) -> string_of_expr k ^ " " ^ string_of_expr v) lst ))e) ^ ">" 
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr e) ^ "]" 
-  | DictLit(e) -> "{" ^ String.concat ", " (List.map (function (k, v) -> k ^ ":" ^ string_of_expr v) e) ^ "}"
   | StrLit(e) -> e
   | Call(f, el) -> 
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
@@ -116,7 +113,6 @@ let rec string_of_typ = function
   | Edge(t) -> "Edge<" ^ string_of_typ t ^ ">"
   | Graph(s,t) -> "Graph<" ^ string_of_typ s ^ string_of_typ t ^ ">"
   | List(t) -> "List<" ^ string_of_typ t ^ ">"
-  | Dict(t) -> "Dict<" ^ string_of_typ t ^ ">"
 
 let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
