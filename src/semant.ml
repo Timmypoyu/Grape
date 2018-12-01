@@ -107,18 +107,18 @@ let check (globals, functions) =
 
         let rec type_of_path ntyp etyp plist = function
             [] -> ((ntyp, etyp), List.rev plist)
-          | hd :: _ when fst (getType (fst hd)) != ntyp ->
+          | hd :: _ when fst (getType (fst hd)) <> ntyp ->
           	raise (Failure ("Node type inconsistency with path " ^ string_of_typ (fst (getType (fst hd))) ^ string_of_typ ntyp ))
-          | hd :: tl when (List.length tl) == 0 && fst (getType (snd hd)) != Void ->  
+          | hd :: tl when (List.length tl) = 0 && fst (getType (snd hd)) <> Void ->  
           	raise (Failure ("Edge type inconsistency with path "))
-          | hd :: tl when (List.length tl) != 0 && fst (getType (snd hd)) != etyp ->
+          | hd :: tl when (List.length tl) <> 0 && fst (getType (snd hd)) <> etyp ->
           	raise (Failure ("Edge type inconsistency with path "))
           | hd :: tl -> type_of_path ntyp etyp (((getType (fst hd)), (getType (snd hd)))::plist) tl 
         in
 
         let rec type_of_graph ntyp etyp type_of_path glist = function
             [] -> ((ntyp, etyp), List.rev glist)
-          | hd :: _ when fst (type_of_path ntyp etyp [] hd) != (ntyp, etyp) ->
+          | hd :: _ when fst (type_of_path ntyp etyp [] hd) <> (ntyp, etyp) ->
             raise (Failure ("Path type inconsistency"))
           | hd :: tl -> type_of_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
         in
