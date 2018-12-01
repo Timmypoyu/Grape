@@ -14,7 +14,7 @@ let check (globals, functions) =
 
   (* Verify a list of bindings has no void types or duplicate names *)
   let check_binds (kind : string) (binds : bind list) =
-    List.iter (function
+     List.iter (function
 	(Void, b) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
       | _ -> ()) binds;
     let rec dups = function
@@ -106,11 +106,14 @@ let check (globals, functions) =
     let type_of_graph graph getType = 
 
         let rec type_of_path ntyp etyp plist = function
-            [] -> ((ntyp, etyp), List.rev plist)
+            [hd] when fst (getType (fst hd)) == ntyp && fst (getType (snd hd)) == Void ->  
+		((ntyp, etyp), List.rev plist)
+	  | [hd] when fst (getType (fst hd)) != ntyp || fst (getType (snd hd)) != Void ->  
+		raise (Failure ("Last node inconsistency with path or path is incomplete"))
           | hd :: tl when fst (getType (fst hd)) != ntyp ->
-          	raise (Failure ("Edge type inconsistency with path "))
-          | hd :: tl when fst (getType (snd hd)) != etyp ->
           	raise (Failure ("Node type inconsistency with path "))
+          | hd :: tl  when fst (getType (snd hd)) != etyp ->
+          	raise (Failure ("Edge type inconsistency with path "))
           | hd :: tl -> type_of_path ntyp etyp (((getType (fst hd)), (getType (snd hd)))::plist) tl 
         in
 
