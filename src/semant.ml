@@ -95,7 +95,7 @@ let check (globals, functions) =
     let type_of_list lst getType =
         let rec helper typ tlist = function
             [] -> (typ, tlist)
-          | hd :: tl when fst (getType hd) != fst typ ->
+          | hd :: _ when fst (getType hd) != fst typ ->
           	raise (Failure ("Type inconsistency with list "))
           | hd :: tl -> helper typ ((getType hd) :: tlist) tl
         in
@@ -107,8 +107,8 @@ let check (globals, functions) =
 
         let rec type_of_path ntyp etyp plist = function
             [] -> ((ntyp, etyp), List.rev plist)
-          | hd :: tl when fst (getType (fst hd)) != ntyp ->
-          	raise (Failure ("Node type inconsistency with path "))
+          | hd :: _ when fst (getType (fst hd)) != ntyp ->
+          	raise (Failure ("Node type inconsistency with path " ^ string_of_typ (fst (getType (fst hd))) ^ string_of_typ ntyp ))
           | hd :: tl when (List.length tl) == 0 && fst (getType (snd hd)) != Void ->  
           	raise (Failure ("Edge type inconsistency with path "))
           | hd :: tl when (List.length tl) != 0 && fst (getType (snd hd)) != etyp ->
@@ -118,7 +118,7 @@ let check (globals, functions) =
 
         let rec type_of_graph ntyp etyp type_of_path glist = function
             [] -> ((ntyp, etyp), List.rev glist)
-          | hd :: tl when fst (type_of_path ntyp etyp [] hd) != (ntyp, etyp) ->
+          | hd :: _ when fst (type_of_path ntyp etyp [] hd) != (ntyp, etyp) ->
             raise (Failure ("Path type inconsistency"))
           | hd :: tl -> type_of_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
         in

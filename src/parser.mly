@@ -153,9 +153,12 @@ graph_opt:
 // as paht_list can be only a single node
  
 graph_list:
-    path_list { [List.rev $1] }
-  | graph_list COMMA path_list { $3 :: $1 } 
+    path_list { [List.append (List.rev (List.tl (List.rev $1))) ([List.hd (List.rev $1)])] }
+  | graph_list COMMA path_list { (List.append (List.rev (List.tl (List.rev $3))) ([List.hd (List.rev $3)])) :: $1 } 
 
 path_list:
-    nodeExpr { [(Noexpr, $1)] }
-  | path_list edgeExpr nodeExpr {($2, $3) :: $1} 
+    nodeExpr { [($1, Noexpr)] }
+  | nodeExpr edgeExpr path_list {($1, $2) :: $3} 
+  /*
+    nodeExpr { [($1, Noexpr)] }
+  | path_list edgeExpr nodeExpr {($3, $2) :: $1} */ 

@@ -1,5 +1,5 @@
 .PHONY : all
-all : clean grape.native grape.o
+all : clean grape.native
 
 .PHONY : grape
 grape.native :
