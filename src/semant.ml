@@ -106,13 +106,12 @@ let check (globals, functions) =
     let type_of_graph graph getType = 
 
         let rec type_of_path ntyp etyp plist = function
-            [hd] when fst (getType (fst hd)) == ntyp && fst (getType (snd hd)) == Void ->  
-		((ntyp, etyp), List.rev plist)
-	  | [hd] when fst (getType (fst hd)) != ntyp || fst (getType (snd hd)) != Void ->  
-		raise (Failure ("Last node inconsistency with path or path is incomplete"))
+            [] -> ((ntyp, etyp), List.rev plist)
           | hd :: tl when fst (getType (fst hd)) != ntyp ->
           	raise (Failure ("Node type inconsistency with path "))
-          | hd :: tl  when fst (getType (snd hd)) != etyp ->
+          | hd :: tl when (List.length tl) == 0 && fst (getType (snd hd)) != Void ->  
+          	raise (Failure ("Edge type inconsistency with path "))
+          | hd :: tl when (List.length tl) != 0 && fst (getType (snd hd)) != etyp ->
           	raise (Failure ("Edge type inconsistency with path "))
           | hd :: tl -> type_of_path ntyp etyp (((getType (fst hd)), (getType (snd hd)))::plist) tl 
         in
