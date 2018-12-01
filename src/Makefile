@@ -1,5 +1,5 @@
 .PHONY : all
-all : clean grape.native
+all : clean grape.native grape.o
 
 .PHONY : grape
 grape.native :
@@ -10,4 +10,4 @@ grape.native :
 
 .PHONY : clean
 clean :
-	rm -rf _build grape.native
+	rm -rf _build grape.native *.o
