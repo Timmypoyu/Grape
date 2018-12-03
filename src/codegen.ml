@@ -26,7 +26,7 @@ let translate (globals, functions) =
      we will generate code *)
   let the_module = L.create_module context "Grape" in
 
-  (* Get types from the context *)
+  (* Get types from the LLVM module context *)
   let i32_t      = L.i32_type    context
   and i8_t       = L.i8_type     context
   and str_t      = L.pointer_type (L.i8_type context)
@@ -37,7 +37,7 @@ let translate (globals, functions) =
   in
 
   (* TODO: Make pointers type-dependent? *)
-  (* Return the LLVM type for a Grape type *)
+  (* Return the LLVM type for AST node of Grape type *)
   let ltype_of_typ = function
       A.Int   -> i32_t
     | A.Str   -> str_t
@@ -48,6 +48,7 @@ let translate (globals, functions) =
     | A.Node(_)  -> obj_ptr_t
     | A.Edge(_)  -> obj_ptr_t
     | A.List(_)  -> obj_ptr_t
+    | A.Graph(_) -> obj_ptr_t
   in
 
   (* Create a map of global variables after creating each *)
@@ -65,6 +66,8 @@ let translate (globals, functions) =
 
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
+  let init_node_func : L.llvalue = 
+      L.declare_function "newNode" printf_t the_module in
   (* This must match the C library function name *)
 
   (*
@@ -93,7 +96,7 @@ let translate (globals, functions) =
       in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in
       StringMap.add name (L.define_function name ftype the_module, fdecl) m in
     List.fold_left function_decl StringMap.empty functions in
-  
+ 
   (* Fill in the body of the given function *)
   let build_function_body fdecl =
     let (the_function, _) = StringMap.find fdecl.sfname function_decls in
@@ -141,7 +144,7 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
-      | SNodeLit (typ, sx) ->  raise (Failure "Unimplemented")
+      | SNodeLit (typ, sx) -> let node = L.build_call node_init_f [|sx|] "node_init" builder in node
 	(* 
 	  let data_value = expr builder m (typ, sx) in 
 	  let data = L.build_malloc (ltype_of_typ typ) "data" builder in
@@ -150,7 +153,7 @@ let translate (globals, functions) =
 	  let node = L.build_call node_init_f [|data|] "node_init" builder in node   
      	*)
       | SEdgeLit i -> raise (Failure "Unimplemented")
-      | SDirEdgeLit i -> raise (Failure "Umnimplemented")
+      | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit i -> raise (Failure "Unimplemented")
       | SListLit i -> raise (Failure "Unimplemented")
 	(*

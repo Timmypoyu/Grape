@@ -5,5 +5,6 @@
 ./src/*.cmo
 ./src/*.cmx
 ./src/*.output
-_build/
+./src/_build/
+
 *.swp

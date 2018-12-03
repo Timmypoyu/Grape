@@ -1,8 +1,6 @@
 /* Ocamlyacc parser for MicroC */
 
-%{
-open Ast
-%}
+%{ open Ast %}
 
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT DQUOT UNDS
 %token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD AMP 
@@ -150,7 +148,7 @@ graph_opt:
   | graph_list { List.rev $1 }
 
 // The following block means that graph_list can be all nodes
-// as paht_list can be only a single node
+// as path_list can be only a single node
  
 graph_list:
     path_list { [List.append (List.rev (List.tl (List.rev $1))) ([List.hd (List.rev $1)])] }
