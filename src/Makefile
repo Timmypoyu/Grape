@@ -1,4 +1,6 @@
-.PHONY : grape
+.PHONY : all
+all : grape.native grape.o
+	gcc -c grape.c 
 
 grape.native : 
 	ocamlbuild -use-ocamlfind -r \

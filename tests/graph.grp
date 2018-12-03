@@ -1,0 +1,7 @@
+fun Int main() {
+	Graph<Int, Int> a;
+
+	a = <<'3' _4_> '6', '4' _7_> '10'>>;
+
+	return 0;
+}

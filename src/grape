@@ -1,0 +1,10 @@
+#!/bin/bash
+
+OBJECT="${1%.*}.s"
+OUTFILE="${1%.*}.out"
+
+./grape.native $1 | llc -relocation-model=pic > $OBJECT
+cc -o $OUTFILE $OBJECT grape.o
+
+rm $OBJECT
+chmod 750 $OUTFILE

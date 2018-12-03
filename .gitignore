@@ -1,10 +1,12 @@
 ./src/scanner.ml
 ./src/parser.ml
-./src/grape.native
 ./src/*.cmi
 ./src/*.cmo
 ./src/*.cmx
 ./src/*.output
 ./src/_build/
 
+*.o
+*.s
 *.swp
+grape.native

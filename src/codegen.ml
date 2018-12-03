@@ -144,15 +144,17 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
-      | SNodeLit (typ, v) ->
+      | SNodeLit (typ, v) -> (* Cast data type into void pointer to init node *)
         let data_value = expr builder (typ, v) in 
         let data = L.build_malloc (ltype_of_typ typ) "data_malloc" builder in
           ignore ( L.build_store data_value data builder);
         let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
         let node = L.build_call init_node [|data|] "init_node" builder in node
       | SEdgeLit i -> raise (Failure "Unimplemented")
+        (* TODO: Initialize with empty lists *)
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit i -> raise (Failure "Unimplemented")
+        (* TODO: Check for existing nodes in graph in lookup *)
       | SListLit i -> raise (Failure "Unimplemented")
   (*
   let rec fill_list n lst = function 

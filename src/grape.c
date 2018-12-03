@@ -23,7 +23,7 @@ struct List {
 
 struct Node { // graph node
 	void *data;
-	struct List *edges;
+	struct List *edges; // adjacency list
 };
 
 struct Edge {
@@ -258,7 +258,7 @@ struct List *list_remove(struct List *list, void *y) {
 =====================================================
 */
 
-void init_node(void *a) {
+void *init_node(void *a) {
 	printf("%s", "Hello World");
 }
 
