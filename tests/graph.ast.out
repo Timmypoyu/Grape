@@ -1,0 +1,7 @@
+
+Int main()
+{
+Graph<Node<Int>Edge<Int>> a;
+a = <<'3' _4_> '6' , '4' _7_> '10' >>;
+return 0;
+}

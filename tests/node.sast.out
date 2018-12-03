@@ -1,0 +1,7 @@
+
+Int main()
+{
+Node<Int> a;
+(Node<Int> : a = (Node<Int> : '(Int : 3)'));
+return (Int : 0);
+}

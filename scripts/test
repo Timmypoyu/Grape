@@ -1,14 +1,15 @@
 #!/bin/bash
 
 TESTS="./tests/*.grp"
-GRAPE="./src/grape.native"
+GRAPE="./src/grape"
+GRAPENATIVE="./src/grape.native"
 
 for TEST in $TESTS 
 do
 
-    RESULT=$(eval "$GRAPE $TEST | lli" 2>&1) 
-    AST_RESULT=$(eval "$GRAPE -a $TEST" 2>&1)
-    SAST_RESULT=$(eval "$GRAPE -s $TEST" 2>&1)
+    RESULT=$(eval "$GRAPE $TEST && ./${TEST%.*}" 2>&1) 
+    AST_RESULT=$(eval "$GRAPENATIVE -a $TEST" 2>&1)
+    SAST_RESULT=$(eval "$GRAPENATIVE -s $TEST" 2>&1)
 
     OUTFILE="${TEST%.*}.out"
     AST_OUTFILE="${TEST%.*}.ast.out"
