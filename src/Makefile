@@ -1,8 +1,6 @@
-.PHONY : all
-all : clean grape.native
-
 .PHONY : grape
-grape.native :
+
+grape.native : 
 	ocamlbuild -use-ocamlfind -r \
 		-pkgs llvm,llvm.analysis \
 		-cflags -w,+a-4 \

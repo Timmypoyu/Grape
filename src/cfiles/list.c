@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-# include "types.h"
+#include "types.h"
 
 struct Node global;
 

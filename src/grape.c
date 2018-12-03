@@ -258,6 +258,10 @@ struct List *list_remove(struct List *list, void *y) {
 =====================================================
 */
 
+void init_node(void *a) {
+	printf("%s", "Hello World");
+}
+
 struct Graph *GraphInit(struct Graph *glist) {
 	
 	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));

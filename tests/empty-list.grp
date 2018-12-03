@@ -1,5 +1,4 @@
 fun Int main() {
     List<Int> a;
-
-    a = []
+    a = [];
 }

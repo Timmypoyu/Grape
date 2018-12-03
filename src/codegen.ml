@@ -34,6 +34,7 @@ let translate (globals, functions) =
   and float_t    = L.double_type context
   and void_t     = L.void_type   context
   and obj_ptr_t  = L.pointer_type (L.i8_type context)
+  and void_ptr_t = L.pointer_type (L.i8_type context)
   in
 
   (* TODO: Make pointers type-dependent? *)
@@ -44,11 +45,10 @@ let translate (globals, functions) =
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Void  -> void_t
-    | A.Graph(_,_) -> obj_ptr_t 
     | A.Node(_)  -> obj_ptr_t
     | A.Edge(_)  -> obj_ptr_t
     | A.List(_)  -> obj_ptr_t
-    | A.Graph(_) -> obj_ptr_t
+    | A.Graph(_,_) -> obj_ptr_t 
   in
 
   (* Create a map of global variables after creating each *)
@@ -60,30 +60,30 @@ let translate (globals, functions) =
       in StringMap.add n (L.define_global n init the_module) m in
     List.fold_left global_var StringMap.empty globals in
 
+  (* STD IO *)
+
+  (* Function signature / type *)
   let printf_t : L.lltype = 
       L.var_arg_function_type i32_t [| L.pointer_type i8_t |] in
-  (* Function signature / type *)
-
-  let printf_func : L.llvalue = 
+  let printf : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
-  let init_node_func : L.llvalue = 
-      L.declare_function "newNode" printf_t the_module in
-  (* This must match the C library function name *)
-
-  (*
-  let prints_t : L.lltype =
-      L.var_arg_function_type i32_t [| str_t |] in 
-  let prints_func : L.llvalue = 
-      L.declare_function "prints" prints_t the_module in
-*)
   let printbig_t : L.lltype =
       L.function_type i32_t [| i32_t |] in
-  let printbig_func : L.llvalue =
+  let printbig : L.llvalue =
       L.declare_function "printbig" printbig_t the_module in
 
-(*list functions*)
-(*string functions*)
-(*graph functions*)
+
+  (* NODE FUNCTIONS *)
+
+  let init_node_t : L.lltype = 
+      L.var_arg_function_type void_ptr_t [| void_ptr_t |] in
+  let init_node : L.llvalue = 
+      L.declare_function "init_node" init_node_t the_module in
+  (* This must match the C library function name *)
+
+  (* list functions*)
+  (* string functions*)
+  (* graph functions*)
 
 
   (* Define each function (arguments and return type) so we can 
@@ -92,7 +92,7 @@ let translate (globals, functions) =
     let function_decl m fdecl =
       let name = fdecl.sfname
       and formal_types = 
-	Array.of_list (List.map (fun (t,_) -> ltype_of_typ t) fdecl.sformals)
+  Array.of_list (List.map (fun (t,_) -> ltype_of_typ t) fdecl.sformals)
       in let ftype = L.function_type (ltype_of_typ fdecl.styp) formal_types in
       StringMap.add name (L.define_function name ftype the_module, fdecl) m in
     List.fold_left function_decl StringMap.empty functions in
@@ -112,15 +112,15 @@ let translate (globals, functions) =
     let local_vars =
       let add_formal m (t, n) p = 
         L.set_value_name n p;
-	let local = L.build_alloca (ltype_of_typ t) n builder in
+  let local = L.build_alloca (ltype_of_typ t) n builder in
         ignore (L.build_store p local builder);
-	StringMap.add n local m 
+  StringMap.add n local m 
 
       (* Allocate space for any locally declared variables and add the
        * resulting registers to our map *)
       and add_local m (t, n) =
-	let local_var = L.build_alloca (ltype_of_typ t) n builder
-	in StringMap.add n local_var m 
+  let local_var = L.build_alloca (ltype_of_typ t) n builder
+  in StringMap.add n local_var m 
       in
 
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
@@ -136,7 +136,7 @@ let translate (globals, functions) =
 
     (* Construct code for an expression; return its value *)
     let rec expr builder ((_, e) : sexpr) = match e with
-	SIntLit i  -> L.const_int i32_t i
+  SIntLit i  -> L.const_int i32_t i
       | SStrLit s   -> L.build_global_stringptr s "string" builder
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFloatLit l -> L.const_float_of_string float_t l
@@ -144,97 +144,95 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
-      | SNodeLit (typ, sx) -> let node = L.build_call node_init_f [|sx|] "node_init" builder in node
-	(* 
-	  let data_value = expr builder m (typ, sx) in 
-	  let data = L.build_malloc (ltype_of_typ typ) "data" builder in
-	  ignore ( L.build_store data_value data builder);
-	  let data = L.build_bitcast data void_ptr_t "data" builder in
-	  let node = L.build_call node_init_f [|data|] "node_init" builder in node   
-     	*)
+      | SNodeLit (typ, v) ->
+        let data_value = expr builder (typ, v) in 
+        let data = L.build_malloc (ltype_of_typ typ) "data_malloc" builder in
+          ignore ( L.build_store data_value data builder);
+        let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
+        let node = L.build_call init_node [|data|] "init_node" builder in node
       | SEdgeLit i -> raise (Failure "Unimplemented")
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit i -> raise (Failure "Unimplemented")
       | SListLit i -> raise (Failure "Unimplemented")
-	(*
-	let rec fill_list n lst = function 
-	   [] -> lst
-	  | sx :: tail -> 
-		let (typ, _) = sx in 
-		let data = (match typ with 
-		  A.Node _ | A.DirEdge _ | A.Edge _ | A.List | A.Graph(_,_) | A.Dict _ -> expr builder n sx 
-		| _ -> let data = L.build_malloc (ltype_of_typ typ) "data" builder in
+  (*
+  let rec fill_list n lst = function 
+     [] -> lst
+    | sx :: tail -> 
+    let (typ, _) = sx in 
+    let data = (match typ with 
+      A.Node _ | A.DirEdge _ | A.Edge _ | A.List | A.Graph(_,_) | A.Dict _ -> expr builder n sx 
+    | _ -> let data = L.build_malloc (ltype_of_typ typ) "data" builder in
                         let llvalue = expr builder n sx
                         in ignore (L.build_store llvalue data builder); data)
-		in 
-		let data = L.build_bitcast data void_ptr_t "data" builder in 
-		ignore (L.build_call addBack_f [|lst, data|] "addBack" builder; fill_list n lst tail
-	  in
-	  let lst = L.build_call list_init_f [||] "list_init" builder in 
-	  ignore(list_fill n lst i ); lst 
-	*)     
+    in 
+    let data = L.build_bitcast data void_ptr_t "data" builder in 
+    ignore (L.build_call addBack_f [|lst, data|] "addBack" builder; fill_list n lst tail
+    in
+    let lst = L.build_call list_init_f [||] "list_init" builder in 
+    ignore(list_fill n lst i ); lst 
+  *)     
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
-	  let e1' = expr builder e1
-	  and e2' = expr builder e2 in
-	  (match op with 
-	    A.Add     -> L.build_fadd
-	  | A.Sub     -> L.build_fsub
-	  | A.Mult    -> L.build_fmul
-	  | A.Div     -> L.build_fdiv 
-	  | A.Exp     -> raise (Failure "Unimplemented")
-	  | A.Mod     -> raise (Failure "Unimplemented")
+    let e1' = expr builder e1
+    and e2' = expr builder e2 in
+    (match op with 
+      A.Add     -> L.build_fadd
+    | A.Sub     -> L.build_fsub
+    | A.Mult    -> L.build_fmul
+    | A.Div     -> L.build_fdiv 
+    | A.Exp     -> raise (Failure "Unimplemented")
+    | A.Mod     -> raise (Failure "Unimplemented")
       | A.Amp     -> raise (Failure "Unimplemented")
-	  | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
-	  | A.Neq     -> L.build_fcmp L.Fcmp.One
-	  | A.Less    -> L.build_fcmp L.Fcmp.Olt
-	  | A.Leq     -> L.build_fcmp L.Fcmp.Ole
-	  | A.Greater -> L.build_fcmp L.Fcmp.Ogt
-	  | A.Geq     -> L.build_fcmp L.Fcmp.Oge
-	  | A.And | A.Or ->
-	      raise (Failure "internal error: semant should have rejected and/or on float")
-	  ) e1' e2' "tmp" builder
+    | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+    | A.Neq     -> L.build_fcmp L.Fcmp.One
+    | A.Less    -> L.build_fcmp L.Fcmp.Olt
+    | A.Leq     -> L.build_fcmp L.Fcmp.Ole
+    | A.Greater -> L.build_fcmp L.Fcmp.Ogt
+    | A.Geq     -> L.build_fcmp L.Fcmp.Oge
+    | A.And | A.Or ->
+        raise (Failure "internal error: semant should have rejected and/or on float")
+    ) e1' e2' "tmp" builder
       | SBinop (e1, op, e2) ->
-	  let e1' = expr builder e1
-	  and e2' = expr builder e2 in
-	  (match op with
-	    A.Add     -> L.build_add
-	  | A.Sub     -> L.build_sub
+    let e1' = expr builder e1
+    and e2' = expr builder e2 in
+    (match op with
+      A.Add     -> L.build_add
+    | A.Sub     -> L.build_sub
       | A.Exp     -> raise(Failure "Unimplemented")
       | A.Mod     -> raise(Failure "Unimplemented")
       | A.Amp     -> raise(Failure "Unimplemented")
-	  | A.Mult    -> L.build_mul
+    | A.Mult    -> L.build_mul
       | A.Div     -> L.build_sdiv
-	  | A.And     -> L.build_and
-	  | A.Or      -> L.build_or
-	  | A.Equal   -> L.build_icmp L.Icmp.Eq
-	  | A.Neq     -> L.build_icmp L.Icmp.Ne
-	  | A.Less    -> L.build_icmp L.Icmp.Slt
-	  | A.Leq     -> L.build_icmp L.Icmp.Sle
-	  | A.Greater -> L.build_icmp L.Icmp.Sgt
-	  | A.Geq     -> L.build_icmp L.Icmp.Sge
-	  ) e1' e2' "tmp" builder
+    | A.And     -> L.build_and
+    | A.Or      -> L.build_or
+    | A.Equal   -> L.build_icmp L.Icmp.Eq
+    | A.Neq     -> L.build_icmp L.Icmp.Ne
+    | A.Less    -> L.build_icmp L.Icmp.Slt
+    | A.Leq     -> L.build_icmp L.Icmp.Sle
+    | A.Greater -> L.build_icmp L.Icmp.Sgt
+    | A.Geq     -> L.build_icmp L.Icmp.Sge
+    ) e1' e2' "tmp" builder
       | SUnop(op, ((t, _) as e)) ->
           let e' = expr builder e in
-	  (match op with
-	    A.Neg when t = A.Float -> L.build_fneg 
-	  | A.Neg                  -> L.build_neg
+    (match op with
+      A.Neg when t = A.Float -> L.build_fneg 
+    | A.Neg                  -> L.build_neg
           | A.Not                  -> L.build_not) e' "tmp" builder
       | SCall ("print", [e]) | SCall ("printb", [e]) ->
-	  L.build_call printf_func [| int_format_str ; (expr builder e) |]
-	    "printf" builder
+    L.build_call printf [| int_format_str ; (expr builder e) |]
+      "printf" builder
       | SCall ("printbig", [e]) ->
-	  L.build_call printbig_func [| (expr builder e) |] 
+    L.build_call printbig [| (expr builder e) |] 
         "printbig" builder
       | SCall ("printf", [e]) -> 
-	  L.build_call printf_func [| float_format_str ; (expr builder e) |] (* Links function to C *)
-	    "printf" builder (* LLVM Name *)
+    L.build_call printf [| float_format_str ; (expr builder e) |] (* Links function to C *)
+      "printf" builder (* LLVM Name *)
       | SCall ("prints", [e]) ->
-      L.build_call printf_func [| str_format_str ; (expr builder e) |]
+      L.build_call printf [| str_format_str ; (expr builder e) |]
         "prints" builder
       | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
-	 let llargs = List.rev (List.map (expr builder) (List.rev args)) in
-	 let result = (match fdecl.styp with 
+   let llargs = List.rev (List.map (expr builder) (List.rev args)) in
+   let result = (match fdecl.styp with 
                         A.Void -> ""
                       | _ -> f ^ "_result") in
          L.build_call fdef (Array.of_list llargs) result builder
@@ -246,15 +244,15 @@ let translate (globals, functions) =
        e.g., to handle the "fall off the end of the function" case. *)
     let add_terminal builder instr =
       match L.block_terminator (L.insertion_block builder) with
-	Some _ -> ()
+  Some _ -> ()
       | None -> ignore (instr builder) in
-	
+  
     (* Build the code for the given statement; return the builder for
        the statement's successor (i.e., the next instruction will be built
        after the one generated by this call) *)
 
     let rec stmt builder = function
-	SBlock sl -> List.fold_left stmt builder sl
+  SBlock sl -> List.fold_left stmt builder sl
       | SExpr e -> ignore(expr builder e); builder
       | SEach (e, f) -> raise(Failure "Unimplemented") 
       | SReturn e -> ignore(match fdecl.styp with
@@ -265,34 +263,34 @@ let translate (globals, functions) =
                      builder
       | SIf (predicate, then_stmt, else_stmt) ->
          let bool_val = expr builder predicate in
-	 let merge_bb = L.append_block context "merge" the_function in
+   let merge_bb = L.append_block context "merge" the_function in
          let build_br_merge = L.build_br merge_bb in (* partial function *)
 
-	 let then_bb = L.append_block context "then" the_function in
-	 add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
-	   build_br_merge;
+   let then_bb = L.append_block context "then" the_function in
+   add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+     build_br_merge;
 
-	 let else_bb = L.append_block context "else" the_function in
-	 add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
-	   build_br_merge;
+   let else_bb = L.append_block context "else" the_function in
+   add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+     build_br_merge;
 
-	 ignore(L.build_cond_br bool_val then_bb else_bb builder);
-	 L.builder_at_end context merge_bb
+   ignore(L.build_cond_br bool_val then_bb else_bb builder);
+   L.builder_at_end context merge_bb
 
       | SWhile (predicate, body) ->
-	  let pred_bb = L.append_block context "while" the_function in
-	  ignore(L.build_br pred_bb builder);
+    let pred_bb = L.append_block context "while" the_function in
+    ignore(L.build_br pred_bb builder);
 
-	  let body_bb = L.append_block context "while_body" the_function in
-	  add_terminal (stmt (L.builder_at_end context body_bb) body)
-	    (L.build_br pred_bb);
+    let body_bb = L.append_block context "while_body" the_function in
+    add_terminal (stmt (L.builder_at_end context body_bb) body)
+      (L.build_br pred_bb);
 
-	  let pred_builder = L.builder_at_end context pred_bb in
-	  let bool_val = expr pred_builder predicate in
+    let pred_builder = L.builder_at_end context pred_bb in
+    let bool_val = expr pred_builder predicate in
 
-	  let merge_bb = L.append_block context "merge" the_function in
-	  ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
-	  L.builder_at_end context merge_bb
+    let merge_bb = L.append_block context "merge" the_function in
+    ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
+    L.builder_at_end context merge_bb
 
     in
 
