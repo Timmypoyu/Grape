@@ -13,29 +13,31 @@
 
 
 struct ListNode {
+	void *data;
 	struct ListNode *next;
-}
+};
 
 struct List {
 	struct ListNode *head;
 };
 
-struct Node {
+struct Node { // graph node
 	void *data;
-	struct List *edges
+	struct List *edges;
 };
 
 struct Edge {
 	void *data;
-	struct Node *to
-	struct Node *from
+	struct Node *to;
+	struct Node *from;
 };
 	
 struct Graph {
 	struct List *nodes;
-	struct List *edges;
-	struct List *paths;
+	// struct List *edges;
+	// struct List *paths;
 };
+
 
 /*
 =====================================================
@@ -52,8 +54,8 @@ int isEmptyList(struct List *list) {
 }
 
 
-struct Node *addFront(struct List *list, void *data) {
-    struct Node *node = (struct Node *) malloc(sizeof(struct Node));
+struct ListNode *addFront(struct List *list, void *data) {
+    struct ListNode *node = (struct ListNode *) malloc(sizeof(struct ListNode));
     if (node == NULL) {
 		return NULL;
 	}
@@ -64,7 +66,8 @@ struct Node *addFront(struct List *list, void *data) {
     
 	return node;
 }
-
+/* 
+ * I don't think we need to have a traverse function
 void traverseList(struct List *list, void (*f)(void *)) {
     struct Node *node = list->head;
     while (node) {
@@ -72,11 +75,12 @@ void traverseList(struct List *list, void (*f)(void *)) {
 		node = node->next;
     }
 }
+*/
 
 void reverseList(struct List *list) {
-    struct Node *prv = NULL;
-    struct Node *cur = list->head;
-    struct Node *nxt;
+    struct ListNode *prv = NULL;
+    struct ListNode *cur = list->head;
+    struct ListNode *nxt;
 
     while (cur) {
 		nxt = cur->next;
@@ -94,7 +98,7 @@ void *popFront(struct List *list) {
 		return NULL;
 	} 
     
-	struct Node *oldHead = list->head;
+	struct ListNode *oldHead = list->head;
     list->head = oldHead->next;
     void *data = oldHead->data;
     free(oldHead);
@@ -108,12 +112,12 @@ void removeAllNodes(struct List *list) {
 	}
 }
 
-struct Node *addAfter(struct List *list, struct Node *prevNode, void *data) {
+struct ListNode *addAfter(struct List *list, struct ListNode *prevNode, void *data) {
     if (prevNode == NULL) { 
 		return addFront(list, data);
 	}
 
-    struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
     
 	if (node == NULL) {
 		return NULL;
@@ -126,8 +130,8 @@ struct Node *addAfter(struct List *list, struct Node *prevNode, void *data) {
 	return node;
 }
 
-struct Node *addBack(struct List *list, void *data) {
-    struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+struct ListNode *addBack(struct List *list, void *data) {
+    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
     if (node == NULL) {
 		return NULL;
 	}
@@ -139,7 +143,7 @@ struct Node *addBack(struct List *list, void *data) {
 		list->head = node;
 		return node;
     }
-    struct Node *end = list->head;   
+    struct ListNode *end = list->head;   
     while (end->next != NULL) {
 		end = end->next;
 	}
@@ -149,17 +153,18 @@ struct Node *addBack(struct List *list, void *data) {
 	return node;
 }
 
-struct List copy(struct List *list) {  
+struct List *copy(struct List *list) {  
 	struct List *new = (struct List *)malloc(sizeof(struct List));
-    struct Node *node = list->head;
-	struct Node *newNode = NULL;
+    struct ListNode *node = list->head;
+	struct ListNode *newNode = NULL;
 	initList(new);
 	
     while (node) {
 		newNode = addAfter(new, newNode, node->data);
 		node = node->next;
 	}
-	return *new;
+	reverseList(new);
+	return new;
 	
 }
 
@@ -169,7 +174,7 @@ int size(struct List *list) {
 		return 0;
 	}	
 	int i = 1;
-	struct Node *node = list->head;
+	struct ListNode *node = list->head;
 	
 	while(node->next) {
 		i += 1;
@@ -183,14 +188,14 @@ struct List *insert(int x, struct List *list, void *y) {
 		return list;
 	}
 
-	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+	struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
 	
 	if (node == NULL) {
 		return NULL;
 	}
 
-	struct Node *iter_node = list->head;
-	struct Node *insert_node = (struct Node *) y;   
+	struct ListNode *iter_node = list->head;
+	struct ListNode *insert_node = (struct ListNode *) y;   
 	
 	///size 
 	int i = size(list);
@@ -212,7 +217,7 @@ struct List *insert(int x, struct List *list, void *y) {
 	return list; 			 
 }
 
-bool isEqual(struct Node *a, struct Node *b) {
+bool isEqual(struct ListNode *a, struct ListNode *b) {
 	
 	if (a == NULL || b == NULL) {
 		return NULL;
@@ -234,7 +239,7 @@ struct List *list_remove(struct List *list, void *y) {
 		return NULL;
 	}
 
-	struct Node *node = list->head;
+	struct ListNode *node = list->head;
 	
 	while (!isEqual(node, y)) {
 		node = node->next;
@@ -253,42 +258,108 @@ struct List *list_remove(struct List *list, void *y) {
 =====================================================
 */
 
-struct Graph *GraphAddNode(struct Graph *graph, struct GraphNode *node) {
-
+struct Graph *GraphInit(struct Graph *glist) {
+	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
+	initList(graph->nodes);
 	return graph;
 }
 
-int GraphSize(struct Graph graph){
-	struct List;
-	
-	return 0;
+struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
+	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+	struct List *elist = (struct List *)malloc(sizeof(struct List));
+	struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
+	node->data = inputData;
+	initList(elist);
+	edge->data = weight;
+	edge->to = inputTo;
+	edge->from = inputFrom;
+	addFront(elist, edge);
+
+	return node;
 }
 
+// when the node already exists
+void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struct Node *inputFrom, void *value) {
+	struct ListNode *node = (graph->nodes)->head;
+    while (node) {
+		if (node->data == value) { // find the same node and add that edge
+			struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
+			struct Node *graphNode = node->data;
+			edge->data = weight;
+			edge->to = inputTo;
+			edge->from = inputFrom;
+			addFront(graphNode->edges, edge);
+			break;
+		} else {
+			continue;
+		}
+		node = node->next;
+	}
+}
+	
+struct Graph *GraphAddNode(struct Graph *graph, struct Node *node) {
+	addFront(graph->nodes, node);
+	return graph;
+}
+
+int GraphSize(struct Graph *graph) {
+	int graphSize = size(graph->nodes);	
+	return graphSize;
+
+}
+
+/* decided to get rid of graph root
 struct GraphNode *GraphRoot(struct Graph *graph) {
 	
 	return NULL;
 }
+*/
 
 struct List *GraphLeaves(struct Graph graph) {
 	
 	return NULL;
 }
 
-struct List *GraphAdjacent(struct Graph graph, struct GraphNode node) {
+struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
+	struct List *adjacentList = (struct List *)malloc(sizeof(struct List));
+	struct ListNode *target = (graph->nodes)->head;
+	while (target) {
+		if (node->data == ((struct Node *)(target->data))->data) {
+			struct Node *targetGraph = (struct Node *)(target->data);
+			struct List *edges = targetGraph->edges;
+			struct ListNode *tedge = edges->head;
+			while (tedge) {
+				struct Node *anode = ((struct Edge *)(tedge->data))->to;
+				addFront(adjacentList, anode);
+				tedge = tedge->next;	
+			}
+		}
+		target = target->next;
 
-	return NULL;
+	}
+	return adjacentList;
 }
 
-struct List *GraphFind(struct Graph graph, void *value) {
+bool GraphFind(struct Graph *graph, void *value) {
 
-	return NULL;
-}
-
-bool GraphIsEmpty(struct Graph graph) {
+    struct ListNode *node = (graph->nodes)->head;
 	
-	return 0;
+    while (node) {
+		if (((struct Node *)(node->data))->data == value) {
+			return true;
+		}
+		node = node->next;
+	}
+
+	return false;
 }
 
-void GraphSwitch(struct Graph *graph, struct GraphNode *node1, struct GraphNode *node2) {
+bool GraphIsEmpty(struct Graph *graph) {
+	
+	return ((graph->nodes)->head == 0);
+}
+
+void GraphSwitch(struct Graph *graph, struct Node *node1, struct Node *node2) {
 
 }
+
