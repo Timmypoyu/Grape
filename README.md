@@ -45,11 +45,41 @@ $ ./run build
 node, graph, type
 - [ ] Don't assign types to empty lists, make new type: (List<>)
 - [ ] Add types for graph 
+- [ ] Semant check if the last one has a no expr, if the node is not the end, there should be no expr. 
 
 ### Codegen
 - [ ] Link C library for lists
 - [ ] Link C library for Node
 - [ ] Link C library for Graph
+
+## C Library
+
+### Node
+- [x] A list of edges 
+- [x] void pointer (data) 
+
+### #dge
+- [x] void(int) pointer (data)
+- [x] node pointer (from) 
+- [x] ndoe pointer (to)
+
+### Graph
+- [x] a list of node 
+- [x] function prototypes
+- [ ] finish writing functions
+- [ ] edge_init
+- [ ] node_init
+- [ ] graph_init:
+1. Create a new graph
+2. Add all nodes to graph
+3. add all edges pointing to the node, and from the previous node
+Then, for each ID:
+3. Merge all graphs into one graph, resolving Nodes with that ID by 
+removing all existing edges to that ID and pointing them to a new 
+Node instance with that ID
+5: return new graph
+
+Suggestion:
 
 ### LRM Changes: 
 - [ ] We can't have empty block stmt
