@@ -1,8 +1,9 @@
 #!/bin/bash
 
+HOME="$1"
 TESTS="./tests/*.grp"
-GRAPE="./src/grape"
-GRAPENATIVE="./src/grape.native"
+GRAPE="./dist/grape"
+GRAPENATIVE="./dist/grape.native"
 
 for TEST in $TESTS 
 do
