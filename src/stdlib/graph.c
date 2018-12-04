@@ -2,7 +2,11 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-# include "types.h"
+# include "list.h"
+
+void *init_node(void *hello) {
+    printf("Hello world");
+}
 
 struct Graph *GraphInit(struct Graph *glist) {
 	

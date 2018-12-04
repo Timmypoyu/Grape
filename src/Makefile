@@ -1,11 +1,12 @@
 .PHONY : all
-all : grape.native grape.o
+all : grape.native stdlib.o
 	cp grape ../dist
-	mv grape.o ../dist
+	mv stdlib.o ../dist
 	cp _build/grape.native ../dist
 
-grape.o: 
-	gcc -c stdlib.c
+stdlib.o: 
+	cd stdlib && gcc -c ./*.c
+	ld -r stdlib/*.o -o stdlib.o
 
 grape.native : 
 	ocamlbuild -use-ocamlfind -r \
@@ -15,4 +16,4 @@ grape.native :
 
 .PHONY : clean
 clean :
-	rm -rf _build grape.native *.o
+	rm -rf _build grape.native **/*.o
