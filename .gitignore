@@ -1,14 +1,15 @@
-*.cmi
-**.cmo
-**.cmx
-**.output
 src/scanner.ml
 src/parser.ml
 src/_build/
 src/grape.native/
 
-./dist
+./dist/*
 
 *.o
 *.s
+*.gob
 *.swp
+*.cmi
+**.cmo
+**.cmx
+**.output

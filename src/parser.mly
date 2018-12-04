@@ -54,35 +54,32 @@ formals_opt:
   | formal_list   { List.rev $1 }
 
 formal_list:
-    typ ID                   { [($1,$2)] }
-  | formal_list COMMA typ ID { ($3,$4) :: $1 }
+    typ ID                      { [($1,$2)] }
+  | formal_list COMMA typ ID    { ($3,$4) :: $1 }
 
 typ:
-    INT               { Int }
-  | STR               { Str }
-  | NODE LT typ GT    { Node($3) }
-  | EDGE LT typ GT    { Edge($3) }
-  | GRAPH LT typ COMMA typ GT             { Graph(Node($3), Edge($5)) }
-  | BOOL              { Bool }
-  | LIST LT typ GT    { List($3) }
+    INT                         { Int }
+  | STR                         { Str }
+  | NODE LT typ GT              { Node($3) }
+  | EDGE LT typ GT              { Edge($3) }
+  | GRAPH LT typ COMMA typ GT   { Graph(Node($3), Edge($5)) }
+  | BOOL                        { Bool }
+  | LIST LT typ GT              { List($3) }
 
 vdecl_list:
     /* nothing */    { [] }
   | vdecl_list vdecl { $2 :: $1 }
 
 vdecl:
-    typ ID SEMI{ ($1, $2) }
+    typ ID SEMI    { ($1, $2) }
 
 stmt_list:
-    /* nothing   { [] }*/
-    stmt { [$1] }
+    stmt           { [$1] }
   | stmt_list stmt { $2 :: $1 }
 
 stmt:
     expr SEMI                               { Expr $1 }
   | RETURN expr_opt SEMI                    { Return $2} 
-/*  | RETURN SEMI                             { Return Noexpr } */
-/*  | RETURN expr SEMI                        { Return $2 } */
   | LBRACE stmt_list RBRACE                 { Block(List.rev $2) }
   | IF LPAREN expr RPAREN stmt %prec NOELSE { If($3, $5, Block([])) }
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
@@ -134,22 +131,22 @@ edgeExpr:
 nodeExpr: 
     SQUOT expr SQUOT       { NodeLit($2) }         /* Node */
 
-/* List with commas separating the elements */
 actuals_opt:
     /* nothing */ { [] }
   | actuals_list { List.rev $1 }
 
+/* comma-separated list */
 actuals_list:
     expr { [$1] }
   | actuals_list COMMA expr { $3 :: $1 }
 
+/* graph list */
 graph_opt: 
   /* nothing */ { [] }
   | graph_list { List.rev $1 }
 
 // The following block means that graph_list can be all nodes
-// as path_list can be only a single node
- 
+// as path_list can be only a single node 
 graph_list:
     path_list { [List.append (List.rev (List.tl (List.rev $1))) ([List.hd (List.rev $1)])] }
   | graph_list COMMA path_list { (List.append (List.rev (List.tl (List.rev $3))) ([List.hd (List.rev $3)])) :: $1 } 
