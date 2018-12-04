@@ -6,6 +6,10 @@
 
 struct Node *GraphInitNode();
 
+struct Node *GraphNodeAddValue(struct Node *node, void *input);
+
+struct Node *GraphNodeAddEdge(struct Node *node, void *weight, struct Node *to, struct Node *from);
+
 int GraphSize(struct Graph *graph);
 
 bool GraphIsEmpty(struct Graph *graph);

@@ -11,6 +11,15 @@ struct Node *GraphInitNode() {
 	return node;
 }
 
+struct Node *GraphNodeAddValue(struct *node, void *input) {
+	return node;
+}
+
+struct Node *GraphNodeAddEdge(struct *node, void *weight, struct Node *to, struct Node *from) {
+	return node;
+}
+
+
 struct Graph *GraphInit(struct Graph *glist) {
 	
 	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
