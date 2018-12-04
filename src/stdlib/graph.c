@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-# include "list.h"
+#include "list.h"
 
-void *init_node(void *hello) {
-    printf("Hello world");
+struct Node *GraphInitNode() {
+	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
+	node->data = NULL;
+	initList(node->edges);	
+	return node;
 }
 
 struct Graph *GraphInit(struct Graph *glist) {
