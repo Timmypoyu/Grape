@@ -1,8 +1,8 @@
 src/scanner.ml
 src/parser.ml
-src/_build/
 src/grape.native
-dist/grape.native
+src/_build/*
+dist/*
 
 *.o
 *.s
