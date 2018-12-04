@@ -5,8 +5,10 @@
 ./src/*.cmx
 ./src/*.output
 ./src/_build/
+./src/grape.native/
+
+./dist
 
 *.o
 *.s
 *.swp
-grape.native

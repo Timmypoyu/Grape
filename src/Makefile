@@ -5,7 +5,7 @@ all : grape.native grape.o
 	cp _build/grape.native ../dist
 
 grape.o: 
-	gcc -c grape.c
+	gcc -c stdlib.c
 
 grape.native : 
 	ocamlbuild -use-ocamlfind -r \
