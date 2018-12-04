@@ -1,10 +1,12 @@
 #!/bin/bash
 
+HOME=$(dirname "$0")
+PROGRAM="$1"
 OBJECT="${1%.*}.s"
-OUTFILE="${1%.*}"
+OUTFILE=${2:-"./out.g"}
 
-./src/grape.native $1 | llc -relocation-model=pic > $OBJECT
-cc -o $OUTFILE $OBJECT ./src/grape.o
+$HOME/grape.native $1 | llc -relocation-model=pic > $OBJECT
+cc -o $OUTFILE $OBJECT $HOME/stdlib.o
 
 rm $OBJECT
 chmod 750 $OUTFILE
