@@ -150,8 +150,13 @@ let translate (globals, functions) =
           ignore ( L.build_store data_value data builder);
         let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
         let node = L.build_call init_node [|data|] "init_node" builder in node
-      | SEdgeLit i -> raise (Failure "Unimplemented")
-        (* TODO: Initialize with empty lists *)
+      | SEdgeLit (typ, v) -> 
+        let data_value = expr builder (typ, v) in 
+        let data = L.build_malloc (ltype_of_typ typ) "data_malloc" builder in
+          ignore ( L.build_store data_value data builder);
+        let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
+        let edge = L.build_call init_edge [|data|] "init_node" builder in edge
+	(* TODO: Initialize with empty lists *)
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit i -> raise (Failure "Unimplemented")
         (* TODO: Check for existing nodes in graph in lookup *)
