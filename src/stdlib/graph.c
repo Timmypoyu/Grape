@@ -4,28 +4,32 @@
 
 #include "list.h"
 
-struct Node *GraphInitNode() {
+struct Node *init_node(void *input) {
 	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
-	node->data = NULL;
+	node->data = input;
 	initList(node->edges);	
 	return node;
 }
-/*
-struct Node *GraphNodeAddValue(struct *node, void *input) {
-	return node;
-}
 
-struct Node *GraphNodeAddEdge(struct *node, void *weight, struct Node *to, struct Node *from) {
-	return node;
-}*/
-
-
-struct Graph *GraphInit(struct Graph *glist) {
-	
+struct Graph *init_graph() {
 	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
 	initList(graph->nodes);
 	return graph;
 }
+
+struct Edge *init_edge(void *data) {
+	struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
+	edge->data = data;
+	edge->to = NULL;
+	edge->to = NULL;
+	return edge;
+}
+
+void link_edge(struct Edge *e, struct Node *from, struct Node *to) {
+	e->to = to;
+	e->from = from;
+}
+
 
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
