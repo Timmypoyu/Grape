@@ -78,7 +78,7 @@ let translate (globals, functions) =
   let init_node_t : L.lltype = 
       L.var_arg_function_type void_ptr_t [| void_ptr_t |] in
   let init_node : L.llvalue = 
-      L.declare_function "init_node" init_node_t the_module in
+      L.declare_function "GraphInitNode" init_node_t the_module in
   (* This must match the C library function name *)
 
   (* list functions*)
@@ -188,7 +188,7 @@ let translate (globals, functions) =
     | A.Div     -> L.build_fdiv 
     | A.Exp     -> raise (Failure "Unimplemented")
     | A.Mod     -> raise (Failure "Unimplemented")
-      | A.Amp     -> raise (Failure "Unimplemented")
+    | A.Amp     -> raise (Failure "Unimplemented")
     | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
     | A.Neq     -> L.build_fcmp L.Fcmp.One
     | A.Less    -> L.build_fcmp L.Fcmp.Olt

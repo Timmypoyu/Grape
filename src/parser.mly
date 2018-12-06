@@ -151,9 +151,10 @@ graph_list:
     path_list { [List.append (List.rev (List.tl (List.rev $1))) ([List.hd (List.rev $1)])] }
   | graph_list COMMA path_list { (List.append (List.rev (List.tl (List.rev $3))) ([List.hd (List.rev $3)])) :: $1 } 
 
+graph_vertex:
+    nodeExpr { $1 }
+  | ID { Id($1) }
+
 path_list:
-    nodeExpr { [($1, Noexpr)] }
-  | nodeExpr edgeExpr path_list {($1, $2) :: $3} 
-  /*
-    nodeExpr { [($1, Noexpr)] }
-  | path_list edgeExpr nodeExpr {($3, $2) :: $1} */ 
+    graph_vertex { [($1, Noexpr)] }
+  | graph_vertex edgeExpr path_list {($1, $2) :: $3} 
