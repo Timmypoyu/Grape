@@ -76,15 +76,30 @@ let translate (globals, functions) =
   (* NODE FUNCTIONS *)
 
   let init_node_t : L.lltype = 
-      L.var_arg_function_type void_ptr_t [| void_ptr_t |] in
+      L.var_arg_function_type obj_ptr_t [| void_ptr_t |] in
   let init_node : L.llvalue = 
-      L.declare_function "GraphInitNode" init_node_t the_module in
+      L.declare_function "init_node" init_node_t the_module in
+
+  let init_edge_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [| void_ptr_t |] in
+  let init_edge : L.llvalue = 
+      L.declare_function "init_edge" init_edge_t the_module in
+
+  let init_graph_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [||] in
+  let init_graph : L.llvalue = 
+      L.declare_function "init_graph" init_graph_t the_module in
+
+  let link_edge_t : L.lltype = 
+    L.var_arg_function_type obj_ptr_t [|obj_ptr_t; obj_ptr_t; obj_ptr_t|] in
+  let link_edge : L.llvalue = 
+      L.declare_function "link_edge" link_edge_t the_module in
   (* This must match the C library function name *)
 
   (* list functions*)
+
   (* string functions*)
   (* graph functions*)
-
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -155,10 +170,13 @@ let translate (globals, functions) =
         let data = L.build_malloc (ltype_of_typ typ) "data_malloc" builder in
           ignore ( L.build_store data_value data builder);
         let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
-        let edge = L.build_call init_edge [|data|] "init_node" builder in edge
+        let edge = L.build_call init_edge [|data|] "init_edge" builder in edge
 	(* TODO: Initialize with empty lists *)
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
-      | SGraphLit i -> raise (Failure "Unimplemented")
+      | SGraphLit l -> 
+        let lastNode = SNodeLit (A.Int, SIntLit 3) in
+        let nextNode = SNodeLit (A.Int, SIntLit 3) in
+        let graph = L.build_call init_graph [||] "init_graph" builder in graph
         (* TODO: Check for existing nodes in graph in lookup *)
       | SListLit i -> raise (Failure "Unimplemented")
   (*
