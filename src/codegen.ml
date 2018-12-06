@@ -151,7 +151,7 @@ let translate (globals, functions) =
 
     (* Construct code for an expression; return its value *)
     let rec expr builder ((_, e) : sexpr) = match e with
-  SIntLit i  -> L.const_int i32_t i
+        SIntLit i   -> L.const_int i32_t i
       | SStrLit s   -> L.build_global_stringptr s "string" builder
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFloatLit l -> L.const_float_of_string float_t l
@@ -174,10 +174,18 @@ let translate (globals, functions) =
 	(* TODO: Initialize with empty lists *)
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit l -> 
-        let lastNode = SNodeLit (A.Int, SIntLit 3) in
-        let nextNode = SNodeLit (A.Int, SIntLit 3) in
-        let graph = L.build_call init_graph [||] "init_graph" builder in graph
-        (* TODO: Check for existing nodes in graph in lookup *)
+        let graph = L.build_call init_graph [||] "init_graph" builder in 
+        let rec init_path lastEdge = function
+          | hd::tl when lastEdge = (L.const_null void_t) -> (* base case *)
+            let edge = expr builder (snd hd) in 
+            let node = expr builder (fst hd) in
+            L.build_call link_edge [|edge; node|] "link_edge"; init_path edge tl
+          | hd::tl  -> 
+            let edge = expr builder (snd hd) in 
+            let node = expr builder (fst hd) in
+            L.build_call link_edge [|edge; node|] "link_edge"; 
+            L.build_call link_edge [|lastEdge; node|] "link_edge"; init_path edge tl
+        in List.fold_left init_path (L.const_null void_t) l
       | SListLit i -> raise (Failure "Unimplemented")
   (*
   let rec fill_list n lst = function 
