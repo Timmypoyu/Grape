@@ -108,6 +108,30 @@ let translate (globals, functions) =
 
   (* list functions*)
 
+  let init_list_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [||] in
+  let init_list : L.llvalue = 
+      L.declare_function "init_list" init_list_t the_module in
+
+  let push_list_t : L.lltype = 
+      L.var_arg_function_type void_t [|obj_ptr_t; void_ptr_t |] in
+  let push_list : L.llvalue = 
+      L.declare_function "push_list" push_list_t the_module in
+
+  let push_front_list_t : L.lltype = 
+      L.var_arg_function_type void_t [|obj_ptr_t; void_ptr_t|] in
+  let push_front_list : L.llvalue = 
+      L.declare_function "push_front_list" push_front_list_t the_module in
+
+  let pop_front_list_t : L.lltype = 
+      L.var_arg_function_type void_t [|obj_ptr_t|] in
+  let pop_front_list : L.llvalue = 
+      L.declare_function "pop_front_list" pop_front_list_t the_module in
+
+  let pop_list_t : L.lltype = 
+      L.var_arg_function_type void_t [|obj_ptr_t|] in
+  let pop_list : L.llvalue = 
+      L.declare_function "pop_list" pop_list_t the_module in
   (* string functions*)
   (* graph functions*)
 
@@ -201,7 +225,7 @@ let translate (globals, functions) =
             L.build_call link_edge [|edge; node|] "link_edge"; 
             L.build_call link_edge [|lastEdge; node|] "link_edge"; init_path edge tl
         in List.fold_left init_path (L.const_null void_t) l
-      | SListLit i -> raise (Failure "Unimplemented")
+      | SListLit i ->
       let rec fill_list n lst = function 
         [] -> lst
         |sx :: tail ->  
@@ -210,10 +234,10 @@ let translate (globals, functions) =
         in ignore (L.build_store data_value data builder);
 
         let data = L.build_bitcast data void_ptr_t "data" builder in 
-        ignore (L.build_call push_list [|lst, data|] "push_list" builder); fill_list n lst tail
+        ignore (L.build_call push_list [|lst; data|] "push_list" builder); fill_list n lst tail
         in
         let lst = L.build_call init_list [||] "init_list" builder in 
-        ignore(fill_list (list.hd i) lst i ); lst
+        ignore(fill_list (List.hd i) lst i ); lst
 
 
  (*
