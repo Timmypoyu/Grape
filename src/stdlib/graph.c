@@ -7,13 +7,13 @@
 struct Node *init_node(void *input) {
 	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
 	node->data = input;
-	initList(node->edges);	
+	node->edges = init_list();	
 	return node;
 }
 
 struct Graph *init_graph() {
 	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
-	initList(graph->nodes);
+	graph->nodes = init_list();
 	return graph;
 }
 
@@ -30,7 +30,7 @@ void link_edge(struct Edge *e, struct Node *from, struct Node *to) {
 	e->from = from;
 }
 
-
+/*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
 	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
@@ -79,12 +79,12 @@ int GraphSize(struct Graph *graph) {
 
 }
 
-/* decided to get rid of graph root
+ decided to get rid of graph root
 struct GraphNode *GraphRoot(struct Graph *graph) {
 	
 	return NULL;
 }
-*/
+
 
 struct List *GraphLeaves(struct Graph *graph) {
 	
@@ -150,3 +150,4 @@ bool GraphIsEmpty(struct Graph *graph) {
 void GraphSwitch(struct Graph *graph, struct Node *node1, struct Node *node2) {
 
 }
+*/
