@@ -6,7 +6,7 @@
 
 int size(struct List *list);
 
-void init_list();
+struct List *init_list();
 
 void push_list(struct List *list, void *data);
 
