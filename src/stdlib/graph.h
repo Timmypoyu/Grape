@@ -12,6 +12,10 @@ struct Edge *init_edge(void *data);
 
 void link_edge(struct Edge *e, struct Node *from, struct Node *to);
 
+void add_node(struct Graph *graph, struct Node *node);
+
+void add_edge(struct Graph *graph, struct Edge *edge);
+
 int GraphSize(struct Graph *graph);
 
 bool GraphIsEmpty(struct Graph *graph);

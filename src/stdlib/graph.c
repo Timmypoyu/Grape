@@ -14,6 +14,7 @@ struct Node *init_node(void *input) {
 struct Graph *init_graph() {
 	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
 	graph->nodes = init_list();
+	graph->edges = init_list();
 	return graph;
 }
 
@@ -30,6 +31,14 @@ void link_edge(struct Edge *e, struct Node *from, struct Node *to) {
 	e->from = from;
 }
 
+void add_node(struct Graph *graph, struct Node *node) {
+	push_list(graph->nodes, node);
+}
+
+void add_edge(struct Graph *graph, struct Edge *edge) {
+	push_list(graph->edges, edge);
+}
+	
 /*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
