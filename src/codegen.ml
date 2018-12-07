@@ -80,10 +80,20 @@ let translate (globals, functions) =
   let init_node : L.llvalue = 
       L.declare_function "init_node" init_node_t the_module in
 
+  let add_node_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [| obj_ptr_t |] in
+  let add_node : L.llvalue = 
+      L.declare_function "add_node" add_node_t the_module in
+
   let init_edge_t : L.lltype = 
       L.var_arg_function_type obj_ptr_t [| void_ptr_t |] in
   let init_edge : L.llvalue = 
       L.declare_function "init_edge" init_edge_t the_module in
+
+  let add_edge_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [| obj_ptr_t |] in
+  let add_edge : L.llvalue = 
+      L.declare_function "add_edge" add_edge_t the_module in
 
   let init_graph_t : L.lltype = 
       L.var_arg_function_type obj_ptr_t [||] in
@@ -179,10 +189,15 @@ let translate (globals, functions) =
           | hd::tl when lastEdge = (L.const_null void_t) -> (* base case *)
             let edge = expr builder (snd hd) in 
             let node = expr builder (fst hd) in
-            L.build_call link_edge [|edge; node|] "link_edge"; init_path edge tl
+            L.build_call add_node [|graph; node|] "add_node";
+            L.build_call add_edge [|graph; edge|] "add_edge";
+            L.build_call link_edge [|edge; node|] "link_edge";
+            init_path edge tl
           | hd::tl  -> 
             let edge = expr builder (snd hd) in 
             let node = expr builder (fst hd) in
+            L.build_call add_node [|graph; node|] "add_node";
+            L.build_call add_edge [|graph; edge|] "add_edge";
             L.build_call link_edge [|edge; node|] "link_edge"; 
             L.build_call link_edge [|lastEdge; node|] "link_edge"; init_path edge tl
         in List.fold_left init_path (L.const_null void_t) l
