@@ -178,24 +178,21 @@ let translate (globals, functions) =
         let nextNode = SNodeLit (A.Int, SIntLit 3) in
         let graph = L.build_call init_graph [||] "init_graph" builder in graph
         (* TODO: Check for existing nodes in graph in lookup *)
-      | SListLit i -> raise (Failure "Unimplemented")
-  (*
-  let rec fill_list n lst = function 
-     [] -> lst
-    | sx :: tail -> 
-    let (typ, _) = sx in 
-    let data = (match typ with 
-      A.Node _ | A.DirEdge _ | A.Edge _ | A.List | A.Graph(_,_) | A.Dict _ -> expr builder n sx 
-    | _ -> let data = L.build_malloc (ltype_of_typ typ) "data" builder in
-                        let llvalue = expr builder n sx
-                        in ignore (L.build_store llvalue data builder); data)
-    in 
-    let data = L.build_bitcast data void_ptr_t "data" builder in 
-    ignore (L.build_call addBack_f [|lst, data|] "addBack" builder; fill_list n lst tail
-    in
-    let lst = L.build_call list_init_f [||] "list_init" builder in 
-    ignore(list_fill n lst i ); lst 
-  *)     
+      | SListLit i -> (*raise (Failure "Unimplemented")*)
+  	
+        let rec fill_list n lst = function 
+        [] -> lst
+        |sx :: tail ->  
+        let data_value = expr builder sx in
+        let data = L.build_malloc (ltype_of_typ (fst sx)) "data" builder   
+        in ignore (L.build_store data_value data builder);
+
+        let data = L.build_bitcast data void_ptr_t "data" builder in 
+        ignore (L.build_call push_list [|lst, data|] "push_list" builder); fill_list n lst tail
+        in
+        let lst = L.build_call init_list [||] "init_list" builder in 
+        ignore(fill_list (list.hd i) lst i ); lst
+
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
     let e1' = expr builder e1
     and e2' = expr builder e2 in
