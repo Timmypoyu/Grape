@@ -20,6 +20,6 @@ struct Edge {
 	
 struct Graph {
 	struct List *nodes;
-	// struct List *edges;
+	struct List *edges;
 	// struct List *paths;
 };
