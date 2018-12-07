@@ -4,17 +4,21 @@
 
 // when the node already exists
 
-struct Node *GraphInitNode();
+struct Node *init_node(void *input);
 
-struct Node *GraphNodeAddValue(struct Node *node, void *input);
+struct Graph *init_graph();
 
-struct Node *GraphNodeAddEdge(struct Node *node, void *weight, struct Node *to, struct Node *from);
+struct Edge *init_edge(void *data);
+
+void link_edge(struct Edge *e, struct Node *from, struct Node *to);
+
+void add_node(struct Graph *graph, struct Node *node);
+
+void add_edge(struct Graph *graph, struct Edge *edge);
 
 int GraphSize(struct Graph *graph);
 
 bool GraphIsEmpty(struct Graph *graph);
-
-struct Graph *GraphInit(struct Graph *glist);
 
 struct List *GraphLeaves(struct Graph *graph);
 

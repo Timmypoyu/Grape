@@ -80,10 +80,20 @@ let translate (globals, functions) =
   let init_node : L.llvalue = 
       L.declare_function "init_node" init_node_t the_module in
 
+  let add_node_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [| obj_ptr_t |] in
+  let add_node : L.llvalue = 
+      L.declare_function "add_node" add_node_t the_module in
+
   let init_edge_t : L.lltype = 
       L.var_arg_function_type obj_ptr_t [| void_ptr_t |] in
   let init_edge : L.llvalue = 
       L.declare_function "init_edge" init_edge_t the_module in
+
+  let add_edge_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [| obj_ptr_t |] in
+  let add_edge : L.llvalue = 
+      L.declare_function "add_edge" add_edge_t the_module in
 
   let init_graph_t : L.lltype = 
       L.var_arg_function_type obj_ptr_t [||] in
@@ -151,7 +161,7 @@ let translate (globals, functions) =
 
     (* Construct code for an expression; return its value *)
     let rec expr builder ((_, e) : sexpr) = match e with
-  SIntLit i  -> L.const_int i32_t i
+        SIntLit i   -> L.const_int i32_t i
       | SStrLit s   -> L.build_global_stringptr s "string" builder
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
       | SFloatLit l -> L.const_float_of_string float_t l
@@ -174,13 +184,25 @@ let translate (globals, functions) =
 	(* TODO: Initialize with empty lists *)
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit l -> 
-        let lastNode = SNodeLit (A.Int, SIntLit 3) in
-        let nextNode = SNodeLit (A.Int, SIntLit 3) in
-        let graph = L.build_call init_graph [||] "init_graph" builder in graph
-        (* TODO: Check for existing nodes in graph in lookup *)
-      | SListLit i -> (*raise (Failure "Unimplemented")*)
-  	
-        let rec fill_list n lst = function 
+        let graph = L.build_call init_graph [||] "init_graph" builder in 
+        let rec init_path lastEdge = function
+          | hd::tl when lastEdge = (L.const_null void_t) -> (* base case *)
+            let edge = expr builder (snd hd) in 
+            let node = expr builder (fst hd) in
+            L.build_call add_node [|graph; node|] "add_node";
+            L.build_call add_edge [|graph; edge|] "add_edge";
+            L.build_call link_edge [|edge; node|] "link_edge";
+            init_path edge tl
+          | hd::tl  -> 
+            let edge = expr builder (snd hd) in 
+            let node = expr builder (fst hd) in
+            L.build_call add_node [|graph; node|] "add_node";
+            L.build_call add_edge [|graph; edge|] "add_edge";
+            L.build_call link_edge [|edge; node|] "link_edge"; 
+            L.build_call link_edge [|lastEdge; node|] "link_edge"; init_path edge tl
+        in List.fold_left init_path (L.const_null void_t) l
+      | SListLit i -> raise (Failure "Unimplemented")
+      let rec fill_list n lst = function 
         [] -> lst
         |sx :: tail ->  
         let data_value = expr builder sx in
@@ -193,6 +215,24 @@ let translate (globals, functions) =
         let lst = L.build_call init_list [||] "init_list" builder in 
         ignore(fill_list (list.hd i) lst i ); lst
 
+
+ (*
+  let rec fill_list n lst = function 
+     [] -> lst
+    | sx :: tail -> 
+    let (typ, _) = sx in 
+    let data = (match typ with 
+      A.Node _ | A.DirEdge _ | A.Edge _ | A.List | A.Graph(_,_) | A.Dict _ -> expr builder n sx 
+    | _ -> let data = L.build_malloc (ltype_of_typ typ) "data" builder in
+                        let llvalue = expr builder n sx
+                        in ignore (L.build_store llvalue data builder); data)
+    in 
+    let data = L.build_bitcast data void_ptr_t "data" builder in 
+    ignore (L.build_call addBack_f [|lst, data|] "addBack" builder; fill_list n lst tail
+    in
+    let lst = L.build_call list_init_f [||] "list_init" builder in 
+    ignore(list_fill n lst i ); lst 
+  *)     
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
     let e1' = expr builder e1
     and e2' = expr builder e2 in

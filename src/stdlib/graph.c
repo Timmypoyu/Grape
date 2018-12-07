@@ -4,29 +4,42 @@
 
 #include "list.h"
 
-struct Node *GraphInitNode() {
+struct Node *init_node(void *input) {
 	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
-	node->data = NULL;
-	initList(node->edges);	
-	return node;
-}
-/*
-struct Node *GraphNodeAddValue(struct *node, void *input) {
+	node->data = input;
+	node->edges = init_list();	
 	return node;
 }
 
-struct Node *GraphNodeAddEdge(struct *node, void *weight, struct Node *to, struct Node *from) {
-	return node;
-}*/
-
-
-struct Graph *GraphInit(struct Graph *glist) {
-	
+struct Graph *init_graph() {
 	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
-	initList(graph->nodes);
+	graph->nodes = init_list();
+	graph->edges = init_list();
 	return graph;
 }
 
+struct Edge *init_edge(void *data) {
+	struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
+	edge->data = data;
+	edge->to = NULL;
+	edge->to = NULL;
+	return edge;
+}
+
+void link_edge(struct Edge *e, struct Node *from, struct Node *to) {
+	e->to = to;
+	e->from = from;
+}
+
+void add_node(struct Graph *graph, struct Node *node) {
+	push_list(graph->nodes, node);
+}
+
+void add_edge(struct Graph *graph, struct Edge *edge) {
+	push_list(graph->edges, edge);
+}
+	
+/*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
 	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
@@ -75,12 +88,12 @@ int GraphSize(struct Graph *graph) {
 
 }
 
-/* decided to get rid of graph root
+ decided to get rid of graph root
 struct GraphNode *GraphRoot(struct Graph *graph) {
 	
 	return NULL;
 }
-*/
+
 
 struct List *GraphLeaves(struct Graph *graph) {
 	
@@ -146,3 +159,4 @@ bool GraphIsEmpty(struct Graph *graph) {
 void GraphSwitch(struct Graph *graph, struct Node *node1, struct Node *node2) {
 
 }
+*/

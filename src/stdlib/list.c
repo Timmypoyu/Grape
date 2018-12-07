@@ -6,37 +6,15 @@
 
 struct Node global;
 
-void initList(struct List *list) {
-    list->head = 0;
+struct List *init_list() {
+	struct List *list = (struct List *)malloc(sizeof(struct List));
+	list->head = NULL;
+	return list;
 }
 
 int isEmptyList(struct List *list) {
-    return (list->head == 0);
+    return (list->head == NULL);
 }
-
-
-struct ListNode *addFront(struct List *list, void *data) {
-    struct ListNode *node = (struct ListNode *) malloc(sizeof(struct ListNode));
-    if (node == NULL) {
-		return NULL;
-	}
-
-    node->data = data;
-    node->next = list->head;
-    list->head = node;
-    
-	return node;
-}
-/* 
- * I don't think we need to have a traverse function
-void traverseList(struct List *list, void (*f)(void *)) {
-    struct Node *node = list->head;
-    while (node) {
-		f(node->data);
-		node = node->next;
-    }
-}
-*/
 
 void reverseList(struct List *list) {
     struct ListNode *prv = NULL;
@@ -53,26 +31,68 @@ void reverseList(struct List *list) {
     list->head = prv;
 }
 
-
-void *popFront(struct List *list) {
-    if (isEmptyList(list)) {
-		return NULL;
-	} 
+void push_list(struct List *list, void *data) {
+    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
     
+    node->data = data;
+    node->next = NULL;
+
+    if (list->head == NULL) {
+		list->head = node;
+    }
+    struct ListNode *end = list->head;   
+    while (end->next != NULL) {
+		end = end->next;
+	}
+    
+	end->next = node;
+    
+}
+
+void push_front_list(struct List *list, void *data) {
+    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
+ 
+    node->data = data;
+    node->next = list->head;
+    list->head = node;
+    
+}
+
+void pop_front_list(struct List *list) {
+        
 	struct ListNode *oldHead = list->head;
     list->head = oldHead->next;
     void *data = oldHead->data;
     free(oldHead);
     
-	return data;
 }
+
+void pop_list(struct List *list) {
+	reverseList(list);
+	pop_front_list(list);
+	reverseList(list);
+}	
+
+
+/* 
+ * I don't think we need to have a traverse function
+void traverseList(struct List *list, void (*f)(void *)) {
+    struct Node *node = list->head;
+    while (node) {
+		f(node->data);
+		node = node->next;
+    }
+}
+*/
+
+
 
 void removeAllNodes(struct List *list) {
     while (!isEmptyList(list)) {
-		popFront(list);
+		pop_front_list(list);
 	}
 }
-
+/*
 struct ListNode *addAfter(struct List *list, struct ListNode *prevNode, void *data) {
     if (prevNode == NULL) { 
 		return addFront(list, data);
@@ -90,30 +110,8 @@ struct ListNode *addAfter(struct List *list, struct ListNode *prevNode, void *da
     
 	return node;
 }
-
-struct ListNode *addBack(struct List *list, void *data) {
-    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
-    if (node == NULL) {
-		return NULL;
-	}
-
-    node->data = data;
-    node->next = NULL;
-
-    if (list->head == NULL) {
-		list->head = node;
-		return node;
-    }
-    struct ListNode *end = list->head;   
-    while (end->next != NULL) {
-		end = end->next;
-	}
-    
-	end->next = node;
-    
-	return node;
-}
-
+*/
+/*
 struct List *copy(struct List *list) {  
 	struct List *new = (struct List *)malloc(sizeof(struct List));
     struct ListNode *node = list->head;
@@ -128,7 +126,7 @@ struct List *copy(struct List *list) {
 	return new;
 	
 }
-
+*/
 int size(struct List *list) {
 	
 	if (isEmptyList(list)) {
