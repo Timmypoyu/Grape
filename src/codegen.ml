@@ -228,12 +228,15 @@ let translate (globals, functions) =
       | SListLit i ->
       let rec fill_list n lst = function 
         [] -> lst
-        |sx :: tail ->  
-        let data_value = expr builder sx in
-        let data = L.build_malloc (ltype_of_typ (fst sx)) "data" builder   
-        in ignore (L.build_store data_value data builder);
+        |sx :: tail ->
+        let (atyp,_) = sx in
+        let data_ptr = match atyp with
+        A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
+        | _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
+                let data_value = expr builder sx in 
+                ignore (L.build_store data_value data builder); data in 
 
-        let data = L.build_bitcast data void_ptr_t "data" builder in 
+        let data = L.build_bitcast data_ptr void_ptr_t "data" builder in 
         ignore (L.build_call push_list [|lst; data|] "push_list" builder); fill_list n lst tail
         in
         let lst = L.build_call init_list [||] "init_list" builder in 
