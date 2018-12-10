@@ -31,7 +31,7 @@ void reverseList(struct List *list) {
     list->head = prv;
 }
 
-void push_list(struct List *list, void *data) {
+void * push_list(struct List *list, void *data) {
     struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
     
     node->data = data;
@@ -46,7 +46,7 @@ void push_list(struct List *list, void *data) {
 	}
     
 	end->next = node;
-    
+    return (void *) list;
 }
 
 void push_front_list(struct List *list, void *data) {

@@ -114,7 +114,7 @@ let translate (globals, functions) =
       L.declare_function "init_list" init_list_t the_module in
 
   let push_list_t : L.lltype = 
-      L.var_arg_function_type void_t [|obj_ptr_t; void_ptr_t |] in
+      L.var_arg_function_type void_ptr_t [|obj_ptr_t; void_ptr_t |] in
   let push_list : L.llvalue = 
       L.declare_function "push_list" push_list_t the_module in
 
@@ -226,21 +226,21 @@ let translate (globals, functions) =
             L.build_call link_edge [|lastEdge; node|] "link_edge"; init_path edge tl
         in List.fold_left init_path (L.const_null void_t) l
       | SListLit i ->
-      let rec fill_list n lst = function 
+      let rec fill_list lst = (function 
         [] -> lst
         |sx :: tail ->
         let (atyp,_) = sx in
-        let data_ptr = match atyp with
-        A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
-        | _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
-                let data_value = expr builder sx in 
-                ignore (L.build_store data_value data builder); data in 
+        let data_ptr = (match atyp with
+        		A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
+        		| _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
+                	let data_value = expr builder sx in 
+                	ignore (L.build_store data_value data builder); data) in 
 
         let data = L.build_bitcast data_ptr void_ptr_t "data" builder in 
-        ignore (L.build_call push_list [|lst; data|] "push_list" builder); fill_list n lst tail
+	ignore(L.build_call push_list [|lst; data|] "push_list" builder); fill_list lst tail)
         in
         let lst = L.build_call init_list [||] "init_list" builder in 
-        ignore(fill_list (List.hd i) lst i ); lst
+        ignore(fill_list lst i); lst 
 
 
  (*
