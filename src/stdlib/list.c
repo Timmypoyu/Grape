@@ -38,14 +38,14 @@ void push_list(struct List *list, void *data) {
     node->next = NULL;
 
     if (list->head == NULL) {
-		list->head = node;
-    }
-    struct ListNode *end = list->head;   
-    while (end->next != NULL) {
-		end = end->next;
+        list->head = node;
+    } else {
+        struct ListNode *end = list->head;   
+        while (end->next != NULL) {
+	    end = end->next;
 	}
-    
 	end->next = node;
+    }
 }
 
 void push_front_list(struct List *list, void *data) {

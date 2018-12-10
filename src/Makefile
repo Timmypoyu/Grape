@@ -5,11 +5,11 @@ all : grape.native stdlib.o
 	cp _build/grape.native ../dist
 
 stdlib.o: 
-	cd stdlib && gcc -c ./*.c
+	cd stdlib && gcc -g -O -c ./*.c
 	ld -r stdlib/*.o -o stdlib.o
 
 grape.native : 
-	ocamlbuild -use-ocamlfind -r \
+	ocamlbuild -use-ocamlfind -tag debug -r \
 		-pkgs llvm,llvm.analysis \
 		-cflags -w,+a-4 \
 		grape.native

@@ -133,7 +133,7 @@ nodeExpr:
 
 actuals_opt:
     /* nothing */ { [] }
-  | actuals_list { List.rev $1 }
+  | actuals_list { $1 }
 
 /* comma-separated list */
 actuals_list:

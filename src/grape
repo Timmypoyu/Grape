@@ -6,7 +6,7 @@ OBJECT="${1%.*}.s"
 OUTFILE=${2:-"./out.g"}
 
 $HOME/grape.native $1 | llc -relocation-model=pic > $OBJECT
-cc -o $OUTFILE $OBJECT $HOME/stdlib.o
+cc -g -O -o $OUTFILE $OBJECT $HOME/stdlib.o
 
 rm $OBJECT
 chmod 750 $OUTFILE
