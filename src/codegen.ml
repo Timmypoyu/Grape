@@ -101,9 +101,12 @@ let translate (globals, functions) =
       L.declare_function "init_graph" init_graph_t the_module in
 
   let link_edge_t : L.lltype = 
-    L.var_arg_function_type obj_ptr_t [|obj_ptr_t; obj_ptr_t; obj_ptr_t|] in
-  let link_edge : L.llvalue = 
-      L.declare_function "link_edge" link_edge_t the_module in
+    L.var_arg_function_type void_t [|obj_ptr_t; obj_ptr_t|] in
+  let link_edge_to : L.llvalue = 
+      L.declare_function "link_edge_to" link_edge_t the_module in
+
+  let link_edge_from : L.llvalue = 
+      L.declare_function "link_edge_from" link_edge_t the_module in
   (* This must match the C library function name *)
 
   (* list functions*)
@@ -209,22 +212,30 @@ let translate (globals, functions) =
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit l -> 
         let graph = L.build_call init_graph [||] "init_graph" builder in 
-        let rec init_path lastEdge = function
-          | hd::tl when lastEdge = (L.const_null void_t) -> (* base case *)
+        let rec init_path lastEdge flag = function
+          | [] -> graph
+          | [hd] when flag = 1 ->
+            let node = expr builder (fst hd) in
+            ignore(L.build_call add_node [|graph; node|] "" builder);
+            ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder);
+            graph
+          | hd::tl when flag = 0 -> 
             let edge = expr builder (snd hd) in 
             let node = expr builder (fst hd) in
-            L.build_call add_node [|graph; node|] "add_node";
-            L.build_call add_edge [|graph; edge|] "add_edge";
-            L.build_call link_edge [|edge; node|] "link_edge";
-            init_path edge tl
+            ignore(L.build_call add_node [|graph; node|] "" builder);
+            ignore(L.build_call add_edge [|graph; edge|] "" builder);
+            ignore(L.build_call link_edge_from [|edge; node|] "" builder);
+            init_path edge 1 tl
           | hd::tl  -> 
             let edge = expr builder (snd hd) in 
             let node = expr builder (fst hd) in
-            L.build_call add_node [|graph; node|] "add_node";
-            L.build_call add_edge [|graph; edge|] "add_edge";
-            L.build_call link_edge [|edge; node|] "link_edge"; 
-            L.build_call link_edge [|lastEdge; node|] "link_edge"; init_path edge tl
-        in List.fold_left init_path (L.const_null void_t) l
+            ignore(L.build_call add_node [|graph; node|] "" builder);
+            ignore(L.build_call add_edge [|graph; edge|] "" builder);
+            ignore(L.build_call link_edge_from [|edge; node|] "" builder); 
+            ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder); 
+            init_path edge 1 tl
+        in 
+        ignore(List.map (init_path (L.const_int i8_t 0) 0) l); graph
       | SListLit i ->
       let rec fill_list lst = (function 
         [] -> lst
