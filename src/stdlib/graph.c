@@ -30,11 +30,13 @@ struct Edge *init_edge(void *data) {
 void link_edge_from(struct Edge *e, struct Node *from) {
         printf("link_edge\n");
 	e->from = from;
+	push_list(from->edges, e);
 }
 
 void link_edge_to(struct Edge *e, struct Node *to) {
         printf("link_edge\n");
 	e->to = to;
+	push_list(to->edges, e);
 }
 
 void add_node(struct Graph *graph, struct Node *node) {
