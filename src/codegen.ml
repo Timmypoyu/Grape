@@ -320,6 +320,17 @@ let translate (globals, functions) =
       | SCall ("prints", [e]) ->
       L.build_call printf [| str_format_str ; (expr builder e) |]
         "prints" builder
+(*	
+      | SCall ("list_get", [e; f]) ->
+                let (a , _) = f in   
+                let lltype = match a with 
+                        A.List i -> ltype_of_typ i (*(fst (List.hd i))*)
+                        | _ -> raise (Failure "Unimplemented") in                   
+	        let data_ptr = L.build_call list_get [|expr builder e; expr builder f|] "list_get" builder in
+	        let data_ptr = L.build_bitcast data_ptr (L.pointer_type lltype ) "data" builder in 
+	        L.build_load data_ptr "data" builder
+*)
+
       | SCall ("list_get_int", [e; f]) -> 
 		let data_ptr = L.build_call list_get_int [|expr builder e; expr builder f|] "list_get" builder in  
 		let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
@@ -328,7 +339,8 @@ let translate (globals, functions) =
 		let data_ptr = L.build_call list_get_str [|expr builder e; expr builder f|] "list_get" builder in  
 		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t) "data" builder in 
 		L.build_load data_ptr "data" builder  
-      | SCall (f, args) ->
+
+    | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     
         let llargs = List.rev (List.map (expr builder) (List.rev args)) in
         let result = (match fdecl.styp with 
