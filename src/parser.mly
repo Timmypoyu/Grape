@@ -60,22 +60,20 @@ formal_list:
 typ:
     INT                         { Int }
   | STR                         { Str }
+  | BOOL                        { Bool }
+  | LIST LT typ GT              { List($3) }
   | NODE LT typ GT              { Node($3) }
   | EDGE LT typ GT              { Edge($3) }
   | GRAPH LT typ COMMA typ GT   { Graph(Node($3), Edge($5)) }
-  | BOOL                        { Bool }
-  | LIST LT typ GT              { List($3) }
-
-vdecl_list:
-    /* nothing */    { [] }
-  | vdecl_list vdecl { $2 :: $1 }
-
-vdecl:
-    typ ID SEMI    { ($1, $2) }
 
 stmt_list:
     stmt           { [$1] }
-  | stmt_list stmt { $2 :: $1 }
+  | stmt_list stmt   { $2 :: $1 }
+  | vdecl_list vdecl { $2 :: $1 }
+
+vdecl:
+    typ ID SEMI         { ($1, $2) }
+    typ ID ASSIGN expr  {
 
 stmt:
     expr SEMI                               { Expr $1 }
@@ -120,6 +118,7 @@ expr:
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
+  | expr LBRACK expr RBRACK { ListIndex($1, $3)
   | LBRACK actuals_opt RBRACK { ListLit($2) }
   | edgeExpr { $1 }  
   | nodeExpr { $1 } 

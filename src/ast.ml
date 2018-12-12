@@ -28,6 +28,7 @@ type expr =
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list 
+  | ListIndex of expr * expr
   | Noexpr
 
 type stmt =
@@ -37,7 +38,7 @@ type stmt =
   | If of expr * stmt * stmt
   | Each of expr * stmt
   | While of expr * stmt
-  | DecAsn of typ * string * expr
+  (* | DecAsn of typ * string * expr *)
 
 type func_decl = {
     typ : typ;
@@ -87,6 +88,7 @@ let rec string_of_expr = function
   | DirEdgeLit(e) -> "_" ^ string_of_expr e ^ "_>"
   | GraphLit(e) -> "<<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) -> string_of_expr k ^ " " ^ string_of_expr v) lst ))e) ^ ">>" 
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr (List.rev e)) ^ "]" 
+  | ListIndex(l, i) -> string_of_expr l ^ "[" ^ string_of_expr i ^ "]"
   | StrLit(e) -> e
   | Call(f, el) -> 
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"

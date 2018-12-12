@@ -1,4 +1,3 @@
-
 fun Int main() {
 
     Edge<String> aEdge;
@@ -44,5 +43,5 @@ fun Int main() {
 
 	token = token + 1;
     }
-	return 0;
+    return 0;
 }
