@@ -29,10 +29,12 @@ struct Edge *init_edge(void *data) {
 
 void link_edge_from(struct Edge *e, struct Node *from) {
 	e->from = from;
+	push_list(from->edges, e);
 }
 
 void link_edge_to(struct Edge *e, struct Node *to) {
 	e->to = to;
+	push_list(to->edges, e);
 }
 
 void add_node(struct Graph *graph, struct Node *node) {
