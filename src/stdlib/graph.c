@@ -55,6 +55,30 @@ void *edge_get(struct Edge *edge) {
     return edge->data;
 }
 	
+struct Node *get_to(struct Edge *edge) {
+    return edge->to;
+}
+
+struct Node *get_from(struct Edge *edge) {
+    return edge->from;
+}
+
+struct List *get_outgoing(struct Node *node) {
+    struct List *adj = node->edges;
+    struct List *outgo = init_list();
+    struct ListNode *lnode = adj->head;
+    struct Node *tnode;
+    struct Node *tedge;
+    while( lnode ) {
+        tedge = (struct Edge *)lnode->data;
+        tnode = (struct Node *)tedge->to;
+        if( tnode != node )
+            push_list(outgo, tedge);
+        lnode = lnode->next;
+    }
+    return outgo;
+}
+
 /*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
