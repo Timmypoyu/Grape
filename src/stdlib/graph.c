@@ -46,6 +46,14 @@ void add_edge(struct Graph *graph, struct Edge *edge) {
         printf("add_edge\n");
 	push_list(graph->edges, edge);
 }
+
+void *node_get(struct Node *node) {
+    return node->data;
+}
+
+void *edge_get(struct Edge *edge) {
+    return edge->data;
+}
 	
 /*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
