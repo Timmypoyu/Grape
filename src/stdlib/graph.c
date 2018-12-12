@@ -13,7 +13,6 @@ struct Node *init_node(void *input) {
 
 struct Graph *init_graph() {
 	struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
-        printf("init_graph\n");
 	graph->nodes = init_list();
 	graph->edges = init_list();
 	return graph;
