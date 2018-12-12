@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 char *get_char(char *a, int b) {
 	
 	if (b >= strlen(a)) {
