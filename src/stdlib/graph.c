@@ -28,22 +28,18 @@ struct Edge *init_edge(void *data) {
 }
 
 void link_edge_from(struct Edge *e, struct Node *from) {
-        printf("link_edge\n");
 	e->from = from;
 }
 
 void link_edge_to(struct Edge *e, struct Node *to) {
-        printf("link_edge\n");
 	e->to = to;
 }
 
 void add_node(struct Graph *graph, struct Node *node) {
-        printf("add_node\n");
 	push_list(graph->nodes, node);
 }
 
 void add_edge(struct Graph *graph, struct Edge *edge) {
-        printf("add_edge\n");
 	push_list(graph->edges, edge);
 }
 
