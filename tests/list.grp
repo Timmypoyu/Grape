@@ -1,6 +1,7 @@
 fun Int main() {
 
-    List<Int> a;
-    a = [1,2,3,4,5];
+    List<String> b;
+    b = ["hi", "hello", "hello?" , "bye"];
+    prints(list_get_str(b,0));
     return 0;
 }

@@ -42,8 +42,10 @@ let check (globals, functions) =
                                                  ("printb", [(Bool, "x")], Void);
                                                  ("printf", [(Float, "x")], Void);
                                                  ("prints", [(Str, "x")], Void);
-                                                 ("printbig", [(Int, "x")], Void) ]
-  in
+                                                 ("printbig", [(Int, "x")], Void); 
+                                                ("list_get_int", [(Int, "x"); (List Int, "y")], Int);
+                                                ("list_get_str", [(Int, "x"); (List Str, "y")], Str)]
+in
 
   (* Add function name to symbol table *)
   let add_func map fd = 

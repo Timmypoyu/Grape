@@ -12,7 +12,7 @@ struct List *init_list() {
 	return list;
 }
 
-void *list_get(struct List *list, int n){
+void *list_get(int n, struct List *list){
     struct ListNode *node = list->head;
     if( n == 0 ){
        return node->data;

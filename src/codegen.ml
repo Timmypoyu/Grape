@@ -135,6 +135,15 @@ let translate (globals, functions) =
       L.var_arg_function_type void_t [|obj_ptr_t|] in
   let pop_list : L.llvalue = 
       L.declare_function "pop_list" pop_list_t the_module in
+
+  let list_get_t : L.lltype = 
+          L.var_arg_function_type void_ptr_t [|i32_t ; obj_ptr_t|] in
+  let list_get_int : L.llvalue = 
+      L.declare_function "list_get" list_get_t the_module in
+  let list_get_str : L.llvalue = 
+      L.declare_function "list_get" list_get_t the_module in
+
+
   (* string functions*)
   (* graph functions*)
 
@@ -252,25 +261,7 @@ let translate (globals, functions) =
         in
         let lst = L.build_call init_list [||] "init_list" builder in 
 	fill_list lst i 
-
-
- (*
-  let rec fill_list n lst = function 
-     [] -> lst
-    | sx :: tail -> 
-    let (typ, _) = sx in 
-    let data = (match typ with 
-      A.Node _ | A.DirEdge _ | A.Edge _ | A.List | A.Graph(_,_) | A.Dict _ -> expr builder n sx 
-    | _ -> let data = L.build_malloc (ltype_of_typ typ) "data" builder in
-                        let llvalue = expr builder n sx
-                        in ignore (L.build_store llvalue data builder); data)
-    in 
-    let data = L.build_bitcast data void_ptr_t "data" builder in 
-    ignore (L.build_call addBack_f [|lst, data|] "addBack" builder; fill_list n lst tail
-    in
-    let lst = L.build_call list_init_f [||] "list_init" builder in 
-    ignore(list_fill n lst i ); lst 
-  *)     
+   
       | SBinop ((A.Float,_ ) as e1, op, e2) ->
     let e1' = expr builder e1
     and e2' = expr builder e2 in
@@ -329,10 +320,18 @@ let translate (globals, functions) =
       | SCall ("prints", [e]) ->
       L.build_call printf [| str_format_str ; (expr builder e) |]
         "prints" builder
+      | SCall ("list_get_int", [e; f]) -> 
+		let data_ptr = L.build_call list_get_int [|expr builder e; expr builder f|] "list_get" builder in  
+		let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
+		L.build_load data_ptr "data" builder  
+      | SCall ("list_get_str", [e; f]) -> 
+		let data_ptr = L.build_call list_get_str [|expr builder e; expr builder f|] "list_get" builder in  
+		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t) "data" builder in 
+		L.build_load data_ptr "data" builder  
       | SCall (f, args) ->
-         let (fdef, fdecl) = StringMap.find f function_decls in
-   let llargs = List.rev (List.map (expr builder) (List.rev args)) in
-   let result = (match fdecl.styp with 
+        let (fdef, fdecl) = StringMap.find f function_decls in     
+        let llargs = List.rev (List.map (expr builder) (List.rev args)) in
+        let result = (match fdecl.styp with 
                         A.Void -> ""
                       | _ -> f ^ "_result") in
          L.build_call fdef (Array.of_list llargs) result builder
@@ -354,7 +353,6 @@ let translate (globals, functions) =
     let rec stmt builder = function
   SBlock sl -> List.fold_left stmt builder sl
       | SExpr e -> ignore(expr builder e); builder
-      | SEach (e, f) -> raise(Failure "Unimplemented") 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder 
@@ -392,7 +390,9 @@ let translate (globals, functions) =
     ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
     L.builder_at_end context merge_bb
 
-    in
+    | SEach (e, f) -> raise(Failure "not implemented!") 
+    
+	in
 
     (* Build the code for each statement in the function *)
     let builder = stmt builder (SBlock fdecl.sbody) in
