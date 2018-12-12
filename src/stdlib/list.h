@@ -8,6 +8,8 @@ int size(struct List *list);
 
 struct List *init_list();
 
+void *list_get(struct List *list, int n);
+
 void push_list(struct List *list, void *data);
 
 void push_front_list(struct List *list, void *data);

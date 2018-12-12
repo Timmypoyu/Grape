@@ -12,6 +12,17 @@ struct List *init_list() {
 	return list;
 }
 
+void *list_get(struct List *list, int n){
+    struct ListNode *node = list->head;
+    if( n == 0 ){
+       return node->data;
+    }
+    for(int i=0; i<n ; i++ ) {
+        node = node->next;
+    }
+    return node->data;
+}
+
 int isEmptyList(struct List *list) {
     return (list->head == NULL);
 }
