@@ -12,9 +12,17 @@ struct Edge *init_edge(void *data);
 
 void link_edge(struct Edge *e, struct Node *from, struct Node *to);
 
+void link_edge_to(struct Edge *e, struct Node *to);
+
+void link_edge_from(struct Edge *e, struct Node *from);
+
 void add_node(struct Graph *graph, struct Node *node);
 
 void add_edge(struct Graph *graph, struct Edge *edge);
+
+void *node_get(struct Node *node);
+
+void *edge_get(struct Edge *edge);
 
 int GraphSize(struct Graph *graph);
 
@@ -34,3 +42,8 @@ struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo
 
 void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struct Node *inputFrom, void *value);
 
+struct Node *get_to(struct Edge *edge);
+
+struct Node *get_from(struct Edge *edge);
+
+struct List *get_outgoing(struct Node *node);

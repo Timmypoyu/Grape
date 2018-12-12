@@ -125,11 +125,11 @@ expr:
   | nodeExpr { $1 } 
 
 edgeExpr:
-    UNDS expr UNDS GT { DirEdgeLit($2)}        /* Directed Edge */ 
-  | UNDS expr UNDS LT {EdgeLit($2) }
+    UNDS expr UNDS GT { DirEdgeLit($2) }        /* Directed Edge */ 
+  | UNDS expr UNDS LT { EdgeLit($2) }
    
 nodeExpr: 
-    SQUOT expr SQUOT       { NodeLit($2) }         /* Node */
+    SQUOT expr SQUOT       { NodeLit($2) }     /* Node */
 
 actuals_opt:
     /* nothing */ { [] }
