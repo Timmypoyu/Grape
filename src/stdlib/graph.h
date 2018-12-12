@@ -16,6 +16,10 @@ void add_node(struct Graph *graph, struct Node *node);
 
 void add_edge(struct Graph *graph, struct Edge *edge);
 
+void *node_get(struct Node *node);
+
+void *edge_get(struct Edge *edge);
+
 int GraphSize(struct Graph *graph);
 
 bool GraphIsEmpty(struct Graph *graph);
