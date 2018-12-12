@@ -68,7 +68,7 @@ struct List *get_outgoing(struct Node *node) {
     struct List *outgo = init_list();
     struct ListNode *lnode = adj->head;
     struct Node *tnode;
-    struct Node *tedge;
+    struct Edge *tedge;
     while( lnode ) {
         tedge = (struct Edge *)lnode->data;
         tnode = (struct Node *)tedge->to;
