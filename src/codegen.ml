@@ -72,7 +72,6 @@ let translate (globals, functions) =
   let printbig : L.llvalue =
       L.declare_function "printbig" printbig_t the_module in
 
-
   (* NODE FUNCTIONS *)
 
   let init_node_t : L.lltype = 
@@ -138,7 +137,8 @@ let translate (globals, functions) =
 
   let list_get_t : L.lltype = 
           L.var_arg_function_type void_ptr_t [|i32_t ; obj_ptr_t|] in
-  let list_get_int : L.llvalue = 
+
+  let list_get : L.llvalue = 
       L.declare_function "list_get" list_get_t the_module in
   let list_get_str : L.llvalue = 
       L.declare_function "list_get" list_get_t the_module in
@@ -149,9 +149,7 @@ let translate (globals, functions) =
       L.var_arg_function_type i32_t [|obj_ptr_t|] in
   let size : L.llvalue = 
       L.declare_function "size" size_t the_module in
-
 	
-
   (* string functions*)
 
   let get_char_t: L.lltype = 
@@ -386,10 +384,10 @@ let translate (globals, functions) =
 	        L.build_load data_ptr "data" builder
 *)
 
-      | SCall ("list_get_int", [e; f]) -> 
-		let data_ptr = L.build_call list_get_int [|expr builder e; expr builder f|] "list_get" builder in  
-		let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
-		L.build_load data_ptr "data" builder  
+      | SCall ("list_get", [e; f]) -> 
+        let data_ptr = L.build_call list_get [|expr builder e; expr builder f|] "list_get" builder in  
+        let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
+        L.build_load data_ptr "data" builder  
       | SCall ("list_get_str", [e; f]) -> 
 		let data_ptr = L.build_call list_get_str [|expr builder e; expr builder f|] "list_get" builder in  
 		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t) "data" builder in 
