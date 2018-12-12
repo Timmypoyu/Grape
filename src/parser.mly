@@ -69,9 +69,6 @@ stmt_list:
     stmt           { [$1] }
   | stmt_list stmt   { $2 :: $1 }
 
-vdecl:
-    typ ID SEMI         { ($1, $2) }
-
 stmt:
     expr SEMI                               { Expr $1 }
   | RETURN expr_opt SEMI                    { Return $2} 
@@ -117,7 +114,6 @@ expr:
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
-  | expr LBRACK expr RBRACK { ListIndex($1, $3) }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
 
 edgeExpr:
