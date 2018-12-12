@@ -221,14 +221,14 @@ let translate (globals, functions) =
       | SDirEdgeLit i -> raise (Failure "Unimplemented")
       | SGraphLit l -> 
         let graph = L.build_call init_graph [||] "init_graph" builder in 
-        let rec init_path lastEdge flag = function
+        let rec init_path lastEdge isLast = function
           | [] -> graph
-          | [hd] when flag = 1 ->
+          | [hd] when isLast = 1 ->
             let node = expr builder (fst hd) in
             ignore(L.build_call add_node [|graph; node|] "" builder);
             ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder);
             graph
-          | hd::tl when flag = 0 -> 
+          | hd::tl when isLast = 0 -> 
             let edge = expr builder (snd hd) in 
             let node = expr builder (fst hd) in
             ignore(L.build_call add_node [|graph; node|] "" builder);

@@ -1,0 +1,20 @@
+fun Int main() {
+    List<Edge<String>> outgoing;
+    Graph<Int, String> dfa;
+    Node<Int> current;
+    Node<Int> start;
+
+    // starting node, not accepting
+    start = '0';
+    current = start;
+
+    dfa = << start _"b"_> '1' >>;
+
+    edges = outgoing(current);
+    while(size(edges) > 0) {
+	// if not accepting state
+	if (getNodeInt(current) !== 1) {
+	    outgoing = getOutgoing(current);
+	}
+    }
+}
