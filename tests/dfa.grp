@@ -1,0 +1,47 @@
+
+fun Int main() {
+
+    Edge<String> aEdge;
+    List<Edge<String>> transitions;
+
+    Int i;
+    Int j;
+
+    Int token;
+    String input;
+    String character;
+
+    Node<Int> start;
+    Node<Int> state;
+    Graph<Int, String> dfa;
+
+    start = '0';
+    dfa = << start _"b"_< '1' _"b"_< '0' _"b"_< '1' >>;
+
+    state = start;
+    while(token < size(input)) { 			// String size
+
+	character = getChar(input, token);		// Get char at token
+	
+	transitions = outgoing(state); 			// Get outgoing edges
+
+	if (size(transitions) == 0) {
+	    if (getNodeInt(state) == 1) {		// Get accepting
+		prints("ACCEPT");
+	    } else {
+		prints("REJECT");
+	    }
+	}
+
+	i = 0;
+	while(i < size(transitions)) { 			// List size
+	    aEdge = getListEdge(i, transitions); 	// Get list item
+	    if (getEdgeString(aEdge) == character) { 	// Get list string
+		state = getTo(aEdge);			// Get edge destination
+	    }
+	    i = i + 1;
+	}
+
+	token = token + 1;
+    }
+}
