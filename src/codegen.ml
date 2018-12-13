@@ -162,7 +162,7 @@ let translate (globals, functions) =
   let str_size_t : L.lltype = 
       L.var_arg_function_type i32_t [|str_t|] in
   let str_size : L.llvalue = 
-      L.declare_function "size" str_size_t the_module in
+      L.declare_function "str_size" str_size_t the_module in
 
 
   (* graph functions*)
