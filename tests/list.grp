@@ -1,5 +1,4 @@
 fun Int main() {
-
     List<String> b;
     b = ["hi", "hello", "hello?" , "bye"];
     prints(list_get_str(b,0));
