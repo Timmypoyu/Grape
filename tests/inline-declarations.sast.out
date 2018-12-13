@@ -1,0 +1,8 @@
+
+Int main()
+{
+(Void : prints((String : HI DUDE!)));
+Int a = (Int : a = (Int : 5))(Void : print((Int : a)));
+String b = (String : b = (String : Hi People!))(Void : prints((String : b)));
+return (Int : a);
+}

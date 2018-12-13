@@ -37,7 +37,7 @@ let check (globals, functions) =
       typ = ret;
       fname = name; 
       formals = frm;
-      locals = []; body = [] } map
+      body = [] } map
     in List.fold_left add_bind StringMap.empty [ ("print",[(Int, "x")], Void);
                                                  ("printb", [(Bool, "x")], Void);
                                                  ("printf", [(Float, "x")], Void);
@@ -86,7 +86,7 @@ in
   let check_function func =
     (* Make sure no formals or locals are void or duplicates *)
     check_binds "formal" func.formals;
-    check_binds "local" func.locals;
+    (* check_binds "local" func.locals;  UH OH!! *)
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
@@ -94,10 +94,16 @@ in
        if lvaluet = rvaluet then lvaluet else raise (Failure err)
     in   
 
-    
+    let rec concat_statements locals = function
+        [] -> locals
+      | hd::tl -> concat_statements (match hd with
+           Declare (t, id, a) -> (t, id) :: locals
+         | _ -> locals) tl
+    in
+
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
-	                StringMap.empty (globals @ func.formals @ func.locals )
+      StringMap.empty (globals @ func.formals @ (concat_statements [] func.body))
     in
 
     (* Return a variable from our local symbol table *)
@@ -154,7 +160,7 @@ in
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
-      | Assign(var, e) as ex -> 
+      | Assign (var, e) as ex -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in
           let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
@@ -215,6 +221,8 @@ in
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | Each(p, s) -> SEach(expr p, check_stmt s)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
+      | Declare (typ, id, asn)  -> 
+          let a = expr asn in SDeclare(typ, id, a)
       | Return e -> let (t, e') = expr e in
         if t = func.typ then SReturn (t, e') 
         else raise (
@@ -236,7 +244,6 @@ in
     { styp = func.typ;
       sfname = func.fname;
       sformals = func.formals;
-      slocals  = func.locals;
       sbody = match check_stmt (Block func.body) with
 	SBlock(sl) -> sl
       | _ -> raise (Failure ("internal error: block didn't become a block?"))

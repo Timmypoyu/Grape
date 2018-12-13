@@ -1,4 +1,3 @@
-
 fun Int main() {
 
     Edge<String> aEdge;
@@ -45,10 +44,11 @@ fun Int main() {
         found = False;
 	token = token + 1;
     }
+
     if (node_get_int(state) == 1) {		// Get accepting
         prints("ACCEPT");
     } else {
         prints("REJECT");
     }
-	return 0;
+    return 0;
 }

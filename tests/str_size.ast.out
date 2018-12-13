@@ -1,0 +1,7 @@
+
+Int main()
+{
+String a = a = applejacks;
+print(str_size(a));
+return 0;
+}

@@ -39,15 +39,17 @@ decls:
  | decls vdecl { ($2 :: fst $1), snd $1 }
  | decls fdecl { fst $1, ($2 :: snd $1) }
 
+vdecl:
+   typ ID SEMI      { ($1, $2) }
+
 /* DO ALL Variable Declarations have to come before all STATEMENTS? */
 
 fdecl:
-   FUN typ ID LPAREN formals_opt RPAREN LBRACE vdecl_list stmt_list RBRACE
+   FUN typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
      { { typ = $2;
 	 fname = $3;
 	 formals = $5;
-	 locals = List.rev $8;
-	 body = List.rev $9 } }
+	 body = List.rev $8 } }
 
 formals_opt:
     /* nothing */ { [] }
@@ -60,22 +62,15 @@ formal_list:
 typ:
     INT                         { Int }
   | STR                         { Str }
+  | BOOL                        { Bool }
+  | LIST LT typ GT              { List($3) }
   | NODE LT typ GT              { Node($3) }
   | EDGE LT typ GT              { Edge($3) }
   | GRAPH LT typ COMMA typ GT   { Graph(Node($3), Edge($5)) }
-  | BOOL                        { Bool }
-  | LIST LT typ GT              { List($3) }
-
-vdecl_list:
-    /* nothing */    { [] }
-  | vdecl_list vdecl { $2 :: $1 }
-
-vdecl:
-    typ ID SEMI    { ($1, $2) }
 
 stmt_list:
     stmt           { [$1] }
-  | stmt_list stmt { $2 :: $1 }
+  | stmt_list stmt   { $2 :: $1 }
 
 stmt:
     expr SEMI                               { Expr $1 }
@@ -85,7 +80,8 @@ stmt:
   | IF LPAREN expr RPAREN stmt ELSE stmt    { If($3, $5, $7) }
   | EACH LPAREN expr RPAREN stmt            { Each($3, $5) }
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
-  | typ ID ASSIGN expr SEMI                 { DecAsn($1 , $2,  Assign($2, $4))}
+  | typ ID ASSIGN expr SEMI                 { Declare($1, $2, Assign($2, $4))}
+  | typ ID SEMI                             { Declare($1, $2, Noexpr) }
 
 expr_opt:
     /* nothing */ { Noexpr }
@@ -99,6 +95,8 @@ expr:
   | FALSE                   { BoolLit(false) }
   | ID                      { Id($1) }
   | GRAPS graph_opt GRAPE   { GraphLit($2) }
+  | edgeExpr { $1 }  
+  | nodeExpr { $1 } 
   | expr PLUS   expr        { Binop($1, Add,   $3) }
   | expr MINUS  expr        { Binop($1, Sub,   $3) }
   | expr TIMES  expr        { Binop($1, Mult,  $3) }
@@ -116,13 +114,10 @@ expr:
   | expr AMP    expr        { Binop($1, Amp,    $3)} 
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
-  /*| typ ID ASSIGN expr       { Assign(snd $1, $4)} */
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
-  | edgeExpr { $1 }  
-  | nodeExpr { $1 } 
 
 edgeExpr:
     UNDS expr UNDS GT { DirEdgeLit($2) }        /* Directed Edge */ 
