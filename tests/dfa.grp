@@ -9,44 +9,46 @@ fun Int main() {
     Int token;
     String input;
     String character;
+    Bool found;
 
     Node<Int> start;
     Node<Int> state;
     Graph<Int, String> dfa;
 
     start = '0';
-    input = "bb";
+    input = "bbbbbbbbbbb";
     dfa = << start _"b"_< '1' _"b"_< '0' _"b"_< '1' >>;
     token = 0;
+    found = False;
 
     state = start;
-    print(str_size(input));
-    while(token < (str_size(input)+2)) { 			// String size
+    while( token < str_size(input)) { 			// String size
 
 	character = get_char(input, token);		// Get char at token
 	transitions = get_outgoing(state); 			// Get outgoing edges
 
-        print(size(transitions));
-	if (size(transitions) == 0) {
-	    if (node_get_int(state) == 1) {		// Get accepting
-		prints("ACCEPT");
-	    } else {
-		prints("REJECT");
-	    }
-	}
+	
 
 	i = 0;
-	while(i < size(transitions)) { 			// List size
+	while((i < size(transitions)) and (found == False)) { 			// List size
 	    aEdge = list_get_edge(transitions, i); 	// Get list item
 	    if (str_equal(edge_get_str(aEdge), character)) { 	// Get list string
-                prints("bool works");
 		state = get_to(aEdge);			// Get edge destination
-                i = 500;
+                found = True;
 	    }
 	    i = i + 1;
 	}
-
+        if( found == False){
+            prints("REJECT");
+            return 0;
+        }
+        found = False;
 	token = token + 1;
+    }
+    if (node_get_int(state) == 1) {		// Get accepting
+        prints("ACCEPT");
+    } else {
+        prints("REJECT");
     }
 	return 0;
 }
