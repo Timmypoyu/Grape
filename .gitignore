@@ -3,6 +3,7 @@ src/parser.ml
 src/grape.native
 src/_build/*
 dist/*
+tests/*.fail
 
 *.o
 *.s
