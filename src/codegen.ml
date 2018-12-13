@@ -226,20 +226,29 @@ let translate (globals, functions) =
     let local_vars =
       let add_formal m (t, n) p = 
         L.set_value_name n p;
-  let local = L.build_alloca (ltype_of_typ t) n builder in
+      let local = L.build_alloca (ltype_of_typ t) n builder in
         ignore (L.build_store p local builder);
-  StringMap.add n local m 
+      StringMap.add n local m 
 
       (* Allocate space for any locally declared variables and add the
        * resulting registers to our map *)
       and add_local m (t, n) =
-  let local_var = L.build_alloca (ltype_of_typ t) n builder
-  in StringMap.add n local_var m 
+        let local_var = L.build_alloca (ltype_of_typ t) n builder
+        in StringMap.add n local_var m 
       in
 
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
           (Array.to_list (L.params the_function)) in
-      List.fold_left add_local formals fdecl.slocals 
+
+      let rec add_declaration locals = function
+          [] -> locals
+        | hd::tl -> add_declaration (match hd with
+             SDeclare (t, id, a) -> (t, id) :: locals
+           | _ -> locals) tl
+      in
+          (* slocals: typ * string list *)
+      let declarations = add_declaration [] fdecl.sbody in
+      List.fold_left add_local formals declarations
     in
 
     (* Return the value for a variable or formal argument.
@@ -451,6 +460,7 @@ let translate (globals, functions) =
     let rec stmt builder = function
   SBlock sl -> List.fold_left stmt builder sl
       | SExpr e -> ignore(expr builder e); builder
+      | SDeclare (s, id, a) -> ignore(expr builder a); builder 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
                               A.Void -> L.build_ret_void builder 
@@ -489,9 +499,6 @@ let translate (globals, functions) =
     L.builder_at_end context merge_bb
 
     | SEach (e, f) -> raise(Failure "not implemented!") 
-    | SDeclare (s, id, a) -> let a' = expr builder a in
-          ignore(L.build_store a' (lookup id) builder); a'
-    
 	in
 
     (* Build the code for each statement in the function *)
