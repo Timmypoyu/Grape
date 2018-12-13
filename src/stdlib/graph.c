@@ -126,15 +126,14 @@ struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
 	}
 	return adjacentList;
 }
+/*
+void removeGraph(struct Graph *graph) {
+	if (GraphIsEmpty(graph)) {
+		free(graph);
+	} else {
+}
 
-/* void removeGraph(struct Graph *graph) { */
-/* 	if (GraphIsEmpty(graph)) { */
-/* 		free(graph); */
-/* 	} else { */
-
-/* } */
-
-
+*/
 /*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
