@@ -24,6 +24,12 @@ void *node_get(struct Node *node);
 
 void *edge_get(struct Edge *edge);
 
+struct Node *get_to(struct Edge *edge);
+
+struct Node *get_from(struct Edge *edge);
+
+struct List *get_outgoing(struct Node *node);
+
 int GraphSize(struct Graph *graph);
 
 bool GraphIsEmpty(struct Graph *graph);
@@ -42,8 +48,3 @@ struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo
 
 void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struct Node *inputFrom, void *value);
 
-struct Node *get_to(struct Edge *edge);
-
-struct Node *get_from(struct Edge *edge);
-
-struct List *get_outgoing(struct Node *node);

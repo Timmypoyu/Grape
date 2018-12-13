@@ -53,7 +53,9 @@ let check (globals, functions) =
                                                  ("get_to", [(Edge Str, "y")], (Node Int));
 						 ("get_from", [(Edge Str, "y")], (Node Int));
                                                  ("get_outgoing", [(Node Int, "x")], List (Edge Str)); 
-                                                 ("get_char", [(Int, "x"); (Str, "y")], Str)]
+                                                 ("get_char", [(Int, "x"); (Str, "y")], Str);
+                                                 ("size", [(List (Edge Str) , "x")], Int); 
+					         ("str_size" , [(Str, "x")], Int)]                                                       
 in
 
   (* Add function name to symbol table *)

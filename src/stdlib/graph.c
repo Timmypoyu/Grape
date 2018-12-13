@@ -76,6 +76,65 @@ struct List *get_outgoing(struct Node *node) {
     return outgo;
 }
 
+int GraphSize(struct Graph *graph) {
+	return size(graph->node);	
+}
+
+bool GraphIsEmpty(struct Graph *graph) {
+	
+	return ((graph->nodes)->head == 0);
+}
+
+struct List *GraphLeaves(struct Graph *graph) {
+	
+	struct List *leavesList = (struct List *)malloc(sizeof(struct List));
+	struct ListNode *target = (graph->nodes)->head;
+	while (target) {
+		struct Node *targetGraph = (struct Node *)(target->data);
+		struct List *edges = targetGraph->edges;
+		struct ListNode *tedge = edges->head;
+		while (tedge) {
+			struct Node *anode = ((struct Edge *)(tedge->data))->to;
+			if (anode == NULL) {
+				push_list(leavesList, anode);
+				tedge = tedge->next;	
+			}
+		target = target->next;
+
+		}
+	}	
+	return leavesList;
+}
+
+struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
+	
+	struct List *adjacentList = (struct List *)malloc(sizeof(struct List));
+	struct ListNode *target = (graph->nodes)->head;
+	while (target) {
+		if (node->data == ((struct Node *)(target->data))->data) {
+			struct Node *targetGraph = (struct Node *)(target->data);
+			struct List *edges = targetGraph->edges;
+			struct ListNode *tedge = edges->head;
+			while (tedge) {
+				struct Node *anode = ((struct Edge *)(tedge->data))->to;
+				push_list(adjacentList, anode);
+				tedge = tedge->next;	
+			}
+		}
+		target = target->next;
+
+	}
+	return adjacentList;
+}
+
+/* void removeGraph(struct Graph *graph) { */
+/* 	if (GraphIsEmpty(graph)) { */
+/* 		free(graph); */
+/* 	} else { */
+
+/* } */
+
+
 /*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
@@ -132,47 +191,7 @@ struct GraphNode *GraphRoot(struct Graph *graph) {
 }
 
 
-struct List *GraphLeaves(struct Graph *graph) {
-	
-	struct List *leavesList = (struct List *)malloc(sizeof(struct List));
-	struct ListNode *target = (graph->nodes)->head;
-	while (target) {
-		struct Node *targetGraph = (struct Node *)(target->data);
-		struct List *edges = targetGraph->edges;
-		struct ListNode *tedge = edges->head;
-		while (tedge) {
-			struct Node *anode = ((struct Edge *)(tedge->data))->to;
-			if (anode == NULL) {
-				addFront(leavesList, anode);
-				tedge = tedge->next;	
-			}
-		target = target->next;
 
-		}
-	}	
-	return leavesList;
-}
-
-struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
-	
-	struct List *adjacentList = (struct List *)malloc(sizeof(struct List));
-	struct ListNode *target = (graph->nodes)->head;
-	while (target) {
-		if (node->data == ((struct Node *)(target->data))->data) {
-			struct Node *targetGraph = (struct Node *)(target->data);
-			struct List *edges = targetGraph->edges;
-			struct ListNode *tedge = edges->head;
-			while (tedge) {
-				struct Node *anode = ((struct Edge *)(tedge->data))->to;
-				addFront(adjacentList, anode);
-				tedge = tedge->next;	
-			}
-		}
-		target = target->next;
-
-	}
-	return adjacentList;
-}
 
 bool GraphFind(struct Graph *graph, void *value) {
 
@@ -188,10 +207,6 @@ bool GraphFind(struct Graph *graph, void *value) {
 	return false;
 }
 
-bool GraphIsEmpty(struct Graph *graph) {
-	
-	return ((graph->nodes)->head == 0);
-}
 
 void GraphSwitch(struct Graph *graph, struct Node *node1, struct Node *node2) {
 

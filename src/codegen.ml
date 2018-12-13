@@ -145,12 +145,12 @@ let translate (globals, functions) =
   let list_get_edge : L.llvalue = 
       L.declare_function "list_get" list_get_t the_module in
 
-
-
   let size_t : L.lltype = 
       L.var_arg_function_type i32_t [|obj_ptr_t|] in
   let size : L.llvalue = 
       L.declare_function "size" size_t the_module in
+
+	
 
   (* string functions*)
 
@@ -158,6 +158,11 @@ let translate (globals, functions) =
           L.var_arg_function_type str_t [|i32_t; str_t|] in
   let get_char : L.llvalue = 
       L.declare_function "get_char" get_char_t the_module in
+
+  let str_size_t : L.lltype = 
+      L.var_arg_function_type i32_t [|str_t|] in
+  let str_size : L.llvalue = 
+      L.declare_function "size" str_size_t the_module in
 
 
   (* graph functions*)
@@ -413,6 +418,8 @@ let translate (globals, functions) =
       | SCall ("get_to", [e]) -> L.build_call get_to [|expr builder e|] "get_to" builder  
       | SCall ("get_from", [e]) -> L.build_call get_from [|expr builder e|] "get_from" builder  
  
+      | SCall ("size", [e]) -> L.build_call size [|expr builder e|] "size" builder  
+      | SCall ("str_size", [e]) -> L.build_call str_size [|expr builder e|] "str_size" builder  
 
 
     | SCall (f, args) ->
