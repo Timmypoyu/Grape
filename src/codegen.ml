@@ -164,6 +164,11 @@ let translate (globals, functions) =
   let str_size : L.llvalue = 
       L.declare_function "str_size" str_size_t the_module in
 
+  let str_equal_t : L.lltype = 
+      L.var_arg_function_type i1_t [|str_t; str_t|] in
+  let str_equal : L.llvalue = 
+      L.declare_function "str_equal" str_equal_t the_module in
+
 
   (* graph functions*)
 
@@ -421,7 +426,7 @@ let translate (globals, functions) =
       | SCall ("size", [e]) -> L.build_call size [|expr builder e|] "size" builder  
       | SCall ("str_size", [e]) -> L.build_call str_size [|expr builder e|] "str_size" builder  
       | SCall ("get_char", [e;f]) -> L.build_call get_char [|expr builder e; expr builder f|] "get_char" builder  
- 
+      | SCall ("str_equal", [e;f]) -> L.build_call str_equal [|expr builder e; expr builder f|] "str_equal" builder  
 
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     

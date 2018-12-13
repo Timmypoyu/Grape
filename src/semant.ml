@@ -55,7 +55,8 @@ let check (globals, functions) =
                                                  ("get_outgoing", [(Node Int, "x")], List (Edge Str)); 
                                                  ("get_char", [(Int, "x"); (Str, "y")], Str);
                                                  ("size", [(List (Edge Str) , "x")], Int); 
-					         ("str_size" , [(Str, "x")], Int)]                                                       
+                                                 ("str_size" , [(Str, "x")], Int);
+						 ("str_equal", [(Str, "x"); (Str, "x")], Bool)]                                                       
 in
 
   (* Add function name to symbol table *)
