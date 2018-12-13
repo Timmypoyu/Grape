@@ -14,18 +14,24 @@ char *get_char(char *a, int b) {
 	return str;
 }
 
-
-/*
-int main() {
-	char *test = "hello world";
-	printf("%s", get_char(test, 0));
-	printf("%s", get_char(test, 1));
-	printf("%s", get_char(test, 2));
-	printf("%s", get_char(test, 3));
-	printf("%s", get_char(test, 4));
-	printf("%s", get_char(test, 5));
-	printf("%s", get_char(test, 6));
-	return 0;
+int str_size(char *a) {
+	
+	return strlen(a);
 }
-*/
+
+
+
+/* int main() { */
+/* 	char *test = "hello world"; */
+/* 	/1* printf("%s", get_char(test, 0)); *1/ */
+/* 	/1* printf("%s", get_char(test, 1)); *1/ */
+/* 	/1* printf("%s", get_char(test, 2)); *1/ */
+/* 	/1* printf("%s", get_char(test, 3)); *1/ */
+/* 	/1* printf("%s", get_char(test, 4)); *1/ */
+/* 	/1* printf("%s", get_char(test, 5)); *1/ */
+/* 	/1* printf("%s", get_char(test, 6)); *1/ */
+/* 	printf("%d", str_size(test)); */
+/* 	return 0; */
+/* } */
+
 
