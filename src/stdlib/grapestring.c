@@ -4,7 +4,7 @@
 #include <string.h>
 #include "grapestring.h"
 
-char *getChar (int b, char *a) {
+char *get_char (int b, char *a) {
 	
 	if (b >= strlen(a)) {
 		exit(1);
