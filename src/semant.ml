@@ -154,7 +154,9 @@ in
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
-      | Assign(var, e) as ex -> 
+      | Declare (typ, id, asn)  -> 
+          let a = expr asn in SDeclare(typ, a)
+      | Assign (var, e) as ex -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in
           let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 

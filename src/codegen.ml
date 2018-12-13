@@ -489,6 +489,8 @@ let translate (globals, functions) =
     L.builder_at_end context merge_bb
 
     | SEach (e, f) -> raise(Failure "not implemented!") 
+    | SDeclare (s, id, a) -> let a' = expr builder a in
+          ignore(L.build_store a' (lookup id) builder); a'
     
 	in
 
