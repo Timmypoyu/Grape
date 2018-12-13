@@ -1,0 +1,8 @@
+
+Int main()
+{
+Node<Int> a = (Void : )Node<Int> b = (Void : )(Node<Int> : a = (Node<Int> : '(Int : 0)'));
+(Node<Int> : b = (Node<Int> : a));
+(Void : print((Int : node_get_int((Node<Int> : b)))));
+return (Int : 0);
+}

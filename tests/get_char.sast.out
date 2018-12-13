@@ -1,0 +1,7 @@
+
+Int main()
+{
+String a = (Void : )(String : a = (String : applejacks));
+(Void : prints((String : get_char((Int : 5), (String : a)))));
+return (Int : 0);
+}

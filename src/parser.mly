@@ -39,6 +39,9 @@ decls:
  | decls vdecl { ($2 :: fst $1), snd $1 }
  | decls fdecl { fst $1, ($2 :: snd $1) }
 
+vdecl:
+   typ ID SEMI      { ($1, $2) }
+
 /* DO ALL Variable Declarations have to come before all STATEMENTS? */
 
 fdecl:

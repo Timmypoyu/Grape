@@ -1,0 +1,13 @@
+fun Int main() {
+        prints("HI DUDE!");
+
+        Int a = 5;
+
+        print(a);
+
+        String b = "Hi People!";
+
+        prints(b);
+
+        return a;
+}
