@@ -2,7 +2,7 @@
 fun Int main() {
 
     Edge<String> aEdge;
-    List<Edge<String>> transitions;
+    List<Edge<String> > transitions;
 
     Int i;
     Int j;
@@ -23,10 +23,10 @@ fun Int main() {
 
 	character = getChar(input, token);		// Get char at token
 	
-	transitions = outgoing(state); 			// Get outgoing edges
+	transitions = get_outgoing(state); 			// Get outgoing edges
 
 	if (size(transitions) == 0) {
-	    if (getNodeInt(state) == 1) {		// Get accepting
+	    if (node_get_int(state) == 1) {		// Get accepting
 		prints("ACCEPT");
 	    } else {
 		prints("REJECT");
@@ -35,9 +35,9 @@ fun Int main() {
 
 	i = 0;
 	while(i < size(transitions)) { 			// List size
-	    aEdge = getListEdge(i, transitions); 	// Get list item
-	    if (getEdgeString(aEdge) == character) { 	// Get list string
-		state = getTo(aEdge);			// Get edge destination
+	    aEdge = list_get_edge(transitions, i); 	// Get list item
+	    if (edge_get_string(aEdge) == character) { 	// Get list string
+		state = get_to(aEdge);			// Get edge destination
 	    }
 	    i = i + 1;
 	}
