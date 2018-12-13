@@ -126,36 +126,9 @@ struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
 	}
 	return adjacentList;
 }
-/*
-void removeGraph(struct Graph *graph) {
-	if (GraphIsEmpty(graph)) {
-		free(graph);
-	} else {
-		struct List *remNodes = graph->nodes;
-		struct List *remEdges = graph->edges;
-		struct ListNode *redge = edges->head;
-		while (redge) {
-			free(redge->data->data);
-			redge = redge->next
-}
-*/
 
 
-/*
-struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
-	
-	struct Node *node = (struct Node *)malloc(sizeof(struct Node));
-	struct List *elist = (struct List *)malloc(sizeof(struct List));
-	struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
-	node->data = inputData;
-	initList(elist);
-	edge->data = weight;
-	edge->to = inputTo;
-	edge->from = inputFrom;
-	addFront(elist, edge);
 
-	return node;
-}
 
 // when the node already exists
 void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struct Node *inputFrom, void *value) {
@@ -168,7 +141,7 @@ void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struc
 			edge->data = weight;
 			edge->to = inputTo;
 			edge->from = inputFrom;
-			addFront(graphNode->edges, edge);
+			push_list(graphNode->edges, edge);
 			break;
 		} else {
 			continue;
@@ -176,28 +149,6 @@ void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struc
 		node = node->next;
 	}
 }
-	
-struct Graph *GraphAddNode(struct Graph *graph, struct Node *node) {
-	
-	addFront(graph->nodes, node);
-	return graph;
-}
-
-int GraphSize(struct Graph *graph) {
-	
-	int graphSize = size(graph->nodes);	
-	return graphSize;
-
-}
-
- decided to get rid of graph root
-struct GraphNode *GraphRoot(struct Graph *graph) {
-	
-	return NULL;
-}
-
-
-
 
 bool GraphFind(struct Graph *graph, void *value) {
 
@@ -209,12 +160,7 @@ bool GraphFind(struct Graph *graph, void *value) {
 		}
 		node = node->next;
 	}
-
 	return false;
 }
 
 
-void GraphSwitch(struct Graph *graph, struct Node *node1, struct Node *node2) {
-
-}
-*/
