@@ -30,7 +30,7 @@ bool str_equal(char *a, char *b) {
 		return true;
 	}
 }
-int main() {
+// int main() {
 	/* char *test = "hello world"; */
 	/* printf("%s", get_char(test, 0)); */
 	/* printf("%s", get_char(test, 1)); */
@@ -48,6 +48,6 @@ int main() {
 	/* 	printf("passed2"); */
 	/* } */
 	/* return 0; */
-}
+//}
 
 

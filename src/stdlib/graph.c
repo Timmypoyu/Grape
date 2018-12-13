@@ -131,9 +131,16 @@ void removeGraph(struct Graph *graph) {
 	if (GraphIsEmpty(graph)) {
 		free(graph);
 	} else {
+		struct List *remNodes = graph->nodes;
+		struct List *remEdges = graph->edges;
+		struct ListNode *redge = edges->head;
+		while (redge) {
+			free(redge->data->data);
+			redge = redge->next
 }
-
 */
+
+
 /*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	

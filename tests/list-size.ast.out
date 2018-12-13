@@ -1,0 +1,8 @@
+
+Int main()
+{
+List<Edge<String>> a = Edge<String> b = b = _3_<;
+a = [b];
+print(size(a));
+return 0;
+}
