@@ -68,8 +68,8 @@ struct List *get_outgoing(struct Node *node) {
     struct Edge *tedge;
     while( lnode ) {
         tedge = (struct Edge *)lnode->data;
-        tnode = (struct Node *)tedge->to;
-        if( tnode != node )
+        tnode = (struct Node *)tedge->from;
+        if( tnode == node )
             push_list(outgo, tedge);
         lnode = lnode->next;
     }
