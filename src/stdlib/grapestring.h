@@ -1,7 +1,7 @@
 // string.h 
 
 
-char *get_char(char *a, int b);
+char *get_char(int b, char *a);
 
 int str_size(char *a);
 
