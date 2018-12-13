@@ -77,7 +77,7 @@ struct List *get_outgoing(struct Node *node) {
 }
 
 int GraphSize(struct Graph *graph) {
-	return size(graph->node);	
+	return size(graph->nodes);	
 }
 
 bool GraphIsEmpty(struct Graph *graph) {

@@ -16,6 +16,7 @@ fun Int main() {
     Graph<Int, String> dfa;
 
     start = '0';
+    input = "bbb";
     dfa = << start _"b"_< '1' _"b"_< '0' _"b"_< '1' >>;
 
     state = start;
