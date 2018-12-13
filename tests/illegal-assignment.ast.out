@@ -1,9 +1,0 @@
-
-Int main()
-{
-Int a;
-Node<Int> b;
-a = 3;
-b = 'a';
-a = b;
-}

@@ -72,13 +72,13 @@ let rec string_of_sstmt = function
   | SIf(e, s1, s2) ->  "if (" ^ string_of_sexpr e ^ ")\n" ^
       string_of_sstmt s1 ^ "else\n" ^ string_of_sstmt s2
   | SWhile(e, s) -> "while (" ^ string_of_sexpr e ^ ") " ^ string_of_sstmt s
-  | SDeclare(t, id, a) -> string_of_typ t ^ " " ^ id ^ " = " ^ string_of_sexpr a
+  | SDeclare(t, id, a) -> string_of_typ t ^ " " ^ (match (snd a) with SNoexpr -> id | _ -> string_of_sexpr a) ^ ";\n"
   | SEach(e, s) -> "each (" ^ string_of_sexpr e ^ ")" ^ string_of_sstmt s
 
 let string_of_sfdecl fdecl =
-  string_of_typ fdecl.styp ^ " " ^
+  "fun " ^ string_of_typ fdecl.styp ^ " " ^
   fdecl.sfname ^ "(" ^ String.concat ", " (List.map snd fdecl.sformals) ^
-  ")\n{\n" ^
+  ") {\n" ^
   String.concat "" (List.map string_of_sstmt fdecl.sbody) ^
   "}\n"
 

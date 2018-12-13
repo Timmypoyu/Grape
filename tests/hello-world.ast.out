@@ -1,5 +1,4 @@
 
-Int main()
-{
-prints(Hello World!);
+fun Int main() {
+prints("Hello World!");
 }

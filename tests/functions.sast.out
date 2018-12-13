@@ -1,20 +1,17 @@
 
-Int main()
-{
+fun Int main() {
 Int a;
 Int b;
 (Int : a = (Int : 4));
 (Int : b = (Int : 1000));
 (Void : print((Int : foo((Int : a)))));
-(Void : print((Int : bar((Int : a), (Int : b)))));
+(Void : print((Int : bar((Int : b), (Int : a)))));
 }
 
-Int bar(a, b)
-{
+fun Int bar(a, b) {
 return (Int : (Int : a) * (Int : b));
 }
 
-Int foo(a)
-{
+fun Int foo(a) {
 return (Int : (Int : a) + (Int : 5));
 }

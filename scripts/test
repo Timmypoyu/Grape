@@ -8,7 +8,7 @@ GRAPENATIVE="./dist/grape.native"
 for TEST in $TESTS 
 do
 
-    RESULT=$(eval "$GRAPE $TEST && ./${TEST%.*}" 2>&1) 
+    RESULT=$(eval "$GRAPE $TEST && ./out.g" 2>&1) 
     AST_RESULT=$(eval "$GRAPENATIVE -a $TEST" 2>&1)
     SAST_RESULT=$(eval "$GRAPENATIVE -s $TEST" 2>&1)
 

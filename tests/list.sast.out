@@ -1,7 +1,7 @@
 
-Int main()
-{
-List<String> b = (Void : )(List<String> : b = (List<String> : [(String : hi),(String : hello),(String : hello?),(String : bye)]));
+fun Int main() {
+List<String> b;
+(List<String> : b = (List<String> : [(String : hi),(String : hello),(String : hello?),(String : bye)]));
 (Void : prints((String : list_get_str((Int : 0), (List<String> : b)))));
 return (Int : 0);
 }

@@ -1,5 +1,5 @@
 
-Int main()
-{
-Int b = return 0;
+fun Int main() {
+Int b;
+return 0;
 }

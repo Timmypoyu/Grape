@@ -1,20 +1,17 @@
 
-Int main()
-{
+fun Int main() {
 Int a;
 Int b;
 a = 4;
 b = 1000;
 print(foo(a));
-print(bar(a, b));
+print(bar(b, a));
 }
 
-Int bar(a, b)
-{
+fun Int bar(a, b) {
 return a * b;
 }
 
-Int foo(a)
-{
+fun Int foo(a) {
 return a + 5;
 }

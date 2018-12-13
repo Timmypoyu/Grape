@@ -1,1 +1,49 @@
-Fatal error: exception Parsing.Parse_error
+
+fun Int main() {
+Edge<String> aEdge;
+List<Edge<String>> transitions;
+Int i;
+Int token;
+String input;
+String character;
+Bool found;
+Node<Int> start;
+Node<Int> state;
+Graph<Node<Int>, Edge<String>> dfa;
+start = '0';
+input = "bbbbbbbbbbb";
+dfa = <<start _"b"_< '1' _"b"_< '0' _"b"_< '1' >>;
+token = 0;
+found = false;
+state = start;
+while (token < str_size(input)) {
+character = get_char(token, input);
+transitions = get_outgoing(state);
+i = 0;
+while (i < size(transitions) and found == false) {
+aEdge = list_get_edge(i, transitions);
+if (str_equal(character, edge_get_str(aEdge)))
+{
+state = get_to(aEdge);
+found = true;
+}
+i = i + 1;
+}
+if (found == false)
+{
+prints("REJECT");
+return 0;
+}
+found = false;
+token = token + 1;
+}
+if (node_get_int(state) == 1)
+{
+prints("ACCEPT");
+}
+else
+{
+prints("REJECT");
+}
+return 0;
+}

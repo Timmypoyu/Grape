@@ -1,7 +1,8 @@
 
-Int main()
-{
-Node<Int> a = Node<Int> b = a = '0';
+fun Int main() {
+Node<Int> a;
+Node<Int> b;
+a = '0';
 b = a;
 print(node_get_int(b));
 return 0;

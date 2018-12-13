@@ -72,9 +72,6 @@ stmt_list:
     stmt           { [$1] }
   | stmt_list stmt   { $2 :: $1 }
 
-vdecl:
-    typ ID SEMI         { ($1, $2) }
-
 stmt:
     expr SEMI                               { Expr $1 }
   | RETURN expr_opt SEMI                    { Return $2} 
@@ -112,15 +109,15 @@ expr:
   | expr GEQ    expr        { Binop($1, Geq,   $3) }
   | expr AND    expr        { Binop($1, And,   $3) }
   | expr OR     expr        { Binop($1, Or,    $3) }
-  | expr EXP    expr        { Binop($1, Exp,    $3)}
-  | expr MOD    expr        { Binop($1, Mod,    $3)} 
-  | expr AMP    expr        { Binop($1, Amp,    $3)} 
+  | expr EXP    expr        { Binop($1, Exp,   $3) }
+  | expr MOD    expr        { Binop($1, Mod,   $3) } 
+  | expr AMP    expr        { Binop($1, Amp,   $3) } 
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
-  | expr LBRACK expr RBRACK { ListIndex($1, $3) }
+  | ID LBRACK expr RBRACK { ListIndex($1, $3) }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
 
 edgeExpr:

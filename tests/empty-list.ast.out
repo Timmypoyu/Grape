@@ -1,1 +1,5 @@
-Fatal error: exception Parsing.Parse_error
+
+fun Int main() {
+List<Int> a;
+a = [];
+}

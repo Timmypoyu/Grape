@@ -1,7 +1,8 @@
 
-Int main()
-{
-List<Edge<String>> a = (Void : )Edge<String> b = (Void : )(Edge<String> : b = (Edge<String> : _(String : 3)_<));
+fun Int main() {
+List<Edge<String>> a;
+Edge<String> b;
+(Edge<String> : b = (Edge<String> : _(String : 3)_<));
 (List<Edge<String>> : a = (List<Edge<String>> : [(Edge<String> : b)]));
 (Void : print((Int : size((List<Edge<String>> : a)))));
 return (Int : 0);

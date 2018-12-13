@@ -1,7 +1,7 @@
 
-Int main()
-{
-List<String> b = b = [hi, hello, hello?, bye];
+fun Int main() {
+List<String> b;
+b = ["hi", "hello", "hello?", "bye"];
 prints(list_get_str(0, b));
 return 0;
 }

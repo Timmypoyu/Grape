@@ -1,5 +1,4 @@
 
-Int main()
-{
+fun Int main() {
 (Void : prints((String : Hello World!)));
 }

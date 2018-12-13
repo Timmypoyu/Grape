@@ -1,1 +1,6 @@
-Fatal error: exception Parsing.Parse_error
+
+fun Int main() {
+Edge<Int> a;
+(Edge<Int> : a = (Edge<Int> : _(Int : 4)_<));
+return (Int : 0);
+}

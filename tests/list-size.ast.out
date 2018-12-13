@@ -1,7 +1,8 @@
 
-Int main()
-{
-List<Edge<String>> a = Edge<String> b = b = _3_<;
+fun Int main() {
+List<Edge<String>> a;
+Edge<String> b;
+b = _"3"_<;
 a = [b];
 print(size(a));
 return 0;
