@@ -68,8 +68,8 @@ struct List *get_outgoing(struct Node *node) {
     struct Edge *tedge;
     while( lnode ) {
         tedge = (struct Edge *)lnode->data;
-        tnode = (struct Node *)tedge->from;
-        if( tnode == node )
+        tnode = (struct Node *)tedge->to;
+        if( tnode != node )
             push_list(outgo, tedge);
         lnode = lnode->next;
     }
@@ -77,7 +77,7 @@ struct List *get_outgoing(struct Node *node) {
 }
 
 int GraphSize(struct Graph *graph) {
-	return size(graph->node);	
+	return size(graph->nodes);	
 }
 
 bool GraphIsEmpty(struct Graph *graph) {
@@ -126,15 +126,14 @@ struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
 	}
 	return adjacentList;
 }
+/*
+void removeGraph(struct Graph *graph) {
+	if (GraphIsEmpty(graph)) {
+		free(graph);
+	} else {
+}
 
-/* void removeGraph(struct Graph *graph) { */
-/* 	if (GraphIsEmpty(graph)) { */
-/* 		free(graph); */
-/* 	} else { */
-
-/* } */
-
-
+*/
 /*
 struct Node *GraphCreateNode(void *inputData, void *weight, struct Node *inputTo, struct Node *inputFrom) {
 	
