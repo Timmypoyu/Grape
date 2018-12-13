@@ -43,13 +43,17 @@ let check (globals, functions) =
                                                  ("printf", [(Float, "x")], Void);
                                                  ("prints", [(Str, "x")], Void);
                                                  ("printbig", [(Int, "x")], Void); 
-						 ("list_get_int", [(Int, "x"); (List Str, "y")], Str);
-						 ("list_get_int", [(Int, "x"); (List Str, "y")], Str);
-						 ("node_get_int", [(Node Int, "x")], Int);
+						 ("list_get_int", [(Int, "x"); (List Int, "y")], Str);
+						 ("list_get_str", [(Int, "x"); (List Str, "y")], Str);
+						 ("list_get_edge", [(Int, "x"); ((List (Edge Str)), "y")], (Edge Str));
+                                                 ("node_get_int", [(Node Int, "x")], Int);
 						 ("node_get_str", [(Node Str, "x")], Str);
 						 ("edge_get_int", [(Edge Int, "x")], Int);
 						 ("edge_get_str", [(Edge Str, "x")], Str);
-						("get_outoing", [(Node Int, "x")], List (Edge Str)) ];
+                                                 ("get_to", [(Edge Str, "y")], (Node Int));
+						 ("get_from", [(Edge Str, "y")], (Node Int));
+                                                 ("get_outgoing", [(Node Int, "x")], List (Edge Str)); 
+                                                 ("get_char", [(Int, "x"); (Str, "y")], Str)]
 in
 
   (* Add function name to symbol table *)

@@ -142,10 +142,55 @@ let translate (globals, functions) =
       L.declare_function "list_get" list_get_t the_module in
   let list_get_str : L.llvalue = 
       L.declare_function "list_get" list_get_t the_module in
+  let list_get_edge : L.llvalue = 
+      L.declare_function "list_get" list_get_t the_module in
 
+
+
+  let size_t : L.lltype = 
+      L.var_arg_function_type i32_t [|obj_ptr_t|] in
+  let size : L.llvalue = 
+      L.declare_function "size" size_t the_module in
 
   (* string functions*)
+
+  let get_char_t: L.lltype = 
+          L.var_arg_function_type str_t [|i32_t; str_t|] in
+  let get_char : L.llvalue = 
+      L.declare_function "get_char" get_char_t the_module in
+
+
   (* graph functions*)
+
+ 
+  let get_outgoing_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let get_outgoing : L.llvalue = 
+      L.declare_function "get_outgoing" get_outgoing_t the_module in
+
+  let node_get_t : L.lltype = 
+      L.var_arg_function_type void_ptr_t [|obj_ptr_t|] in
+  let node_get_int : L.llvalue = 
+      L.declare_function "node_get" node_get_t the_module in
+  let node_get_str : L.llvalue = 
+      L.declare_function "node_get" node_get_t the_module in
+
+  let edge_get_t : L.lltype = 
+      L.var_arg_function_type void_ptr_t [|obj_ptr_t|] in
+  let edge_get_int : L.llvalue = 
+      L.declare_function "edge_get" edge_get_t the_module in
+  let edge_get_str : L.llvalue = 
+      L.declare_function "edge_get" edge_get_t the_module in
+
+  let get_to_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let get_to : L.llvalue = 
+      L.declare_function "get_to" get_to_t the_module in
+
+ let get_from_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let get_from : L.llvalue = 
+      L.declare_function "get_from" get_from_t the_module in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -339,6 +384,36 @@ let translate (globals, functions) =
 		let data_ptr = L.build_call list_get_str [|expr builder e; expr builder f|] "list_get" builder in  
 		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t) "data" builder in 
 		L.build_load data_ptr "data" builder  
+      | SCall ("list_get_edge", [e; f]) -> 
+		let data_ptr = L.build_call list_get_edge [|expr builder e; expr builder f|] "list_get" builder in  
+	         L.build_bitcast data_ptr obj_ptr_t "data" builder 
+        
+      | SCall ("get_outgoing", [e]) -> L.build_call get_outgoing [|expr builder e|] "outgoing" builder  
+
+      | SCall ("node_get_int", [e; f]) -> 
+		let data_ptr = L.build_call node_get_int [|expr builder e; expr builder f|] "node_get" builder in  
+		let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
+		L.build_load data_ptr "data" builder  
+
+      | SCall ("node_get_str", [e; f]) -> 
+		let data_ptr = L.build_call node_get_str [|expr builder e; expr builder f|] "node_get" builder in  
+		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t ) "data" builder in 
+		L.build_load data_ptr "data" builder  
+
+      | SCall ("edge_get_int", [e; f]) -> 
+		let data_ptr = L.build_call edge_get_int [|expr builder e; expr builder f|] "edge_get" builder in  
+		let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
+		L.build_load data_ptr "data" builder  
+ 
+      | SCall ("edge_get_str", [e; f]) -> 
+		let data_ptr = L.build_call edge_get_int [|expr builder e; expr builder f|] "edge_get" builder in  
+		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t ) "data" builder in 
+		L.build_load data_ptr "data" builder  
+
+      | SCall ("get_to", [e]) -> L.build_call get_to [|expr builder e|] "get_to" builder  
+      | SCall ("get_from", [e]) -> L.build_call get_from [|expr builder e|] "get_from" builder  
+ 
+
 
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     
