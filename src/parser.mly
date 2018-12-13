@@ -81,6 +81,7 @@ stmt:
   | EACH LPAREN expr RPAREN stmt            { Each($3, $5) }
   | WHILE LPAREN expr RPAREN stmt           { While($3, $5) }
   | typ ID ASSIGN expr SEMI                 { Declare($1 , $2, Assign($2, $4))}
+  | typ ID SEMI                             { /* TODO: Empty declarations */ }
 
 expr_opt:
     /* nothing */ { Noexpr }
