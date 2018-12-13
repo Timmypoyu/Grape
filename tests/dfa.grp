@@ -15,16 +15,18 @@ fun Int main() {
     Graph<Int, String> dfa;
 
     start = '0';
-    input = "bbb";
+    input = "bb";
     dfa = << start _"b"_< '1' _"b"_< '0' _"b"_< '1' >>;
     token = 0;
 
     state = start;
-    while(token < str_size(input)) { 			// String size
+    print(str_size(input));
+    while(token < (str_size(input)+2)) { 			// String size
 
 	character = get_char(input, token);		// Get char at token
 	transitions = get_outgoing(state); 			// Get outgoing edges
 
+        print(size(transitions));
 	if (size(transitions) == 0) {
 	    if (node_get_int(state) == 1) {		// Get accepting
 		prints("ACCEPT");
@@ -36,8 +38,10 @@ fun Int main() {
 	i = 0;
 	while(i < size(transitions)) { 			// List size
 	    aEdge = list_get_edge(transitions, i); 	// Get list item
-	    if (edge_get_str(aEdge) == character) { 	// Get list string
+	    if (str_equal(edge_get_str(aEdge), character)) { 	// Get list string
+                prints("bool works");
 		state = get_to(aEdge);			// Get edge destination
+                i = 500;
 	    }
 	    i = i + 1;
 	}
