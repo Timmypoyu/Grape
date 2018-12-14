@@ -4,6 +4,6 @@ Node<Int> a;
 Node<Int> b;
 a = '0';
 b = a;
-print(node_get_int(b));
+print(b.val);
 return 0;
 }

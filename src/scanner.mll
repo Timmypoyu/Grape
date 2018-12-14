@@ -17,12 +17,13 @@ rule token = parse
 | ')'      { RPAREN }
 | '{'      { LBRACE }
 | '}'      { RBRACE }
-| '['	   { LBRACK }
+| '['	     { LBRACK }
 | ']'      { RBRACK }
 | ';'      { SEMI }
 | "'"      { SQUOT }
 | '"'      { DQUOT }
 | ','      { COMMA }
+| '.'      { DOT }
 | '+'      { PLUS }
 | '-'      { MINUS }
 | '*'      { TIMES }
@@ -32,7 +33,7 @@ rule token = parse
 | '='      { ASSIGN }
 | "=="     { EQ }
 | "!="     { NEQ }
-| '&'	   { AMP } 
+| '&'	     { AMP } 
 | '<'      { LT }
 | "<<"     { GRAPS }
 | ">>"     { GRAPE }

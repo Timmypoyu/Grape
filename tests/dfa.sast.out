@@ -16,7 +16,7 @@ while ((Bool : (Int : token) < (Int : str_size((String : input))))) {
 (Int : i = (Int : 0));
 while ((Bool : (Bool : (Int : i) < (Int : size((List<Edge<String>> : transitions)))) and (Bool : (Bool : found) == (Bool : false)))) {
 (Edge<String> : aEdge = (Edge<String> : transitions[(Int : i)]));
-if ((Bool : str_equal((String : character), (String : edge_get_str((Edge<String> : aEdge))))))
+if ((Bool : str_equal((String : character), (String : aEdge.val))))
 {
 (Node<Int> : state = (Node<Int> : get_to((Edge<String> : aEdge))));
 (Bool : found = (Bool : true));
@@ -31,7 +31,7 @@ return (Int : 0);
 (Bool : found = (Bool : false));
 (Int : token = (Int : (Int : token) + (Int : 1)));
 }
-if ((Bool : (Int : node_get_int((Node<Int> : state))) == (Int : 1)))
+if ((Bool : (Int : state.val) == (Int : 1)))
 {
 (Void : prints((String : ACCEPT)));
 }

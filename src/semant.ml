@@ -44,9 +44,6 @@ let check (globals, functions) =
       ("printf", [(Float, "x")], Void);
       ("prints", [(Str, "x")], Void);
       ("printbig", [(Int, "x")], Void); 
-      ("list_get_int", [(Int, "x"); (List Int, "y")], Str);
-			("list_get_str", [(Int, "x"); (List Str, "y")], Str);
-			("list_get_edge", [(Int, "x"); ((List (Edge Str)), "y")], (Edge Str));
       ("node_get_int", [(Node Int, "x")], Int);
 			("node_get_str", [(Node Str, "x")], Str);
 			("edge_get_int", [(Edge Int, "x")], Int);
@@ -170,12 +167,22 @@ let check (globals, functions) =
       | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
+      | Prop (var, p) -> 
+          let lt = type_of_identifier var in
+          let pt = (match (lt, p) with
+              (Node t, "val") -> t
+            | (Edge t, "val") -> t
+            | (Edge _, "to") -> Node Void
+            | (Edge _, "from") -> Node Void
+            | (Node _, "adj") -> List (Node Void)
+            | (_, _) -> raise (Failure ("no such property"))) in
+          (pt, SProp (var, p))
       | Assign (var, e) as ex -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in
           let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
-            string_of_typ rt ^ " in " ^ string_of_expr ex
-          in (check_assign lt rt err, SAssign(var, (rt, e')))
+            string_of_typ rt ^ " in " ^ string_of_expr ex in 
+          (check_assign lt rt err, SAssign(var, (rt, e')))
       | Unop(op, e) as ex -> 
           let (t, e') = expr e in
           let ty = match op with

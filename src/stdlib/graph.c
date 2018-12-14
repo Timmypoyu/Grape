@@ -44,14 +44,10 @@ void add_edge(struct Graph *graph, struct Edge *edge) {
 	push_list(graph->edges, edge);
 }
 
-void *node_get(struct Node *node) {
+void *get_val(struct Node *node) {
     return node->data;
 }
 
-void *edge_get(struct Edge *edge) {
-    return edge->data;
-}
-	
 struct Node *get_to(struct Edge *edge) {
     return edge->to;
 }

@@ -1,0 +1,27 @@
+fun Int main() {
+        Int b;
+
+        b = 7;
+
+        Int a = 5;
+
+        Node<Int> start = '0';
+
+        Graph<Int, String> g = << 
+                start  -"h"-  '0'  -"i"-  '1',
+                start  -"h"-  '0'  -"o"-  '1',
+                start  -"s"-  '0'  -"u"-  start  -"p"-  '1'
+        >>;
+
+        prints("Hell oWorld ");
+
+        List<Edge<String> > adjacent = get_outgoing(start);
+
+        Int i = 0;
+        while (i < size(adjacent)) {
+                prints(edge_get_str(list_get_edge(adjacent, i)));
+                i = i + 1;
+        }
+
+        return 0;
+}

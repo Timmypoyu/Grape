@@ -22,7 +22,7 @@ fun Int main() {
 	i = 0;
 	while ((i < size(transitions)) and (found == False)) { 			// List size
 	    aEdge = transitions[i]; 	// Get list item
-	    if (str_equal(edge_get_str(aEdge), character)) { 	// Get list string
+	    if (str_equal(aEdge.val, character)) { 	// Get list string
 		state = get_to(aEdge);			// Get edge destination
                 found = True;
 	    }
@@ -36,7 +36,7 @@ fun Int main() {
 	token = token + 1;
     }
 
-    if (node_get_int(state) == 1) {		// Get accepting
+    if (state.val == 1) {		// Get accepting
         prints("ACCEPT");
     } else {
         prints("REJECT");

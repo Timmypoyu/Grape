@@ -2,7 +2,7 @@
 
 %{ open Ast %}
 
-%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT DQUOT UNDS
+%token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT DQUOT DOT UNDS
 %token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD AMP 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
 %token RETURN IF ELSE EACH WHILE FOR FUN 
@@ -18,6 +18,7 @@
 %right ASSIGN
 %left OR
 %left AND
+%left DOT
 %left EQ NEQ
 %left LT GT LEQ GEQ
 %left AMP
@@ -47,9 +48,9 @@ vdecl:
 fdecl:
    FUN typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
      { { typ = $2;
-	 fname = $3;
-	 formals = $5;
-	 body = List.rev $8 } }
+	       fname = $3;
+	       formals = $5;
+	       body = List.rev $8 } }
 
 formals_opt:
     /* nothing */ { [] }
@@ -111,6 +112,7 @@ node_expr:
 
 expr:
     ID                      { Id($1) }
+  | ID DOT ID               { Prop($1, $3) }
   | FALSE                   { BoolLit(false) }
   | TRUE                    { BoolLit(true) }
   | FLOAT_LIT               { FloatLit($1) }

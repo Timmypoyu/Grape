@@ -1,0 +1,13 @@
+fun Int main() {
+        List<Int> a = [1,2,3,4,5];
+        
+        print(a[3]);
+
+        List<String> b = ["hi", "how", "are", "you"];
+
+        List<Node<Int> > c = [
+                '3', '4', '5', '6'
+        ];
+
+        prints(b[2]);
+}

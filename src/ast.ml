@@ -24,6 +24,7 @@ type expr =
   | ListLit of expr list 
   | StrLit of string
   | Id of string
+  | Prop of string * string
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
@@ -79,6 +80,7 @@ let rec string_of_expr = function
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
+  | Prop(v, p) -> v ^ "." ^ p
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ " " ^ string_of_expr e
