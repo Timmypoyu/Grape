@@ -12,7 +12,7 @@ Node<Int> state;
 Graph<Node<Int>, Edge<String>> dfa;
 start = '0';
 input = "bbbbbbbbbbb";
-dfa = <<start _"b"_< '1' _"b"_< '0' _"b"_< '1' >>;
+dfa = <<start -"b"- '1' -"b"- '0' -"b"- '1' >>;
 token = 0;
 found = false;
 state = start;

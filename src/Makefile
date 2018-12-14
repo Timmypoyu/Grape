@@ -16,4 +16,4 @@ grape.native :
 
 .PHONY : clean
 clean :
-	rm -rf _build grape.native **/*.o
+	rm -rf _build grape.native **/*.o parser.ml parser.mli

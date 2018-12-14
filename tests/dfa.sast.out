@@ -12,7 +12,7 @@ Node<Int> state;
 Graph<Node<Int>, Edge<String>> dfa;
 (Node<Int> : start = (Node<Int> : '(Int : 0)'));
 (String : input = (String : bbbbbbbbbbb));
-(Graph<Node<Int>, Edge<String>> : dfa = (Graph<Node<Int>, Edge<String>> : <(Node<Int> : start) (Edge<String> : _(String : b)_<) (Node<Int> : '(Int : 1)') (Edge<String> : _(String : b)_<) (Node<Int> : '(Int : 0)') (Edge<String> : _(String : b)_<) (Node<Int> : '(Int : 1)') (Void : )>));
+(Graph<Node<Int>, Edge<String>> : dfa = (Graph<Node<Int>, Edge<String>> : <(Node<Int> : start) (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 0)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Void : )>));
 (Int : token = (Int : 0));
 (Bool : found = (Bool : false));
 (Node<Int> : state = (Node<Int> : start));

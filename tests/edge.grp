@@ -1,7 +1,5 @@
 fun Int main() {
-        Edge<Int> a;
-
-        a = _4_<;
+        Edge<Int> a = <<-3->>;
 
         return 0;
 }

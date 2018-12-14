@@ -1,7 +1,7 @@
 fun Int main() {
 	Graph<Int, Int> a;
 
-        a = <<'3' _3_< '4'>>;
+        a = <<'3' -3- '4'>>;
 
 	return 0;
 }

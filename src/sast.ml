@@ -48,8 +48,8 @@ let rec string_of_sexpr (t, e) =
   | SBoolLit(false) -> "false"
   | SNodeLit(e) -> "'" ^ string_of_sexpr e ^ "'" 
   | SListLit(e) -> "[" ^ String.concat "," (List.map string_of_sexpr e) ^ "]"
-  | SDirEdgeLit(e) -> "_" ^ string_of_sexpr e ^ "_>"
-  | SEdgeLit(e) -> "_" ^ string_of_sexpr e ^ "_<"
+  | SDirEdgeLit(e) -> "-" ^ string_of_sexpr e ^ "->"
+  | SEdgeLit(e) -> "-" ^ string_of_sexpr e ^ "-"
   | SGraphLit(e) -> "<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) ->  string_of_sexpr k ^ " " ^ string_of_sexpr v) lst ))e) ^ ">"  
   | SStrLit(e) -> e
   | SId(e) -> e

@@ -84,8 +84,8 @@ let rec string_of_expr = function
   | Unop(o, e) -> string_of_uop o ^ " " ^ string_of_expr e
   | Assign(v, e) -> v ^ " = " ^ string_of_expr e
   | NodeLit(e) -> "'" ^ string_of_expr e ^ "'"
-  | EdgeLit(e) -> "_" ^ string_of_expr e ^ "_<"
-  | DirEdgeLit(e) -> "_" ^ string_of_expr e ^ "_>"
+  | EdgeLit(e) -> "-" ^ string_of_expr e ^ "-"
+  | DirEdgeLit(e) -> "-" ^ string_of_expr e ^ "->"
   | GraphLit(e) -> "<<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) -> string_of_expr k ^ " " ^ string_of_expr v) lst ))e) ^ ">>" 
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr (List.rev e)) ^ "]" 
   | ListIndex(l, i) -> l ^ "[" ^ string_of_expr i ^ "]"

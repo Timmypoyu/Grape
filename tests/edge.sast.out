@@ -1,6 +1,5 @@
 
 fun Int main() {
-Edge<Int> a;
-(Edge<Int> : a = (Edge<Int> : _(Int : 4)_<));
+Edge<Int> (Edge<Int> : a = (Edge<Int> : -(Int : 3)-));
 return (Int : 0);
 }

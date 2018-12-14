@@ -87,16 +87,33 @@ expr_opt:
     /* nothing */ { Noexpr }
   | expr          { $1 } 
 
+edge_expr:
+  | edge_expr GT                        { DirEdgeLit($1) }
+  | MINUS ID MINUS                      { EdgeLit(Id($2)) }
+  | MINUS INT_LIT MINUS                 { EdgeLit(IntLit($2)) }
+  | MINUS STR_LIT MINUS                 { EdgeLit(StrLit($2)) }
+  | MINUS FLOAT_LIT MINUS               { EdgeLit(FloatLit($2)) }
+  | MINUS TRUE MINUS                    { EdgeLit(BoolLit(true)) }
+  | MINUS FALSE MINUS                   { EdgeLit(BoolLit(false)) }
+   
+node_expr: 
+    SQUOT INT_LIT SQUOT                 { NodeLit(IntLit($2)) }
+  | SQUOT FLOAT_LIT SQUOT               { NodeLit(FloatLit($2)) }
+  | SQUOT STR_LIT SQUOT                 { NodeLit(StrLit($2)) }
+  | SQUOT TRUE SQUOT                    { NodeLit(BoolLit(true)) }
+  | SQUOT FALSE SQUOT                   { NodeLit(BoolLit(false)) }
+  | SQUOT ID SQUOT                      { NodeLit(Id($2)) }
+
 expr:
-    INT_LIT                 { IntLit($1) }
+    ID                      { Id($1) }
+  | FALSE                   { BoolLit(false) }
+  | TRUE                    { BoolLit(true) }
   | FLOAT_LIT               { FloatLit($1) }
   | STR_LIT                 { StrLit($1) }
-  | TRUE                    { BoolLit(true) }
-  | FALSE                   { BoolLit(false) }
-  | ID                      { Id($1) }
+  | INT_LIT                 { IntLit($1) }
+  | node_expr               { $1 }
+  | GRAPS edge_expr GRAPE   { $2 }
   | GRAPS graph_opt GRAPE   { GraphLit($2) }
-  | edgeExpr { $1 }  
-  | nodeExpr { $1 } 
   | expr PLUS   expr        { Binop($1, Add,   $3) }
   | expr MINUS  expr        { Binop($1, Sub,   $3) }
   | expr TIMES  expr        { Binop($1, Mult,  $3) }
@@ -120,13 +137,6 @@ expr:
   | ID LBRACK expr RBRACK { ListIndex($1, $3) }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
 
-edgeExpr:
-    UNDS expr UNDS GT { DirEdgeLit($2) }        /* Directed Edge */ 
-  | UNDS expr UNDS LT { EdgeLit($2) }
-   
-nodeExpr: 
-    SQUOT expr SQUOT       { NodeLit($2) }     /* Node */
-
 actuals_opt:
     /* nothing */ { [] }
   | actuals_list { $1 }
@@ -148,9 +158,9 @@ graph_list:
   | graph_list COMMA path_list { (List.append (List.rev (List.tl (List.rev $3))) ([List.hd (List.rev $3)])) :: $1 } 
 
 graph_vertex:
-    nodeExpr { $1 }
-  | ID { Id($1) }
+    node_expr { $1 }
+  | ID        { Id($1) }
 
 path_list:
     graph_vertex { [($1, Noexpr)] }
-  | graph_vertex edgeExpr path_list {($1, $2) :: $3} 
+  | graph_vertex edge_expr path_list {($1, $2) :: $3} 

@@ -1,8 +1,7 @@
 
 fun Int main() {
 List<Edge<String>> a;
-Edge<String> b;
-b = _"3"_<;
+Edge<String> b = -"hi"-;
 a = [b];
 print(size(a));
 return 0;
