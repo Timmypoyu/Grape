@@ -137,12 +137,7 @@ let translate (globals, functions) =
 
   let list_get_t : L.lltype = 
           L.var_arg_function_type void_ptr_t [|i32_t ; obj_ptr_t|] in
-
   let list_get : L.llvalue = 
-      L.declare_function "list_get" list_get_t the_module in
-  let list_get_str : L.llvalue = 
-      L.declare_function "list_get" list_get_t the_module in
-  let list_get_edge : L.llvalue = 
       L.declare_function "list_get" list_get_t the_module in
 
   let size_t : L.lltype = 
@@ -258,7 +253,7 @@ let translate (globals, functions) =
     in
 
     (* Construct code for an expression; return its value *)
-    let rec expr builder ((_, e) : sexpr) = match e with
+    let rec expr builder ((typ, e) : sexpr) = match e with
         SIntLit i   -> L.const_int i32_t i
       | SStrLit s   -> L.build_global_stringptr s "string" builder
       | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
@@ -267,15 +262,15 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
-      | SNodeLit (typ, v) -> (* Cast data type into void pointer to init node *)
-        let data_value = expr builder (typ, v) in 
-        let data = L.build_malloc (ltype_of_typ typ) "data_malloc" builder in
+      | SNodeLit (t, v) -> (* Cast data type into void pointer to init node *)
+        let data_value = expr builder (t, v) in 
+        let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
           ignore ( L.build_store data_value data builder);
         let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
         let node = L.build_call init_node [|data|] "init_node" builder in node
-      | SEdgeLit (typ, v) -> 
-        let data_value = expr builder (typ, v) in 
-        let data = L.build_malloc (ltype_of_typ typ) "data_malloc" builder in
+      | SEdgeLit (t, v) -> 
+        let data_value = expr builder (t, v) in 
+        let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
           ignore ( L.build_store data_value data builder);
         let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
         let edge = L.build_call init_edge [|data|] "init_edge" builder in edge
@@ -307,8 +302,26 @@ let translate (globals, functions) =
             init_path edge 1 tl
         in 
         ignore(List.map (init_path (L.const_int i8_t 0) 0) l); graph
+      | SListIndex (id, e) ->
+        let theList = L.build_load (lookup id) id builder in
+        let theIndex = expr builder e in 
+        let data_ptr = L.build_call list_get [|theIndex; theList|] "list_get" builder in  
+        (match typ with
+          | A.Edge _ ->
+              L.build_bitcast data_ptr obj_ptr_t "data" builder
+          | A.Node _ ->
+              L.build_bitcast data_ptr obj_ptr_t "data" builder
+          | A.Int ->
+              let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t) "data" builder in 
+              L.build_load data_ptr "data" builder  
+          | A.Str ->
+              let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t) "data" builder in 
+              L.build_load data_ptr "data" builder  
+          | A.Float ->
+              let data_ptr = L.build_bitcast data_ptr (L.pointer_type float_t) "data" builder in 
+              L.build_load data_ptr "data" builder)
       | SListLit i ->
-      let rec fill_list lst = (function 
+        let rec fill_list lst = (function 
         [] -> lst
         |sx :: tail ->
         let (atyp,_) = sx in
@@ -349,21 +362,21 @@ let translate (globals, functions) =
     and e2' = expr builder e2 in
     (match op with
       A.Add     -> L.build_add
-    | A.Sub     -> L.build_sub
+      | A.Sub     -> L.build_sub
       | A.Exp     -> raise(Failure "Unimplemented")
       | A.Mod     -> raise(Failure "Unimplemented")
       | A.Amp     -> raise(Failure "Unimplemented")
-    | A.Mult    -> L.build_mul
+      | A.Mult    -> L.build_mul
       | A.Div     -> L.build_sdiv
-    | A.And     -> L.build_and
-    | A.Or      -> L.build_or
-    | A.Equal   -> L.build_icmp L.Icmp.Eq
-    | A.Neq     -> L.build_icmp L.Icmp.Ne
-    | A.Less    -> L.build_icmp L.Icmp.Slt
-    | A.Leq     -> L.build_icmp L.Icmp.Sle
-    | A.Greater -> L.build_icmp L.Icmp.Sgt
-    | A.Geq     -> L.build_icmp L.Icmp.Sge
-    ) e1' e2' "tmp" builder
+      | A.And     -> L.build_and
+      | A.Or      -> L.build_or
+      | A.Equal   -> L.build_icmp L.Icmp.Eq
+      | A.Neq     -> L.build_icmp L.Icmp.Ne
+      | A.Less    -> L.build_icmp L.Icmp.Slt
+      | A.Leq     -> L.build_icmp L.Icmp.Sle
+      | A.Greater -> L.build_icmp L.Icmp.Sgt
+      | A.Geq     -> L.build_icmp L.Icmp.Sge
+        ) e1' e2' "tmp" builder
       | SUnop(op, ((t, _) as e)) ->
           let e' = expr builder e in
     (match op with
@@ -393,43 +406,26 @@ let translate (globals, functions) =
 	        L.build_load data_ptr "data" builder
 *)
 
-      | SCall ("list_get", [e; f]) -> 
-        let data_ptr = L.build_call list_get [|expr builder e; expr builder f|] "list_get" builder in  
-        let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
-        L.build_load data_ptr "data" builder  
-      | SCall ("list_get_str", [e; f]) -> 
-		let data_ptr = L.build_call list_get_str [|expr builder e; expr builder f|] "list_get" builder in  
-		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t) "data" builder in 
-		L.build_load data_ptr "data" builder  
-      | SCall ("list_get_edge", [e; f]) -> 
-		let data_ptr = L.build_call list_get_edge [|expr builder e; expr builder f|] "list_get" builder in  
-	         L.build_bitcast data_ptr obj_ptr_t "data" builder 
-        
-      | SCall ("get_outgoing", [e]) -> L.build_call get_outgoing [|expr builder e|] "outgoing" builder  
-
+      | SCall ("get_outgoing", [e]) -> 
+          L.build_call get_outgoing [|expr builder e|] "outgoing" builder  
       | SCall ("node_get_int", [e]) -> 
-		let data_ptr = L.build_call node_get_int [|expr builder e|] "node_get" builder in  
-		let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
-		L.build_load data_ptr "data" builder  
-
+          let data_ptr = L.build_call node_get_int [|expr builder e|] "node_get" builder in  
+          let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
+          L.build_load data_ptr "data" builder  
       | SCall ("node_get_str", [e]) -> 
-		let data_ptr = L.build_call node_get_str [|expr builder e|] "node_get" builder in  
-		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t ) "data" builder in 
-		L.build_load data_ptr "data" builder  
-
+          let data_ptr = L.build_call node_get_str [|expr builder e|] "node_get" builder in  
+          let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t ) "data" builder in 
+          L.build_load data_ptr "data" builder  
       | SCall ("edge_get_int", [e]) -> 
-		let data_ptr = L.build_call edge_get_int [|expr builder e|] "edge_get" builder in  
-		let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
-		L.build_load data_ptr "data" builder  
- 
+          let data_ptr = L.build_call edge_get_int [|expr builder e|] "edge_get" builder in  
+          let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t ) "data" builder in 
+          L.build_load data_ptr "data" builder  
       | SCall ("edge_get_str", [e]) -> 
-		let data_ptr = L.build_call edge_get_str [|expr builder e|] "edge_get" builder in  
-		let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t ) "data" builder in 
-		L.build_load data_ptr "data" builder  
-
+          let data_ptr = L.build_call edge_get_str [|expr builder e|] "edge_get" builder in  
+          let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t ) "data" builder in 
+          L.build_load data_ptr "data" builder  
       | SCall ("get_to", [e]) -> L.build_call get_to [|expr builder e|] "get_to" builder  
       | SCall ("get_from", [e]) -> L.build_call get_from [|expr builder e|] "get_from" builder  
- 
       | SCall ("size", [e]) -> L.build_call size [|expr builder e|] "size" builder  
       | SCall ("str_size", [e]) -> L.build_call str_size [|expr builder e|] "str_size" builder  
       | SCall ("get_char", [e;f]) -> L.build_call get_char [|expr builder e; expr builder f|] "get_char" builder  

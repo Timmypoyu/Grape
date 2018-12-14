@@ -5,7 +5,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | An
 type uop = Neg | Not
 
 type typ = Int | Float | Bool | Void | Str 
-        | Graph of typ * typ
+  | Graph of typ * typ
 	| Node of typ
 	| Edge of typ
 	| List of typ 

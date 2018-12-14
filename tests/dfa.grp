@@ -30,7 +30,7 @@ fun Int main() {
 
 	i = 0;
 	while((i < size(transitions)) and (found == False)) { 			// List size
-	    aEdge = list_get_edge(transitions, i); 	// Get list item
+	    aEdge = transitions[i]; 	// Get list item
 	    if (str_equal(edge_get_str(aEdge), character)) { 	// Get list string
 		state = get_to(aEdge);			// Get edge destination
                 found = True;

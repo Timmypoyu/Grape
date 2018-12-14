@@ -1,6 +1,6 @@
 fun Int main() {
     List<String> b;
     b = ["hi", "hello", "hello?" , "bye"];
-    prints(list_get_str(b,0));
+    prints(b[0]);
     return 0;
 }

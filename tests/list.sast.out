@@ -2,6 +2,6 @@
 fun Int main() {
 List<String> b;
 (List<String> : b = (List<String> : [(String : hi),(String : hello),(String : hello?),(String : bye)]));
-(Void : prints((String : list_get_str((Int : 0), (List<String> : b)))));
+(Void : prints((String : b[(Int : 0)])));
 return (Int : 0);
 }

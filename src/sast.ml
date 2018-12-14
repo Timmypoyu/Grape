@@ -18,6 +18,7 @@ and sx =
   | SGraphLit of ((sexpr * sexpr) list) list 
   | SListLit of sexpr list 
   | SStrLit of string
+  | SListIndex of string * sexpr
   | SNoexpr
 
 type sstmt =
@@ -48,9 +49,10 @@ let rec string_of_sexpr (t, e) =
   | SBoolLit(false) -> "false"
   | SNodeLit(e) -> "'" ^ string_of_sexpr e ^ "'" 
   | SListLit(e) -> "[" ^ String.concat "," (List.map string_of_sexpr e) ^ "]"
+  | SListIndex(v, e) -> v ^ "[" ^ string_of_sexpr e ^ "]"
   | SDirEdgeLit(e) -> "-" ^ string_of_sexpr e ^ "->"
   | SEdgeLit(e) -> "-" ^ string_of_sexpr e ^ "-"
-  | SGraphLit(e) -> "<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) ->  string_of_sexpr k ^ " " ^ string_of_sexpr v) lst ))e) ^ ">"  
+  | SGraphLit(e) -> "<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) ->  string_of_sexpr k ^ " " ^ string_of_sexpr v) lst )) e) ^ ">"  
   | SStrLit(e) -> e
   | SId(e) -> e
   | SBinop(e1, o, e2) ->

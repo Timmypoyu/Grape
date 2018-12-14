@@ -38,26 +38,27 @@ let check (globals, functions) =
       fname = name; 
       formals = frm;
       body = [] } map
-    in List.fold_left add_bind StringMap.empty [ ("print",[(Int, "x")], Void);
-                                                 ("printb", [(Bool, "x")], Void);
-                                                 ("printf", [(Float, "x")], Void);
-                                                 ("prints", [(Str, "x")], Void);
-                                                 ("printbig", [(Int, "x")], Void); 
-						 ("list_get_int", [(Int, "x"); (List Int, "y")], Str);
-						 ("list_get_str", [(Int, "x"); (List Str, "y")], Str);
-						 ("list_get_edge", [(Int, "x"); ((List (Edge Str)), "y")], (Edge Str));
-                                                 ("node_get_int", [(Node Int, "x")], Int);
-						 ("node_get_str", [(Node Str, "x")], Str);
-						 ("edge_get_int", [(Edge Int, "x")], Int);
-						 ("edge_get_str", [(Edge Str, "x")], Str);
-                                                 ("get_to", [(Edge Str, "y")], (Node Int));
-						 ("get_from", [(Edge Str, "y")], (Node Int));
-                                                 ("get_outgoing", [(Node Int, "x")], List (Edge Str)); 
-                                                 ("get_char", [(Int, "x"); (Str, "y")], Str);
-                                                 ("size", [(List (Edge Str) , "x")], Int); 
-                                                 ("str_size" , [(Str, "x")], Int);
-						 ("str_equal", [(Str, "x"); (Str, "x")], Bool)]                                                       
-in
+    in List.fold_left add_bind StringMap.empty [ 
+      ("print",[(Int, "x")], Void);
+      ("printb", [(Bool, "x")], Void);
+      ("printf", [(Float, "x")], Void);
+      ("prints", [(Str, "x")], Void);
+      ("printbig", [(Int, "x")], Void); 
+      ("list_get_int", [(Int, "x"); (List Int, "y")], Str);
+			("list_get_str", [(Int, "x"); (List Str, "y")], Str);
+			("list_get_edge", [(Int, "x"); ((List (Edge Str)), "y")], (Edge Str));
+      ("node_get_int", [(Node Int, "x")], Int);
+			("node_get_str", [(Node Str, "x")], Str);
+			("edge_get_int", [(Edge Int, "x")], Int);
+			("edge_get_str", [(Edge Str, "x")], Str);
+      ("get_to", [(Edge Str, "y")], (Node Int));
+			("get_from", [(Edge Str, "y")], (Node Int));
+      ("get_outgoing", [(Node Int, "x")], List (Edge Str)); 
+      ("get_char", [(Int, "x"); (Str, "y")], Str);
+      ("size", [(List (Edge Str) , "x")], Int); 
+      ("str_size" , [(Str, "x")], Int);
+			("str_equal", [(Str, "x"); (Str, "x")], Bool)]      
+  in
 
   (* Add function name to symbol table *)
   let add_func map fd = 
@@ -119,27 +120,26 @@ in
           	raise (Failure ("Type inconsistency with list "))
           | hd :: tl -> helper typ ((getType hd) :: tlist) tl
         in
-            helper (getType (List.hd lst)) [] lst 
+      helper (getType (List.hd lst)) [] lst 
     in
-       
 
     let type_of_graph graph getType = 
 
         let rec type_of_path ntyp etyp plist = function
             [] -> ((ntyp, etyp), List.rev plist)
           | hd :: _ when fst (getType (fst hd)) <> ntyp ->
-          	raise (Failure ("Node type inconsistency with path " ^ string_of_typ (fst (getType (fst hd))) ^ string_of_typ ntyp ))
+          	raise (Failure ("node type inconsistency with path " ^ string_of_typ (fst (getType (fst hd))) ^ string_of_typ ntyp ))
           | hd :: tl when (List.length tl) = 0 && fst (getType (snd hd)) <> Void ->  
-          	raise (Failure ("Edge type inconsistency with path "))
+          	raise (Failure ("edge type inconsistency with path "))
           | hd :: tl when (List.length tl) <> 0 && fst (getType (snd hd)) <> etyp ->
-          	raise (Failure ("Edge type inconsistency with path "))
+          	raise (Failure ("edge type inconsistency with path "))
           | hd :: tl -> type_of_path ntyp etyp (((getType (fst hd)), (getType (snd hd)))::plist) tl 
         in
 
         let rec type_of_graph ntyp etyp type_of_path glist = function
             [] -> ((ntyp, etyp), List.rev glist)
           | hd :: _ when fst (type_of_path ntyp etyp [] hd) <> (ntyp, etyp) ->
-            raise (Failure ("Path type inconsistency"))
+            raise (Failure ("path type inconsistency"))
           | hd :: tl -> type_of_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
         in
              
@@ -155,6 +155,13 @@ in
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit n ->  let t = expr n in (Node (fst t), SNodeLit t)
       | ListLit l -> let t = type_of_list l expr in (List (fst (fst t)), SListLit (snd t)) 
+      | ListIndex (var, e) -> 
+          let (te, _) as e' = expr e in 
+          let tl = let t = type_of_identifier var in match t with 
+              List x -> x
+            | _ -> raise (Failure ("not a list"))
+          in if te != Int then raise (Failure ("list index not integer")) 
+          else (tl, SListIndex (var, e') )
       | GraphLit g -> let t = type_of_graph g expr in (Graph ((fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
       | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
