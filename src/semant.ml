@@ -113,39 +113,42 @@ let check (globals, functions) =
       with Not_found -> raise (Failure ("Undeclared identifier " ^ s))
     in
 
-    let type_of_list lst getType =
+    let expr_list lst expr =
         let rec helper typ tlist = function
             [] -> (typ, tlist)
-          | hd :: _ when fst (getType hd) != fst typ ->
+          | hd :: _ when (match (typ, fst (expr hd)) with 
+                            (Node a , Node b) -> a <> b
+                          | (Edge a , Edge b) -> a <> b
+                          | (a, b) -> a <> b) ->
           	raise (Failure ("Type inconsistency with list "))
-          | hd :: tl -> helper typ ((getType hd) :: tlist) tl
+          | hd :: tl -> helper typ (expr hd :: tlist) tl
         in
-      helper (getType (List.hd lst)) [] lst 
+      helper (fst (expr (List.hd lst))) [] lst 
     in
 
-    let type_of_graph graph getType = 
+    let expr_graph graph expr = 
 
         let rec type_of_path ntyp etyp plist = function
             [] -> ((ntyp, etyp), List.rev plist)
-          | hd :: _ when fst (getType (fst hd)) <> ntyp ->
-          	raise (Failure ("node type inconsistency with path " ^ string_of_typ (fst (getType (fst hd))) ^ string_of_typ ntyp ))
-          | hd :: tl when (List.length tl) = 0 && fst (getType (snd hd)) <> Void ->  
+          | hd :: _ when fst (expr (fst hd)) <> ntyp ->
+          	raise (Failure ("node type inconsistency with path " ^ string_of_typ (fst (expr (fst hd))) ^ string_of_typ ntyp ))
+          | hd :: tl when (List.length tl) = 0 && fst (expr (snd hd)) <> Void ->  
           	raise (Failure ("edge type inconsistency with path "))
-          | hd :: tl when (List.length tl) <> 0 && fst (getType (snd hd)) <> etyp ->
+          | hd :: tl when (List.length tl) <> 0 && fst (expr (snd hd)) <> etyp ->
           	raise (Failure ("edge type inconsistency with path "))
-          | hd :: tl -> type_of_path ntyp etyp (((getType (fst hd)), (getType (snd hd)))::plist) tl 
+          | hd :: tl -> type_of_path ntyp etyp (((expr (fst hd)), (expr (snd hd)))::plist) tl 
         in
 
-        let rec type_of_graph ntyp etyp type_of_path glist = function
+        let rec expr_graph ntyp etyp type_of_path glist = function
             [] -> ((ntyp, etyp), List.rev glist)
           | hd :: _ when fst (type_of_path ntyp etyp [] hd) <> (ntyp, etyp) ->
             raise (Failure ("path type inconsistency"))
-          | hd :: tl -> type_of_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
+          | hd :: tl -> expr_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
         in
              
-        let edgeType = fst (getType (snd (List.hd (List.hd graph)))) in
-        let nodeType = fst (getType (fst (List.hd (List.hd graph)))) in
-        type_of_graph nodeType edgeType type_of_path [] graph in
+        let edgeType = fst (expr (snd (List.hd (List.hd graph)))) in
+        let nodeType = fst (expr (fst (List.hd (List.hd graph)))) in
+        expr_graph nodeType edgeType type_of_path [] graph in
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
@@ -153,8 +156,8 @@ let check (globals, functions) =
       | FloatLit l -> (Float, SFloatLit l)
       | BoolLit l  -> (Bool, SBoolLit l)
       | StrLit s   -> (Str, SStrLit s)
-      | NodeLit n ->  let t = expr n in (Node (fst t), SNodeLit t)
-      | ListLit l -> let t = type_of_list l expr in (List (fst (fst t)), SListLit (snd t)) 
+      | NodeLit n ->  let (t, d) = expr n in (Node t, SNodeLit (t, d))
+      | ListLit l -> let (t, l) = expr_list l expr in (List t, SListLit l) 
       | ListIndex (var, e) -> 
           let (te, _) as e' = expr e in 
           let tl = let t = type_of_identifier var in match t with 
@@ -162,9 +165,9 @@ let check (globals, functions) =
             | _ -> raise (Failure ("not a list"))
           in if te != Int then raise (Failure ("list index not integer")) 
           else (tl, SListIndex (var, e') )
-      | GraphLit g -> let t = type_of_graph g expr in (Graph ((fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
-      | EdgeLit s -> let t = expr s in (Edge(fst t), SEdgeLit t)  
-      | DirEdgeLit s -> let t = expr s in (Edge(fst t), SDirEdgeLit t)
+      | GraphLit g -> let t = expr_graph g expr in (Graph ((fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
+      | EdgeLit s -> let t = expr s in (Edge (fst t), SEdgeLit t)  
+      | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Assign (var, e) as ex -> 

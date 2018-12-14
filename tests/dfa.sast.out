@@ -1,27 +1,21 @@
 
 fun Int main() {
 Edge<String> aEdge;
-List<Edge<String>> transitions;
-Int i;
-Int token;
-String input;
+Node<Int> (Node<Int> : start = (Node<Int> : '(Int : 0)'));
+String (String : input = (String : bbbbbbbbbbb));
+Graph<Node<Int>, Edge<String>> (Graph<Node<Int>, Edge<String>> : dfa = (Graph<Node<Int>, Edge<String>> : <(Node<Int> : start) (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 0)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Void : )>));
+Int (Int : token = (Int : 0));
+Int (Int : i = (Int : 0));
+Bool (Bool : found = (Bool : false));
 String character;
-Bool found;
-Node<Int> start;
-Node<Int> state;
-Graph<Node<Int>, Edge<String>> dfa;
-(Node<Int> : start = (Node<Int> : '(Int : 0)'));
-(String : input = (String : bbbbbbbbbbb));
-(Graph<Node<Int>, Edge<String>> : dfa = (Graph<Node<Int>, Edge<String>> : <(Node<Int> : start) (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 0)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Void : )>));
-(Int : token = (Int : 0));
-(Bool : found = (Bool : false));
-(Node<Int> : state = (Node<Int> : start));
+List<Edge<String>> transitions;
+Node<Int> (Node<Int> : state = (Node<Int> : start));
 while ((Bool : (Int : token) < (Int : str_size((String : input))))) {
 (String : character = (String : get_char((Int : token), (String : input))));
 (List<Edge<String>> : transitions = (List<Edge<String>> : get_outgoing((Node<Int> : state))));
 (Int : i = (Int : 0));
 while ((Bool : (Bool : (Int : i) < (Int : size((List<Edge<String>> : transitions)))) and (Bool : (Bool : found) == (Bool : false)))) {
-(Edge<String> : aEdge = (Edge<String> : list_get_edge((Int : i), (List<Edge<String>> : transitions))));
+(Edge<String> : aEdge = (Edge<String> : transitions[(Int : i)]));
 if ((Bool : str_equal((String : character), (String : edge_get_str((Edge<String> : aEdge))))))
 {
 (Node<Int> : state = (Node<Int> : get_to((Edge<String> : aEdge))));

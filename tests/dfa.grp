@@ -1,35 +1,26 @@
 fun Int main() {
 
     Edge<String> aEdge;
+
+    Node<Int> start = '0';
+
+    String input = "bbbbbbbbbbb";
+    Graph<Int, String> dfa = << start  -"b"-  '1'  -"b"-  '0'  -"b"-  '1' >>;
+    Int token = 0;
+    Int i = 0;
+    Bool found = False;
+
+    String character;
     List<Edge<String> > transitions;
 
-    Int i;
-
-    Int token;
-    String input;
-    String character;
-    Bool found;
-
-    Node<Int> start;
-    Node<Int> state;
-    Graph<Int, String> dfa;
-
-    start = '0';
-    input = "bbbbbbbbbbb";
-    dfa = << start  -"b"-  '1'  -"b"-  '0'  -"b"-  '1' >>;
-    token = 0;
-    found = False;
-
-    state = start;
+    Node<Int> state = start;
     while( token < str_size(input)) { 			// String size
 
 	character = get_char(input, token);		// Get char at token
-	transitions = get_outgoing(state); 			// Get outgoing edges
-
-	
+        transitions = get_outgoing(state); 			// Get outgoing edges
 
 	i = 0;
-	while((i < size(transitions)) and (found == False)) { 			// List size
+	while ((i < size(transitions)) and (found == False)) { 			// List size
 	    aEdge = transitions[i]; 	// Get list item
 	    if (str_equal(edge_get_str(aEdge), character)) { 	// Get list string
 		state = get_to(aEdge);			// Get edge destination
@@ -37,7 +28,7 @@ fun Int main() {
 	    }
 	    i = i + 1;
 	}
-        if( found == False){
+        if ( found == False){
             prints("REJECT");
             return 0;
         }
