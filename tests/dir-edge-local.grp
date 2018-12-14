@@ -1,0 +1,7 @@
+fun Int main() {
+
+        Edge<Int> a = << -5-> >>;
+
+        return 0;
+
+}

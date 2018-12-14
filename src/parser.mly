@@ -88,7 +88,12 @@ expr_opt:
   | expr          { $1 } 
 
 edge_expr:
-  | edge_expr GT                        { DirEdgeLit($1) }
+  | MINUS ID MINUS GT                   { DirEdgeLit(Id($2)) }
+  | MINUS INT_LIT MINUS GT              { DirEdgeLit(IntLit($2)) }
+  | MINUS STR_LIT MINUS GT              { DirEdgeLit(StrLit($2)) }
+  | MINUS FLOAT_LIT MINUS GT            { DirEdgeLit(FloatLit($2)) }
+  | MINUS TRUE MINUS GT                 { DirEdgeLit(BoolLit(true)) }
+  | MINUS FALSE MINUS GT                { DirEdgeLit(BoolLit(false)) }
   | MINUS ID MINUS                      { EdgeLit(Id($2)) }
   | MINUS INT_LIT MINUS                 { EdgeLit(IntLit($2)) }
   | MINUS STR_LIT MINUS                 { EdgeLit(StrLit($2)) }
@@ -134,7 +139,7 @@ expr:
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN { Call($1, $3) }
   | LPAREN expr RPAREN      { $2 }
-  | ID LBRACK expr RBRACK { ListIndex($1, $3) }
+  | ID LBRACK expr RBRACK   { ListIndex($1, $3) }
   | LBRACK actuals_opt RBRACK { ListLit($2) }
 
 actuals_opt:
