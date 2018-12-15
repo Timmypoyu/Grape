@@ -1,0 +1,27 @@
+fun Int main(){
+
+Node<Int> A = '0';
+Node<Int> B = '10000';
+Node<Int> C = '10000';
+Node<Int> D = '10000';
+Node<Int> E = '10000';
+Node<Int> F = '10000';
+Node<Int> G = '10000';
+
+Graph<Int, Int> mainGraph = << A -2-> B -5-> D -3-> G , 
+			       A -3-> C -7-> E -4-> F -2-> G,
+			       D -2-> F >>  
+
+List<Node<Int> > result;
+result = dijkstra(mainGraph, A, B);
+
+return 0  
+}
+
+fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int> y){
+
+List<Node<Int> > visited;
+List<String> last_node_record; 
+
+
+}  
