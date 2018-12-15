@@ -1,0 +1,6 @@
+
+fun Int main() {
+List<List<Int>> (List<List<Int>> : a = (List<List<Int>> : [(List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)]),(List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)]),(List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)]),(List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)])]));
+(Void : print((Int : (List<Int> : (List<List<Int>> : a)[(Int : 0)])[(Int : 0)])));
+return (Int : (Int : (List<Int> : (List<List<Int>> : a)[(Int : 3)])[(Int : 3)]) + (Int : (List<Int> : (List<List<Int>> : a)[(Int : 1)])[(Int : 2)]));
+}

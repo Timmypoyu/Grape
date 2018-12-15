@@ -93,8 +93,10 @@ let rec string_of_expr = function
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr (List.rev e)) ^ "]" 
   | Index(e, i) -> string_of_expr e ^ "[" ^ string_of_expr i ^ "]"
   | StrLit(e) -> "\"" ^ e ^ "\""
-  | Call(f, el) -> 
-      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | Call(f, args) -> 
+      f ^ "(" ^ String.concat ", " (List.map string_of_expr args) ^ ")"
+  | Method(o, f, args) -> 
+      string_of_expr o ^ f ^ "(" ^ String.concat ", " (List.map string_of_expr args) ^ ")"
   | Noexpr -> ""
 
 let rec string_of_typ = function
