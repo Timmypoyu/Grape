@@ -6,8 +6,8 @@ type uop = Neg | Not
 
 type typ = Int | Float | Bool | Void | Str 
   | Graph of typ * typ
+	| Edge of typ * typ
 	| Node of typ
-	| Edge of typ
 	| List of typ 
 
 (* variable type declaration *)
@@ -103,7 +103,7 @@ let rec string_of_typ = function
   | Float -> "Float"
   | Str -> "String"
   | Node(t) -> "Node<" ^ string_of_typ t ^ ">" 
-  | Edge(t) -> "Edge<" ^ string_of_typ t ^ ">"
+  | Edge(t, n) -> "Edge<" ^ string_of_typ t ^ "->" ^ string_of_typ n ^ ">"
   | Graph(s,t) -> "Graph<" ^ string_of_typ s ^ ", " ^ string_of_typ t ^ ">"
   | List(t) -> "List<" ^ string_of_typ t ^ ">"
 

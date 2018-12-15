@@ -355,6 +355,10 @@ let translate (globals, functions) =
     | A.And | A.Or ->
         raise (Failure "internal error: semant should have rejected and/or on float")
     ) e1' e2' "tmp" builder
+      | SBinop ((A.Str, _) as e1, A.Equal, e2) ->
+    let e1' = expr builder e1
+    and e2' = expr builder e2 in
+    L.build_call str_equal [|e1'; e2'|] "str_equal" builder
       | SBinop (e1, op, e2) ->
     let e1' = expr builder e1
     and e2' = expr builder e2 in
@@ -393,17 +397,6 @@ let translate (globals, functions) =
       | SCall ("prints", [e]) ->
       L.build_call printf [| str_format_str ; (expr builder e) |]
         "prints" builder
-(*	
-      | SCall ("list_get", [e; f]) ->
-                let (a , _) = f in   
-                let lltype = match a with 
-                        A.List i -> ltype_of_typ i (*(fst (List.hd i))*)
-                        | _ -> raise (Failure "Unimplemented") in                   
-	        let data_ptr = L.build_call list_get [|expr builder e; expr builder f|] "list_get" builder in
-	        let data_ptr = L.build_bitcast data_ptr (L.pointer_type lltype ) "data" builder in 
-	        L.build_load data_ptr "data" builder
-*)
-
       | SCall ("get_outgoing", [e]) -> 
           L.build_call get_outgoing [|expr builder e|] "outgoing" builder  
       | SCall ("get_to", [e]) -> L.build_call get_to [|expr builder e|] "get_to" builder  
@@ -411,7 +404,6 @@ let translate (globals, functions) =
       | SCall ("size", [e]) -> L.build_call size [|expr builder e|] "size" builder  
       | SCall ("str_size", [e]) -> L.build_call str_size [|expr builder e|] "str_size" builder  
       | SCall ("get_char", [e;f]) -> L.build_call get_char [|expr builder e; expr builder f|] "get_char" builder  
-      | SCall ("str_equal", [e;f]) -> L.build_call str_equal [|expr builder e; expr builder f|] "str_equal" builder  
 
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     

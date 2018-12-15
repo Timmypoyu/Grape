@@ -59,8 +59,8 @@ rule token = parse
 | "List"   { LIST }
 | "String" { STR }
 | "Bool"   { BOOL }
-| "True"   { TRUE }
-| "False"  { FALSE }
+| "Yes"   { TRUE }
+| "No"  { FALSE }
 | decimal as lxm            { FLOAT_LIT(lxm) }
 | digit+ as lxm             { INT_LIT(int_of_string lxm) }
 | '\"' ([^'\"']* as lxm) '\"' { STR_LIT(lxm) }

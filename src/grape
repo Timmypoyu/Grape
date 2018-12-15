@@ -5,7 +5,7 @@ PROGRAM="$1"
 OBJECT="${1%.*}.s"
 OUTFILE=${2:-"./out.g"}
 
-$HOME/grape.native $1 | llc -relocation-model=pic > $OBJECT
+cat $HOME/grplib.grp "$1" | $HOME/grape.native | llc -relocation-model=pic > $OBJECT
 cc -g -O -o $OUTFILE $OBJECT $HOME/stdlib.o
 
 rm $OBJECT

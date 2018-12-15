@@ -1,7 +1,8 @@
 .PHONY : all
 all : grape.native stdlib.o
 	cp grape ../dist
-	mv stdlib.o ../dist
+	cp stdlib.o ../dist
+	cp stdlib/grplib.grp ../dist
 	cp _build/grape.native ../dist
 
 stdlib.o: 
@@ -16,4 +17,4 @@ grape.native :
 
 .PHONY : clean
 clean :
-	rm -rf _build grape.native **/*.o parser.ml parser.mli
+	rm -rf _build grape.native *.o **/*.o parser.ml parser.mli

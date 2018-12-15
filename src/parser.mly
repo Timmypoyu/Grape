@@ -5,7 +5,7 @@
 %token SEMI LPAREN RPAREN LBRACE RBRACE COMMA LBRACK RBRACK GRAPS GRAPE SQUOT DQUOT DOT UNDS
 %token PLUS MINUS TIMES EXP DIVIDE ASSIGN NOT MOD AMP 
 %token EQ NEQ LT LEQ GT GEQ TRUE FALSE AND OR
-%token RETURN IF ELSE EACH WHILE FOR FUN 
+%token RETURN IF ELSE EACH WHILE FOR FUN THIS
 %token INT NODE EDGE GRAPH STR BOOL LIST DICT
 %token <int> INT_LIT
 %token <string> FLOAT_LIT
@@ -66,8 +66,8 @@ typ:
   | BOOL                        { Bool }
   | LIST LT typ GT              { List($3) }
   | NODE LT typ GT              { Node($3) }
-  | EDGE LT typ GT              { Edge($3) }
-  | GRAPH LT typ COMMA typ GT   { Graph(Node($3), Edge($5)) }
+  | EDGE LT typ GT              { Edge($3, Void) }
+  | GRAPH LT typ COMMA typ GT   { Graph(Node($3), Edge($5,$3)) }
 
 stmt_list:
     stmt           { [$1] }
@@ -89,12 +89,14 @@ expr_opt:
   | expr          { $1 } 
 
 edge_expr:
+  | MINUS MINUS GT                      { DirEdgeLit(Void) }
   | MINUS ID MINUS GT                   { DirEdgeLit(Id($2)) }
   | MINUS INT_LIT MINUS GT              { DirEdgeLit(IntLit($2)) }
   | MINUS STR_LIT MINUS GT              { DirEdgeLit(StrLit($2)) }
   | MINUS FLOAT_LIT MINUS GT            { DirEdgeLit(FloatLit($2)) }
   | MINUS TRUE MINUS GT                 { DirEdgeLit(BoolLit(true)) }
   | MINUS FALSE MINUS GT                { DirEdgeLit(BoolLit(false)) }
+  | MINUS MINUS                         { EdgeLit(Void) }
   | MINUS ID MINUS                      { EdgeLit(Id($2)) }
   | MINUS INT_LIT MINUS                 { EdgeLit(IntLit($2)) }
   | MINUS STR_LIT MINUS                 { EdgeLit(StrLit($2)) }
@@ -167,6 +169,7 @@ graph_list:
 graph_vertex:
     node_expr { $1 }
   | ID        { Id($1) }
+// | ID ASSIGN node_expr { Declare } TODO: Assign inside graphs
 
 path_list:
     graph_vertex { [($1, Noexpr)] }

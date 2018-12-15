@@ -17,10 +17,10 @@ let check (globals, functions) =
      List.iter (function
 	(Void, b) -> raise (Failure ("illegal void " ^ kind ^ " " ^ b))
       | _ -> ()) binds;
-    let rec dups = function
+        let rec dups = function
         [] -> ()
       |	((_,n1) :: (_,n2) :: _) when n1 = n2 ->
-	  raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
+	      raise (Failure ("duplicate " ^ kind ^ " " ^ n1))
       | _ :: t -> dups t
     in dups (List.sort (fun (_,a) (_,b) -> compare a b) binds)
   in
@@ -30,6 +30,10 @@ let check (globals, functions) =
   check_binds "global" globals;
 
   (**** Check functions ****)
+
+  let func_key name typ = (name ^ (match typ with 
+              Node _ -> "-node"
+            | Edge (_, _) -> "-edge" | _ -> "")) in
 
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_decls = 
@@ -44,29 +48,25 @@ let check (globals, functions) =
       ("printf", [(Float, "x")], Void);
       ("prints", [(Str, "x")], Void);
       ("printbig", [(Int, "x")], Void); 
-      ("node_get_int", [(Node Int, "x")], Int);
-			("node_get_str", [(Node Str, "x")], Str);
-			("edge_get_int", [(Edge Int, "x")], Int);
-			("edge_get_str", [(Edge Str, "x")], Str);
-      ("get_to", [(Edge Str, "y")], (Node Int));
-			("get_from", [(Edge Str, "y")], (Node Int));
-      ("get_outgoing", [(Node Int, "x")], List (Edge Str)); 
+      ("get_to", [(Edge (Str, Int), "y")], (Node Int));
+			("get_from", [(Edge (Str, Int), "y")], (Node Int));
+      ("get_outgoing", [(Node Int, "x")], List (Edge (Str, Int))); 
       ("get_char", [(Int, "x"); (Str, "y")], Str);
-      ("size", [(List (Edge Str) , "x")], Int); 
+      ("size", [(List (Edge (Str, Int)) , "x")], Int); 
       ("str_size" , [(Str, "x")], Int);
 			("str_equal", [(Str, "x"); (Str, "x")], Bool)]      
   in
 
   (* Add function name to symbol table *)
   let add_func map fd = 
-    let built_in_err = "function " ^ fd.fname ^ " may not be defined"
+    let key = func_key fd.fname fd.typ
+    and built_in_err = "function " ^ fd.fname ^ " may not be defined"
     and dup_err = "duplicate function " ^ fd.fname
     and make_err er = raise (Failure er)
-    and n = fd.fname (* Name of the function *)
     in match fd with (* No duplicate functions or redefinitions of built-ins *)
-         _ when StringMap.mem n built_in_decls -> make_err built_in_err
-       | _ when StringMap.mem n map -> make_err dup_err  
-       | _ ->  StringMap.add n fd map 
+         _ when StringMap.mem key built_in_decls -> make_err built_in_err
+       | _ when StringMap.mem key map -> make_err dup_err  
+       | _ ->  StringMap.add key fd map 
   in
 
   (* Collect all function names into one symbol table *)
@@ -88,8 +88,14 @@ let check (globals, functions) =
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
-    let check_assign lvaluet rvaluet err =
-       if lvaluet = rvaluet then lvaluet else raise (Failure err)
+    let rec check_assign lvaluet rvaluet err =
+      match (lvaluet, rvaluet) with
+          (Edge (a, b), Edge(c, _)) -> 
+            Edge (check_assign a c err, b)
+        | (List a, List b) -> List (check_assign a b err)
+        | (Graph (a, b), Graph (c, _)) -> 
+            Graph (check_assign a c err, b)
+        | (a, b) -> if a = b then a else raise (Failure err)
     in   
 
     let rec concat_statements locals = function
@@ -115,7 +121,7 @@ let check (globals, functions) =
             [] -> (typ, tlist)
           | hd :: _ when (match (typ, fst (expr hd)) with 
                             (Node a , Node b) -> a <> b
-                          | (Edge a , Edge b) -> a <> b
+                          | (Edge (a, b), Edge (c, d)) -> a <> c && b <> d
                           | (a, b) -> a <> b) ->
           	raise (Failure ("Type inconsistency with list "))
           | hd :: tl -> helper typ (expr hd :: tlist) tl
@@ -159,22 +165,23 @@ let check (globals, functions) =
           let (te, _) as e' = expr e in 
           let tl = let t = type_of_identifier var in match t with 
               List x -> x
+            | Str -> Str
             | _ -> raise (Failure ("not a list"))
           in if te != Int then raise (Failure ("list index not integer")) 
           else (tl, SListIndex (var, e') )
       | GraphLit g -> let t = expr_graph g expr in (Graph ((fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
-      | EdgeLit s -> let t = expr s in (Edge (fst t), SEdgeLit t)  
-      | DirEdgeLit s -> let t = expr s in (Edge (fst t), SDirEdgeLit t)
+      | EdgeLit s -> let t = expr s in (Edge ((fst t), Void), SEdgeLit t)  
+      | DirEdgeLit s -> let t = expr s in (Edge ((fst t), Void), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Prop (var, p) -> 
           let lt = type_of_identifier var in
           let pt = (match (lt, p) with
               (Node t, "val") -> t
-            | (Edge t, "val") -> t
-            | (Edge _, "to") -> Node Void
-            | (Edge _, "from") -> Node Void
-            | (Node _, "adj") -> List (Node Void)
+            | (Edge (t, _), "val") -> t
+            | (Edge (_, t), "to") -> Node t
+            | (Edge (_, t), "from") -> Node t
+            | (Node t, "adj") -> List (Edge (Void, t))
             | (_, _) -> raise (Failure ("no such property"))) in
           (pt, SProp (var, p))
       | Assign (var, e) as ex -> 
