@@ -105,7 +105,7 @@ literal:
   | STR_LIT                       { StrLit($1) }
   | INT_LIT                       { IntLit($1) }
   | LPAREN expr RPAREN            { $2 }
-  | literal LBRACK expr RBRACK    { ListIndex($1, $3) }
+  | literal LBRACK expr RBRACK    { Index($1, $3) }
 
 expr:
     literal                 { $1 }

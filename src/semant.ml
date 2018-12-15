@@ -161,13 +161,13 @@ let check (globals, functions) =
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit n ->  let (t, d) = expr n in (Node t, SNodeLit (t, d))
       | ListLit l -> let (t, l) = expr_list l expr in (List t, SListLit l) 
-      | ListIndex (e, i) -> 
+      | Index (e, i) -> 
           let (te, _) as e' = expr e in 
           let (ti, _) as i' = expr i in 
           if ti != Int then raise (Failure ("list index not integer"))
           else (match te with 
-              List x -> (x, SListIndex (e', i')) 
-            | Str -> (Str, SListIndex (e', i')) 
+              List x -> (x, SIndex (e', i')) 
+            | Str -> (Str, SIndex (e', i')) 
             | _ -> raise (Failure ("not iterable")))
       | GraphLit g -> let ((n, e), l) = expr_graph g expr in 
         (Graph (n, e), SGraphLit l)       

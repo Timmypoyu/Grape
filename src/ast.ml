@@ -25,11 +25,12 @@ type expr =
   | StrLit of string
   | Id of string
   | Prop of expr * string
+  | Method of expr * string * (expr list)
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list 
-  | ListIndex of expr * expr
+  | Index of expr * expr
   | Noexpr
 
 type stmt =
@@ -90,7 +91,7 @@ let rec string_of_expr = function
   | DirEdgeLit(e) -> "-" ^ string_of_expr e ^ "->"
   | GraphLit(e) -> "<<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) -> string_of_expr k ^ " " ^ string_of_expr v) lst ))e) ^ ">>" 
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr (List.rev e)) ^ "]" 
-  | ListIndex(e, i) -> string_of_expr e ^ "[" ^ string_of_expr i ^ "]"
+  | Index(e, i) -> string_of_expr e ^ "[" ^ string_of_expr i ^ "]"
   | StrLit(e) -> "\"" ^ e ^ "\""
   | Call(f, el) -> 
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"

@@ -1,0 +1,9 @@
+
+fun Int main() {
+String (String : a = (String : hi));
+Node<String> (Node<String> : n = (Node<String> : '(String : a)'));
+(Void : prints((String : (String : hi)[(Int : 0)])));
+(Void : prints((String : (String : a)[(Int : 0)])));
+(Void : prints((String : (String : (Node<String> : n).val)[(Int : 0)])));
+return (Int : 0);
+}
