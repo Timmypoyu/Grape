@@ -1,6 +1,6 @@
 
 fun Int main() {
-Graph<Node<Int>, Edge<Int>> a;
+Graph<Node<Int>, Edge<Int->Int>> a;
 a = <<'3' -3- '4' >>;
 return 0;
 }

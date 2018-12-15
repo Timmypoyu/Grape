@@ -1,6 +1,6 @@
 
 fun Int main() {
-Graph<Node<Int>, Edge<Int>> a;
-(Graph<Node<Int>, Edge<Int>> : a = (Graph<Node<Int>, Edge<Int>> : <(Node<Int> : '(Int : 3)') (Edge<Int> : -(Int : 3)-) (Node<Int> : '(Int : 4)') (Void : )>));
+Graph<Node<Int>, Edge<Int->Int>> a;
+(Graph<Node<Int>, Edge<Int->Int>> : a = (Graph<Node<Int>, Edge<Int->Void>> : <(Node<Int> : '(Int : 3)') (Edge<Int->Void> : -(Int : 3)-) (Node<Int> : '(Int : 4)') (Void : )>));
 return (Int : 0);
 }

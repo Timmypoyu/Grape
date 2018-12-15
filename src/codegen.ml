@@ -249,15 +249,20 @@ let translate (globals, functions) =
       | SFloatLit l -> L.const_float_of_string float_t l
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
-      | SProp (v, p) ->
-        let obj = L.build_load (lookup v) v builder in
+      | SProp (e, p) ->
+        let obj = expr builder e in
         (match (typ, p) with
             (_, "val") ->
               let dest_ptr = L.pointer_type (ltype_of_typ typ) in
               let data_ptr = L.build_call get_val [|obj|] "edge_val" builder in  
               let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in 
               L.build_load data_ptr "data" builder
-            )
+          | (Edge (_, _), "to") ->
+              let dest_ptr = L.pointer_type (ltype_of_typ typ) in
+              let data_ptr = L.build_call get_val [|obj|] "edge_val" builder in  
+              let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in 
+              L.build_load data_ptr "data" builder
+        )
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
       | SNodeLit (t, v) -> (* Cast data type into void pointer to init node *)
@@ -300,9 +305,9 @@ let translate (globals, functions) =
             init_path edge 1 tl
         in 
         ignore(List.map (init_path (L.const_int i8_t 0) 0) l); graph
-      | SListIndex (id, e) ->
-        let theList = L.build_load (lookup id) id builder in
-        let theIndex = expr builder e in 
+      | SListIndex (e, i) ->
+        let theList = expr builder e in
+        let theIndex = expr builder i in 
         let data_ptr = L.build_call list_get [|theIndex; theList|] "list_get" builder in  
         (match typ with
           | A.Edge _ ->

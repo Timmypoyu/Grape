@@ -1,8 +1,8 @@
 
 fun Int main() {
-Graph<Node<Int>, Edge<Int>> a;
+Graph<Node<Int>, Edge<Int->Int>> a;
 Node<Int> b;
 (Node<Int> : b = (Node<Int> : '(Int : 3)'));
-(Graph<Node<Int>, Edge<Int>> : a = (Graph<Node<Int>, Edge<Int>> : <(Node<Int> : b) (Edge<Int> : -(Int : 4)-) (Node<Int> : '(Int : 5)') (Void : ), (Node<Int> : b) (Edge<Int> : -(Int : 10)-) (Node<Int> : '(Int : 6)') (Void : )>));
+(Graph<Node<Int>, Edge<Int->Int>> : a = (Graph<Node<Int>, Edge<Int->Void>> : <(Node<Int> : b) (Edge<Int->Void> : -(Int : 4)-) (Node<Int> : '(Int : 5)') (Void : ), (Node<Int> : b) (Edge<Int->Void> : -(Int : 10)-) (Node<Int> : '(Int : 6)') (Void : )>));
 return (Int : 0);
 }

@@ -24,12 +24,12 @@ type expr =
   | ListLit of expr list 
   | StrLit of string
   | Id of string
-  | Prop of string * string
+  | Prop of expr * string
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list 
-  | ListIndex of string * expr
+  | ListIndex of expr * expr
   | Noexpr
 
 type stmt =
@@ -80,7 +80,7 @@ let rec string_of_expr = function
   | BoolLit(true) -> "true"
   | BoolLit(false) -> "false"
   | Id(s) -> s
-  | Prop(v, p) -> v ^ "." ^ p
+  | Prop(e, p) -> string_of_expr e ^ "." ^ p
   | Binop(e1, o, e2) ->
       string_of_expr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_expr e2
   | Unop(o, e) -> string_of_uop o ^ " " ^ string_of_expr e
@@ -90,7 +90,7 @@ let rec string_of_expr = function
   | DirEdgeLit(e) -> "-" ^ string_of_expr e ^ "->"
   | GraphLit(e) -> "<<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) -> string_of_expr k ^ " " ^ string_of_expr v) lst ))e) ^ ">>" 
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr (List.rev e)) ^ "]" 
-  | ListIndex(l, i) -> l ^ "[" ^ string_of_expr i ^ "]"
+  | ListIndex(e, i) -> string_of_expr e ^ "[" ^ string_of_expr i ^ "]"
   | StrLit(e) -> "\"" ^ e ^ "\""
   | Call(f, el) -> 
       f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"

@@ -89,37 +89,26 @@ expr_opt:
   | expr          { $1 } 
 
 edge_expr:
-  | MINUS MINUS GT                      { DirEdgeLit(Void) }
-  | MINUS ID MINUS GT                   { DirEdgeLit(Id($2)) }
-  | MINUS INT_LIT MINUS GT              { DirEdgeLit(IntLit($2)) }
-  | MINUS STR_LIT MINUS GT              { DirEdgeLit(StrLit($2)) }
-  | MINUS FLOAT_LIT MINUS GT            { DirEdgeLit(FloatLit($2)) }
-  | MINUS TRUE MINUS GT                 { DirEdgeLit(BoolLit(true)) }
-  | MINUS FALSE MINUS GT                { DirEdgeLit(BoolLit(false)) }
-  | MINUS MINUS                         { EdgeLit(Void) }
-  | MINUS ID MINUS                      { EdgeLit(Id($2)) }
-  | MINUS INT_LIT MINUS                 { EdgeLit(IntLit($2)) }
-  | MINUS STR_LIT MINUS                 { EdgeLit(StrLit($2)) }
-  | MINUS FLOAT_LIT MINUS               { EdgeLit(FloatLit($2)) }
-  | MINUS TRUE MINUS                    { EdgeLit(BoolLit(true)) }
-  | MINUS FALSE MINUS                   { EdgeLit(BoolLit(false)) }
+  | MINUS MINUS GT                        { DirEdgeLit(Noexpr) }
+  | MINUS literal MINUS GT                { DirEdgeLit($2) }
+  | MINUS literal MINUS                   { EdgeLit($2) }
    
 node_expr: 
-    SQUOT INT_LIT SQUOT                 { NodeLit(IntLit($2)) }
-  | SQUOT FLOAT_LIT SQUOT               { NodeLit(FloatLit($2)) }
-  | SQUOT STR_LIT SQUOT                 { NodeLit(StrLit($2)) }
-  | SQUOT TRUE SQUOT                    { NodeLit(BoolLit(true)) }
-  | SQUOT FALSE SQUOT                   { NodeLit(BoolLit(false)) }
-  | SQUOT ID SQUOT                      { NodeLit(Id($2)) }
+  | SQUOT literal SQUOT                 { NodeLit($2) }
+
+literal:
+    ID                            { Id($1) }
+  | literal DOT ID                { Prop($1, $3) }
+  | FALSE                         { BoolLit(false) }
+  | TRUE                          { BoolLit(true) }
+  | FLOAT_LIT                     { FloatLit($1) }
+  | STR_LIT                       { StrLit($1) }
+  | INT_LIT                       { IntLit($1) }
+  | LPAREN expr RPAREN            { $2 }
+  | literal LBRACK expr RBRACK    { ListIndex($1, $3) }
 
 expr:
-    ID                      { Id($1) }
-  | ID DOT ID               { Prop($1, $3) }
-  | FALSE                   { BoolLit(false) }
-  | TRUE                    { BoolLit(true) }
-  | FLOAT_LIT               { FloatLit($1) }
-  | STR_LIT                 { StrLit($1) }
-  | INT_LIT                 { IntLit($1) }
+    literal                 { $1 }
   | node_expr               { $1 }
   | GRAPS edge_expr GRAPE   { $2 }
   | GRAPS graph_opt GRAPE   { GraphLit($2) }
@@ -142,9 +131,7 @@ expr:
   | NOT expr                { Unop(Not, $2) }
   | ID ASSIGN expr          { Assign($1, $3) }
   | ID LPAREN actuals_opt RPAREN  { Call($1, $3) }
-  | ID LBRACK expr RBRACK         { ListIndex($1, $3) }
   | LBRACK actuals_opt RBRACK     { ListLit($2) }
-  | LPAREN expr RPAREN            { $2 }
 
 actuals_opt:
     /* nothing */ { [] }

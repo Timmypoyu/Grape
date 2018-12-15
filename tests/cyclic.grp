@@ -18,8 +18,8 @@ fun Int main() {
         List<Edge<String> > adjacent = get_outgoing(start);
 
         Int i = 0;
-        while (i < size(adjacent)) {
-                prints(edge_get_str(list_get_edge(adjacent, i)));
+        while (i < size(adjacent) {
+                prints(adjacent[i].val);
                 i = i + 1;
         }
 

@@ -8,7 +8,7 @@ and sx =
   | SFloatLit of string
   | SBoolLit of bool
   | SId of string
-  | SProp of string * string
+  | SProp of sexpr * string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
   | SAssign of string * sexpr
@@ -19,7 +19,7 @@ and sx =
   | SGraphLit of ((sexpr * sexpr) list) list 
   | SListLit of sexpr list 
   | SStrLit of string
-  | SListIndex of string * sexpr
+  | SListIndex of sexpr * sexpr
   | SNoexpr
 
 type sstmt =
@@ -50,13 +50,13 @@ let rec string_of_sexpr (t, e) =
   | SBoolLit(false) -> "false"
   | SNodeLit(e) -> "'" ^ string_of_sexpr e ^ "'" 
   | SListLit(e) -> "[" ^ String.concat "," (List.map string_of_sexpr e) ^ "]"
-  | SListIndex(v, e) -> v ^ "[" ^ string_of_sexpr e ^ "]"
+  | SListIndex(e, i) -> string_of_sexpr e ^ "[" ^ string_of_sexpr i ^ "]"
   | SDirEdgeLit(e) -> "-" ^ string_of_sexpr e ^ "->"
   | SEdgeLit(e) -> "-" ^ string_of_sexpr e ^ "-"
   | SGraphLit(e) -> "<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) ->  string_of_sexpr k ^ " " ^ string_of_sexpr v) lst )) e) ^ ">"  
   | SStrLit(e) -> e
   | SId(e) -> e
-  | SProp(v, p) -> v ^ "." ^ p
+  | SProp(e, p) -> string_of_sexpr e ^ "." ^ p
   | SBinop(e1, o, e2) ->
       string_of_sexpr e1 ^ " " ^ string_of_op o ^ " " ^ string_of_sexpr e2
   | SUnop(o, e) -> string_of_uop o ^ string_of_sexpr e

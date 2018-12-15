@@ -1,0 +1,7 @@
+fun Int main() {
+
+        List<Node<Int> > a = ['3', '4'];
+        
+        print(a[0].val);
+        return a[1].val;
+}

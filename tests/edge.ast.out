@@ -1,5 +1,5 @@
 
 fun Int main() {
-Edge<Int> a = -3-;
+Edge<Int->Void> a = -3-;
 return 0;
 }

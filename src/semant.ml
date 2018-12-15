@@ -161,29 +161,30 @@ let check (globals, functions) =
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit n ->  let (t, d) = expr n in (Node t, SNodeLit (t, d))
       | ListLit l -> let (t, l) = expr_list l expr in (List t, SListLit l) 
-      | ListIndex (var, e) -> 
+      | ListIndex (e, i) -> 
           let (te, _) as e' = expr e in 
-          let tl = let t = type_of_identifier var in match t with 
-              List x -> x
-            | Str -> Str
-            | _ -> raise (Failure ("not a list"))
-          in if te != Int then raise (Failure ("list index not integer")) 
-          else (tl, SListIndex (var, e') )
-      | GraphLit g -> let t = expr_graph g expr in (Graph ((fst (fst t)), (snd (fst t))), SGraphLit (snd t))       
+          let (ti, _) as i' = expr i in 
+          if ti != Int then raise (Failure ("list index not integer"))
+          else (match te with 
+              List x -> (x, SListIndex (e', i')) 
+            | Str -> (Str, SListIndex (e', i')) 
+            | _ -> raise (Failure ("not iterable")))
+      | GraphLit g -> let ((n, e), l) = expr_graph g expr in 
+        (Graph (n, e), SGraphLit l)       
       | EdgeLit s -> let t = expr s in (Edge ((fst t), Void), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr s in (Edge ((fst t), Void), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
-      | Prop (var, p) -> 
-          let lt = type_of_identifier var in
-          let pt = (match (lt, p) with
-              (Node t, "val") -> t
+      | Prop (e, p) -> 
+          let (et, _) as e' = expr e in
+          let pt = (match (et, p) with
+              (Node t,      "val") -> t
             | (Edge (t, _), "val") -> t
             | (Edge (_, t), "to") -> Node t
             | (Edge (_, t), "from") -> Node t
-            | (Node t, "adj") -> List (Edge (Void, t))
+            | (Node t,      "adj") -> List (Edge (Void, t))
             | (_, _) -> raise (Failure ("no such property"))) in
-          (pt, SProp (var, p))
+          (pt, SProp (e', p))
       | Assign (var, e) as ex -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in
