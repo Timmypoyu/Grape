@@ -1,6 +1,6 @@
 
 fun Int main() {
 Int (Int : a = (Int : 2147483648));
-(Void : print((Int : a)));
+(* : print((Int : a)));
 return (Int : 0);
 }
