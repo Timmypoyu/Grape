@@ -45,6 +45,7 @@ let translate (globals, functions) =
     | A.Bool  -> i1_t
     | A.Float -> float_t
     | A.Void  -> void_t
+    | A.Any  -> obj_ptr_t
     | A.Node(_)  -> obj_ptr_t
     | A.List(_)  -> obj_ptr_t
     | A.Edge(_,_)  -> obj_ptr_t
@@ -269,16 +270,16 @@ let translate (globals, functions) =
           let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
           L.build_load data_ptr "data" builder
       | (A.Edge (_, t), "to") ->
-          let dest_ptr = L.pointer_type (ltype_of_typ t) in
-          let data_ptr = L.build_call get_to [|o'|] "to" builder in  
-          L.build_bitcast data_ptr dest_ptr "data" builder
+          L.build_call get_to [|o'|] "to" builder
       | (A.Edge (_, t), "from") ->
           let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_from [|o'|] "from" builder in  
           L.build_bitcast data_ptr dest_ptr "data" builder
       | (_, _) -> raise (Failure "no such property"))
+
     | SAssign (s, e) -> let e' = expr builder e in
       ignore(L.build_store e' (lookup s) builder); e'
+
     | SNodeLit (t, v) -> (* Cast data type into void pointer to init node *)
       let data_value = expr builder (t, v) in 
       let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
@@ -291,7 +292,7 @@ let translate (globals, functions) =
         ignore ( L.build_store data_value data builder);
       let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
       let edge = L.build_call init_edge [|data|] "init_edge" builder in edge
-(* TODO: Initialize with empty lists *)
+      (* TODO: Initialize with empty lists *)
     | SDirEdgeLit _ -> raise (Failure "Unimplemented")
     | SGraphLit l -> 
       let graph = L.build_call init_graph [||] "init_graph" builder in 
@@ -410,8 +411,6 @@ let translate (globals, functions) =
         L.build_call size [|expr builder e|] "size" builder  
     | SCall ("str_size", [e]) -> 
         L.build_call str_size [|expr builder e|] "str_size" builder  
-    | SCall ("get_char", [e;f]) -> 
-        L.build_call get_char [|expr builder e; expr builder f|] "get_char" builder  
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     
         let llargs = List.rev (List.map (expr builder) (List.rev args)) in
@@ -483,18 +482,18 @@ let rec stmt builder = function
     ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
     L.builder_at_end context merge_bb
 
-    | SEach (_, _) -> raise(Failure "not implemented!") 
-	in
+  | SEach (_, _) -> raise(Failure "not implemented!") 
+in
 
-    (* Build the code for each statement in the function *)
-  let builder = stmt builder (SBlock fdecl.sbody) in
+(* Build the code for each statement in the function *)
+let builder = stmt builder (SBlock fdecl.sbody) in
 
-    (* Add a return if the last block falls off the end *)
-    add_terminal builder (match fdecl.styp with
-        A.Void -> L.build_ret_void
-      | A.Float -> L.build_ret (L.const_float float_t 0.0)
-      | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
-  in
+  (* Add a return if the last block falls off the end *)
+  add_terminal builder (match fdecl.styp with
+      A.Void -> L.build_ret_void
+    | A.Float -> L.build_ret (L.const_float float_t 0.0)
+    | t -> L.build_ret (L.const_int (ltype_of_typ t) 0))
+in
 
-  List.iter build_function_body functions;
-  the_module
+List.iter build_function_body functions;
+the_module

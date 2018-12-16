@@ -55,18 +55,18 @@ let check (globals, functions) =
         formals = args;
         body = [] } map
     in List.fold_left add_bind StringMap.empty [ 
-      ("print",     [(Int, "x")],   Void);
-      ("printb",    [(Bool, "x")],  Void);
-      ("printf",    [(Float, "x")], Void);
-      ("prints",    [(Str, "x")],   Void);
-      ("printbig",  [(Int, "x")],   Void); 
+      ("print",     [(Int, "x")],   Any);
+      ("printb",    [(Bool, "x")],  Any);
+      ("printf",    [(Float, "x")], Any);
+      ("prints",    [(Str, "x")],   Any);
+      ("printbig",  [(Int, "x")],   Any); 
       ("size",      [(List (Edge (Str, Int)), "x")], Int); 
       ("str_size" , [(Str, "x")],   Int);
     ]      
   in
 
   let built_in_methods = 
-    let v = Void in
+    let v = Any in
     let add_bind map (name, typ, frm, ret) = 
       let key = method_key typ name frm in
       StringMap.add key {
@@ -119,10 +119,9 @@ let check (globals, functions) =
        the given lvalue type *)
     let rec check_assign lvaluet rvaluet err =
       match (lvaluet, rvaluet) with
-          (Edge (a, _), Edge(c, d)) -> 
-            Edge (check_assign a c err, d)
-        | (List a, List b) -> 
-            List (check_assign a b err)
+          (Edge (_,_), Edge (a,b)) -> Edge (a,b)
+        | (Node _, Node a) -> Node a
+        | (List a, List b) -> List (check_assign a b err)
         | (Graph (a, b), Graph (c, _)) -> 
             Graph (check_assign a c err, b)
         | (a, b) -> if a = b then a else raise (Failure err)
@@ -166,8 +165,11 @@ let check (globals, functions) =
       let rec type_of_path ntyp etyp plist = function
           [] -> ((ntyp, etyp), List.rev plist)
         | hd :: _ when fst (expr (fst hd)) <> ntyp ->
-          raise (Failure ("node type inconsistency with path " ^ string_of_typ (fst (expr (fst hd))) ^ string_of_typ ntyp ))
-        | hd :: tl when (List.length tl) = 0 && fst (expr (snd hd)) <> Void ->  
+          raise (Failure (
+            "node type inconsistency with path " ^ 
+            string_of_typ (fst (expr (fst hd))) ^ 
+            string_of_typ ntyp ))
+        | hd :: tl when (List.length tl)  0 && fst (expr (snd hd)) <> Void ->  
           raise (Failure ("edge type inconsistency with path "))
         | hd :: tl when (List.length tl) <> 0 && fst (expr (snd hd)) <> etyp ->
           raise (Failure ("edge type inconsistency with path "))
@@ -181,9 +183,9 @@ let check (globals, functions) =
         | hd :: tl -> expr_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
       in
              
-    let edgeType = fst (expr (snd (List.hd (List.hd graph)))) in
-    let nodeType = fst (expr (fst (List.hd (List.hd graph)))) in
-    expr_graph nodeType edgeType type_of_path [] graph in
+      let edgeType = fst (expr (snd (List.hd (List.hd graph)))) in
+      let nodeType = fst (expr (fst (List.hd (List.hd graph)))) in
+      expr_graph nodeType edgeType type_of_path [] graph in
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
@@ -203,19 +205,19 @@ let check (globals, functions) =
             | _ -> raise (Failure ("not iterable")))
       | GraphLit g -> let ((n, e), l) = expr_graph g expr in 
         (Graph (n, e), SGraphLit l)       
-      | EdgeLit s -> let t = expr s in (Edge ((fst t), Void), SEdgeLit t)  
-      | DirEdgeLit s -> let t = expr s in (Edge ((fst t), Void), SDirEdgeLit t)
+      | EdgeLit s -> let t = expr s in (Edge ((fst t), Any), SEdgeLit t)  
+      | DirEdgeLit s -> let t = expr s in (Edge ((fst t), Any), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Prop (e, p) -> 
-          let (et, _) as e' = expr e in
-          let pt = (match (et, p) with
-              (Node t,      "val") -> t
-            | (Edge (t, _), "val") -> t
-            | (Edge (_, t), "to") -> Node t
-            | (Edge (_, t), "from") -> Node t
-            | (_, _) -> raise (Failure ("no such property"))) in
-          (pt, SProp (e', p))
+        let (et, _) as e' = expr e in
+        let pt = (match (et, p) with
+            (Node t,      "val") -> t
+          | (Edge (t, _), "val") -> t
+          | (Edge (_, t), "to") -> Node t
+          | (Edge (_, t), "from") -> Node t
+          | (_, _) -> raise (Failure ("no such property"))) in
+        (pt, SProp (e', p))
       | Assign (var, e) as ex -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in

@@ -16,15 +16,16 @@ fun Int main() {
     Node<Int> state = start;
     while( token < str_size(input)) { 			// String size
 
-	character = input[token];		// Get char at token
-        transitions = dfa.outgoing(state); 			// Get outgoing edges
+	character = input[token];		        // Get char at token
+        transitions = dfa.outgoing(state); 	        // Get outgoing edges
 
 	i = 0;
 	while ((i < size(transitions)) and (found == No)) { 			// List size
 	    if (transitions[i].val == character) { 	// Get list string
-		state = transitions[i].to;			// Get edge destination
+		state = transitions[i].to;		// Get edge destination
                 found = Yes;
 	    }
+
 	    i = i + 1;
 	}
         if ( found == No){
