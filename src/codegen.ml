@@ -324,8 +324,12 @@ let translate (globals, functions) =
           A.Str -> L.build_call get_char [|i'; e'|] "get_char" builder 
         | A.List t -> 
           let data_ptr = L.build_call list_get [|i'; e'|] "list_get" builder in  
-          let data_ptr = L.build_bitcast data_ptr (L.pointer_type (ltype_of_typ t)) "data" builder in
-          L.build_load data_ptr "data" builder
+          match t with 
+              A.List _ -> data_ptr
+            | _ -> 
+              let dest_ptr = L.pointer_type (ltype_of_typ t) in
+              let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
+              L.build_load data_ptr "data" builder 
         | _ -> raise (Failure "Cannot index type"))
     | SListLit i ->
       let rec fill_list lst = (function 
