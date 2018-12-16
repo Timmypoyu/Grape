@@ -172,7 +172,7 @@ let translate (globals, functions) =
   let get_outgoing2_t : L.lltype = 
       L.var_arg_function_type obj_ptr_t [|obj_ptr_t; obj_ptr_t|] in
   let get_outgoing2 : L.llvalue = 
-      L.declare_function "get_outgoing" get_outgoing2_t the_module in
+      L.declare_function "get_outgoing2" get_outgoing2_t the_module in
 
   let get_t : L.lltype = 
       L.var_arg_function_type void_ptr_t [|obj_ptr_t|] in

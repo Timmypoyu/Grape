@@ -4,12 +4,12 @@ Int b;
 b = 7;
 Int a = 5;
 Node<Int> start = '0';
-Graph<Node<Int>, Edge<String>> g = <<start -"h"- '0' -"i"- '1' , start -"h"- '0' -"o"- '1' , start -"s"- '0' -"u"- start -"p"- '1' >>;
+Graph<Node<Int>, Edge<String->Int>> g = <<start -"h"- '0' -"i"- '1' , start -"h"- '0' -"o"- '1' , start -"s"- '0' -"u"- start -"p"- '1' >>;
 prints("Hell oWorld ");
-List<Edge<String>> adjacent = get_outgoing(start);
+List<Edge<String->Void>> adjacent = goutgoing(start);
 Int i = 0;
 while (i < size(adjacent)) {
-prints(edge_get_str(list_get_edge(i, adjacent)));
+prints(adjacent[i].val);
 i = i + 1;
 }
 return 0;
