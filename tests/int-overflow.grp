@@ -1,0 +1,5 @@
+fun Int main() {
+    Int a = 2147483648;
+    print(a);
+    return 0;
+}
