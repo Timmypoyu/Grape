@@ -4,12 +4,12 @@ Int b;
 (Int : b = (Int : 7));
 Int (Int : a = (Int : 5));
 Node<Int> (Node<Int> : start = (Node<Int> : '(Int : 0)'));
-Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : g = (Graph<Node<Int>, Edge<String->Void>> : <(Node<Int> : start) (Edge<String->Void> : -(String : h)-) (Node<Int> : '(Int : 0)') (Edge<String->Void> : -(String : i)-) (Node<Int> : '(Int : 1)') (Void : ), (Node<Int> : start) (Edge<String->Void> : -(String : h)-) (Node<Int> : '(Int : 0)') (Edge<String->Void> : -(String : o)-) (Node<Int> : '(Int : 1)') (Void : ), (Node<Int> : start) (Edge<String->Void> : -(String : s)-) (Node<Int> : '(Int : 0)') (Edge<String->Void> : -(String : u)-) (Node<Int> : start) (Edge<String->Void> : -(String : p)-) (Node<Int> : '(Int : 1)') (Void : )>));
-(Void : prints((String : Hell oWorld )));
-List<Edge<String->Void>> (List<Edge<String->Int>> : adjacent = (List<Edge<String->Int>> : (Graph<Node<Int>, Edge<String->Int>> : g)outgoing((Node<Int> : start))));
+Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : g = (Graph<Node<Int>, Edge<String->*>> : <(Node<Int> : start) (Edge<String->*> : -(String : h)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : i)-) (Node<Int> : '(Int : 1)') (Void : ), (Node<Int> : start) (Edge<String->*> : -(String : h)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : o)-) (Node<Int> : '(Int : 1)') (Void : ), (Node<Int> : start) (Edge<String->*> : -(String : s)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : u)-) (Node<Int> : start) (Edge<String->*> : -(String : p)-) (Node<Int> : '(Int : 1)') (Void : )>));
+(* : prints((String : Hell oWorld )));
+List<Edge<String->*>> (List<Edge<String->Int>> : adjacent = (List<Edge<String->Int>> : (Graph<Node<Int>, Edge<String->Int>> : g)outgoing((Node<Int> : start))));
 Int (Int : i = (Int : 0));
-while ((Bool : (Int : i) < (Int : size((List<Edge<String->Void>> : adjacent))))) {
-(Void : prints((String : (Edge<String->Void> : (List<Edge<String->Void>> : adjacent)[(Int : i)]).val)));
+while ((Bool : (Int : i) < (Int : size((List<Edge<String->*>> : adjacent))))) {
+(* : prints((String : (Edge<String->*> : (List<Edge<String->*>> : adjacent)[(Int : i)]).val)));
 (Int : i = (Int : (Int : i) + (Int : 1)));
 }
 return (Int : 0);

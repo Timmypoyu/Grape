@@ -121,6 +121,7 @@ let check (globals, functions) =
       match (lvaluet, rvaluet) with
           (Edge (_,_), Edge (a,b)) -> Edge (a,b)
         | (Node _, Node a) -> Node a
+        | (List a, List Any) -> List a
         | (List a, List b) -> List (check_assign a b err)
         | (Graph (a, b), Graph (c, _)) -> 
             Graph (check_assign a c err, b)
@@ -156,7 +157,7 @@ let check (globals, functions) =
           | hd :: tl -> helper typ (expr hd :: tlist) tl
         in
       let typ = match (List.length lst) with  
-          0 -> Void
+          0 -> Any
         | _ -> (fst (expr (List.hd lst))) in
       helper typ [] lst 
     in
@@ -169,7 +170,7 @@ let check (globals, functions) =
             "node type inconsistency with path " ^ 
             string_of_typ (fst (expr (fst hd))) ^ 
             string_of_typ ntyp ))
-        | hd :: tl when (List.length tl)  0 && fst (expr (snd hd)) <> Void ->  
+        | hd :: tl when (List.length tl) = 0 && fst (expr (snd hd)) <> Void ->  
           raise (Failure ("edge type inconsistency with path "))
         | hd :: tl when (List.length tl) <> 0 && fst (expr (snd hd)) <> etyp ->
           raise (Failure ("edge type inconsistency with path "))

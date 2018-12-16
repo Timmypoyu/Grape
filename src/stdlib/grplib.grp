@@ -1,4 +1,4 @@
-fun Int dfa(Graph<Int, String> dfa, String input) {
+fun Bool dfa(Graph<Int, String> dfa, String input) {
 
     Int i = 0;
     Int token = 0;
@@ -26,14 +26,15 @@ fun Int dfa(Graph<Int, String> dfa, String input) {
 	    }
 	    i = i + 1;
 	}
-        if ( found == No){
-            prints("REJECT");
-            return 0;
+        if (found == No){
+            return No;
         }
+
         found = No;
 	token = token + 1;
     }
 
-    if (state.val == 1) { prints("ACCEPT"); }
-    else { prints("REJECT"); }
+    if (state.val == 1) { return Yes }
+
+    return No;
 }

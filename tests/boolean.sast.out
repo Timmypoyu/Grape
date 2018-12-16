@@ -4,7 +4,7 @@ Bool a;
 (Bool : a = (Bool : true));
 if ((Bool : a))
 {
-(Void : prints((String : Bool works)));
+(* : prints((String : Bool works)));
 }
 return (Int : 0);
 }

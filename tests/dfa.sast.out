@@ -1,43 +1,42 @@
 
 fun Int main() {
-Edge<String> aEdge;
+Edge<String->*> aEdge;
 Node<Int> (Node<Int> : start = (Node<Int> : '(Int : 0)'));
 String (String : input = (String : bbbbbbbbbbb));
-Graph<Node<Int>, Edge<String>> (Graph<Node<Int>, Edge<String>> : dfa = (Graph<Node<Int>, Edge<String>> : <(Node<Int> : start) (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 0)') (Edge<String> : -(String : b)-) (Node<Int> : '(Int : 1)') (Void : )>));
+Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : dfa = (Graph<Node<Int>, Edge<String->*>> : <(Node<Int> : start) (Edge<String->*> : -(String : b)-) (Node<Int> : '(Int : 1)') (Edge<String->*> : -(String : b)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : b)-) (Node<Int> : '(Int : 1)') (Void : )>));
 Int (Int : token = (Int : 0));
 Int (Int : i = (Int : 0));
 Bool (Bool : found = (Bool : false));
 String character;
-List<Edge<String>> transitions;
+List<Edge<String->*>> transitions;
 Node<Int> (Node<Int> : state = (Node<Int> : start));
 while ((Bool : (Int : token) < (Int : str_size((String : input))))) {
-(String : character = (String : get_char((Int : token), (String : input))));
-(List<Edge<String>> : transitions = (List<Edge<String>> : get_outgoing((Node<Int> : state))));
+(String : character = (String : (String : input)[(Int : token)]));
+(List<Edge<String->Int>> : transitions = (List<Edge<String->Int>> : (Graph<Node<Int>, Edge<String->Int>> : dfa)outgoing((Node<Int> : state))));
 (Int : i = (Int : 0));
-while ((Bool : (Bool : (Int : i) < (Int : size((List<Edge<String>> : transitions)))) and (Bool : (Bool : found) == (Bool : false)))) {
-(Edge<String> : aEdge = (Edge<String> : transitions[(Int : i)]));
-if ((Bool : str_equal((String : character), (String : aEdge.val))))
+while ((Bool : (Bool : (Int : i) < (Int : size((List<Edge<String->*>> : transitions)))) and (Bool : (Bool : found) == (Bool : false)))) {
+if ((Bool : (String : (Edge<String->*> : (List<Edge<String->*>> : transitions)[(Int : i)]).val) == (String : character)))
 {
-(Node<Int> : state = (Node<Int> : get_to((Edge<String> : aEdge))));
+(Node<*> : state = (Node<*> : (Edge<String->*> : (List<Edge<String->*>> : transitions)[(Int : i)]).to));
 (Bool : found = (Bool : true));
 }
 (Int : i = (Int : (Int : i) + (Int : 1)));
 }
 if ((Bool : (Bool : found) == (Bool : false)))
 {
-(Void : prints((String : REJECT)));
+(* : prints((String : REJECT)));
 return (Int : 0);
 }
 (Bool : found = (Bool : false));
 (Int : token = (Int : (Int : token) + (Int : 1)));
 }
-if ((Bool : (Int : state.val) == (Int : 1)))
+if ((Bool : (Int : (Node<Int> : state).val) == (Int : 1)))
 {
-(Void : prints((String : ACCEPT)));
+(* : prints((String : ACCEPT)));
 }
 else
 {
-(Void : prints((String : REJECT)));
+(* : prints((String : REJECT)));
 }
 return (Int : 0);
 }

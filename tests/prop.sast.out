@@ -2,8 +2,8 @@
 fun Int main() {
 Int (Int : a = (Int : 3));
 Node<Int> (Node<Int> : b = (Node<Int> : '(Int : a)'));
-Edge<String->Void> (Edge<String->Void> : e = (Edge<String->Void> : -(String : WASSUP)-));
-(Void : print((Int : (Node<Int> : b).val)));
-(Void : prints((String : (Edge<String->Void> : e).val)));
+Edge<String->*> (Edge<String->*> : e = (Edge<String->*> : -(String : WASSUP)-));
+(* : print((Int : (Node<Int> : b).val)));
+(* : prints((String : (Edge<String->*> : e).val)));
 return (Int : 0);
 }

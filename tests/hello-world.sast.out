@@ -1,4 +1,4 @@
 
 fun Int main() {
-(Void : prints((String : Hello World!)));
+(* : prints((String : Hello World!)));
 }

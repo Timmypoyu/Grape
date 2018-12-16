@@ -2,9 +2,9 @@
 fun Int main() {
 Int (Int : a = (Int : 3));
 Int (Int : b = (Int : 5));
-(Void : print((Int : (Int : a) + (Int : b))));
-(Void : print((Int : (Int : a) * (Int : 3000))));
+(* : print((Int : (Int : a) + (Int : b))));
+(* : print((Int : (Int : a) * (Int : 3000))));
 String (String : z = (String : Hello));
-Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : g = (Graph<Node<Int>, Edge<Int->Void>> : <(Node<Int> : '(Int : 3)') (Edge<Int->Void> : -(Int : 5)-) (Node<Int> : '(Int : 6)') (Void : )>));
+Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : g = (Graph<Node<Int>, Edge<Int->*>> : <(Node<Int> : '(Int : 3)') (Edge<Int->*> : -(Int : 5)-) (Node<Int> : '(Int : 6)') (Void : )>));
 return (Int : 0);
 }

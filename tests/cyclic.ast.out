@@ -6,7 +6,7 @@ Int a = 5;
 Node<Int> start = '0';
 Graph<Node<Int>, Edge<String->Int>> g = <<start -"h"- '0' -"i"- '1' , start -"h"- '0' -"o"- '1' , start -"s"- '0' -"u"- start -"p"- '1' >>;
 prints("Hell oWorld ");
-List<Edge<String->Void>> adjacent = goutgoing(start);
+List<Edge<String->*>> adjacent = goutgoing(start);
 Int i = 0;
 while (i < size(adjacent)) {
 prints(adjacent[i].val);
