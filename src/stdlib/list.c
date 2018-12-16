@@ -196,7 +196,7 @@ bool isEqual(struct ListNode *a, struct ListNode *b) {
 	int *dataB = (int *) b->data;
 	
 	if (*dataA == *dataB) {
-		return 1;
+		return true;
 	}
 	
 	return 0; 
