@@ -1,6 +1,6 @@
 fun Int main() {
     String a;
     a = "applejacks";
-    prints(get_char(a, 5));
+    prints(a[5]);
     return 0;
 }
