@@ -4,8 +4,8 @@ Int a;
 Int b;
 (Int : a = (Int : 4));
 (Int : b = (Int : 1000));
-(Void : print((Int : foo((Int : a)))));
-(Void : print((Int : bar((Int : b), (Int : a)))));
+(* : print((Int : foo((Int : a)))));
+(* : print((Int : bar((Int : b), (Int : a)))));
 }
 
 fun Int bar(a, b) {

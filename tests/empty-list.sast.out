@@ -1,1 +1,6 @@
-Fatal error: exception Failure("hd")
+
+fun Int main() {
+List<Int> a;
+(List<Int> : a = (List<*> : []));
+return (Int : 0);
+}

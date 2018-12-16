@@ -30,56 +30,85 @@ let check (globals, functions) =
   check_binds "global" globals;
 
   (**** Check functions ****)
+  let func_key name args = 
+    let rec args_str str = function
+        [] -> str
+      | (t, _)::tl -> args_str (str ^ (match t with
+            Int -> "int."
+          | Bool -> "bool."
+          | _ -> "" )) tl in
+    (name ^ (args_str ":" args))
+  in
 
-  let func_key name typ = (name ^ (match typ with 
-              Node _ -> "-node"
-            | Edge (_, _) -> "-edge" | _ -> "")) in
+  let method_key typ name args = match typ with
+      Graph _ -> "graph:" ^ (func_key name args)
+    | _ -> "" 
+  in
 
   (* Collect function declarations for built-in functions: no bodies *)
-  let built_in_decls = 
-    let add_bind map (name, frm, ret) = StringMap.add name {
-      typ = ret;
-      fname = name; 
-      formals = frm;
-      body = [] } map
+  let built_in_functions = 
+    let add_bind map (name, args, ret) = 
+      let key = func_key name args in
+      StringMap.add key {
+        typ = ret;
+        fname = name; 
+        formals = args;
+        body = [] } map
     in List.fold_left add_bind StringMap.empty [ 
-      ("print",[(Int, "x")], Void);
-      ("printb", [(Bool, "x")], Void);
-      ("printf", [(Float, "x")], Void);
-      ("prints", [(Str, "x")], Void);
-      ("printbig", [(Int, "x")], Void); 
-      ("get_to", [(Edge (Str, Int), "y")], (Node Int));
-			("get_from", [(Edge (Str, Int), "y")], (Node Int));
-      ("get_outgoing", [(Node Int, "x")], List (Edge (Str, Int))); 
-      ("get_char", [(Int, "x"); (Str, "y")], Str);
-      ("size", [(List (Edge (Str, Int)) , "x")], Int); 
-      ("str_size" , [(Str, "x")], Int);
-			("str_equal", [(Str, "x"); (Str, "x")], Bool)]      
+      ("print",     [(Int, "x")],   Any);
+      ("printb",    [(Bool, "x")],  Any);
+      ("printf",    [(Float, "x")], Any);
+      ("prints",    [(Str, "x")],   Any);
+      ("printbig",  [(Int, "x")],   Any); 
+      ("size",      [(List (Edge (Str, Int)), "x")], Int); 
+      ("str_size" , [(Str, "x")],   Int);
+    ]      
+  in
+
+  let built_in_methods = 
+    let v = Any in
+    let add_bind map (name, typ, frm, ret) = 
+      let key = method_key typ name frm in
+      StringMap.add key {
+        typ = ret;
+        fname = name; 
+        formals = frm; 
+        body = [] } map 
+      in List.fold_left add_bind StringMap.empty [ 
+        ("outgoing", Graph (v, v), [(Node v, "x")], List (Edge (v, v)));
+    ] 
   in
 
   (* Add function name to symbol table *)
   let add_func map fd = 
-    let key = func_key fd.fname fd.typ
+    let key = func_key fd.fname fd.formals
     and built_in_err = "function " ^ fd.fname ^ " may not be defined"
     and dup_err = "duplicate function " ^ fd.fname
     and make_err er = raise (Failure er)
     in match fd with (* No duplicate functions or redefinitions of built-ins *)
-         _ when StringMap.mem key built_in_decls -> make_err built_in_err
-       | _ when StringMap.mem key map -> make_err dup_err  
-       | _ ->  StringMap.add key fd map 
+        _ when StringMap.mem key built_in_functions -> make_err built_in_err
+      | _ when StringMap.mem key map -> make_err dup_err  
+      | _ ->  StringMap.add key fd map 
   in
 
   (* Collect all function names into one symbol table *)
-  let function_decls = List.fold_left add_func built_in_decls functions
-  in
-  
-  (* Return a function from our symbol table *)
-  let find_func s = 
-    try StringMap.find s function_decls
-    with Not_found -> raise (Failure ("unrecognized function " ^ s))
+  let function_decls = List.fold_left add_func built_in_functions functions
   in
 
-  let _ = find_func "main" in (* Ensure "main" is defined *)
+  (* Return a function from our symbol table *)
+  let find_func name args = 
+    let key = func_key name args in
+    try StringMap.find key function_decls
+    with Not_found -> raise (Failure ("unrecognized function " ^ key))
+  in
+
+  let find_method typ name args  =
+    let key = method_key typ name args in
+    try StringMap.find key built_in_methods
+    with Not_found -> raise (Failure ("unrecognized method " ^ key))
+  in
+
+  let _ = find_func "main" [] in (* Ensure "main" is defined *)
 
   let check_function func =
     (* Make sure no formals or locals are void or duplicates *)
@@ -90,8 +119,9 @@ let check (globals, functions) =
        the given lvalue type *)
     let rec check_assign lvaluet rvaluet err =
       match (lvaluet, rvaluet) with
-          (Edge (a, b), Edge(c, _)) -> 
-            Edge (check_assign a c err, b)
+          (Edge (_,_), Edge (a,b)) -> Edge (a,b)
+        | (Node _, Node a) -> Node a
+        | (List a, List Any) -> List a
         | (List a, List b) -> List (check_assign a b err)
         | (Graph (a, b), Graph (c, _)) -> 
             Graph (check_assign a c err, b)
@@ -120,38 +150,43 @@ let check (globals, functions) =
         let rec helper typ tlist = function
             [] -> (typ, tlist)
           | hd :: _ when (match (typ, fst (expr hd)) with 
-                            (Node a , Node b) -> a <> b
-                          | (Edge (a, b), Edge (c, d)) -> a <> c && b <> d
-                          | (a, b) -> a <> b) ->
+                (Node a , Node b) -> a <> b
+              | (Edge (a, b), Edge (c, d)) -> a <> c && b <> d
+              | (a, b) -> a <> b) ->
           	raise (Failure ("Type inconsistency with list "))
           | hd :: tl -> helper typ (expr hd :: tlist) tl
         in
-      helper (fst (expr (List.hd lst))) [] lst 
+      let typ = match (List.length lst) with  
+          0 -> Any
+        | _ -> (fst (expr (List.hd lst))) in
+      helper typ [] lst 
     in
 
     let expr_graph graph expr = 
+      let rec type_of_path ntyp etyp plist = function
+          [] -> ((ntyp, etyp), List.rev plist)
+        | hd :: _ when fst (expr (fst hd)) <> ntyp ->
+          raise (Failure (
+            "node type inconsistency with path " ^ 
+            string_of_typ (fst (expr (fst hd))) ^ 
+            string_of_typ ntyp ))
+        | hd :: tl when (List.length tl) = 0 && fst (expr (snd hd)) <> Void ->  
+          raise (Failure ("edge type inconsistency with path "))
+        | hd :: tl when (List.length tl) <> 0 && fst (expr (snd hd)) <> etyp ->
+          raise (Failure ("edge type inconsistency with path "))
+        | hd :: tl -> type_of_path ntyp etyp (((expr (fst hd)), (expr (snd hd)))::plist) tl 
+      in
 
-        let rec type_of_path ntyp etyp plist = function
-            [] -> ((ntyp, etyp), List.rev plist)
-          | hd :: _ when fst (expr (fst hd)) <> ntyp ->
-          	raise (Failure ("node type inconsistency with path " ^ string_of_typ (fst (expr (fst hd))) ^ string_of_typ ntyp ))
-          | hd :: tl when (List.length tl) = 0 && fst (expr (snd hd)) <> Void ->  
-          	raise (Failure ("edge type inconsistency with path "))
-          | hd :: tl when (List.length tl) <> 0 && fst (expr (snd hd)) <> etyp ->
-          	raise (Failure ("edge type inconsistency with path "))
-          | hd :: tl -> type_of_path ntyp etyp (((expr (fst hd)), (expr (snd hd)))::plist) tl 
-        in
-
-        let rec expr_graph ntyp etyp type_of_path glist = function
-            [] -> ((ntyp, etyp), List.rev glist)
-          | hd :: _ when fst (type_of_path ntyp etyp [] hd) <> (ntyp, etyp) ->
-            raise (Failure ("path type inconsistency"))
-          | hd :: tl -> expr_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
-        in
+      let rec expr_graph ntyp etyp type_of_path glist = function
+          [] -> ((ntyp, etyp), List.rev glist)
+        | hd :: _ when fst (type_of_path ntyp etyp [] hd) <> (ntyp, etyp) ->
+          raise (Failure ("path type inconsistency"))
+        | hd :: tl -> expr_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
+      in
              
-        let edgeType = fst (expr (snd (List.hd (List.hd graph)))) in
-        let nodeType = fst (expr (fst (List.hd (List.hd graph)))) in
-        expr_graph nodeType edgeType type_of_path [] graph in
+      let edgeType = fst (expr (snd (List.hd (List.hd graph)))) in
+      let nodeType = fst (expr (fst (List.hd (List.hd graph)))) in
+      expr_graph nodeType edgeType type_of_path [] graph in
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
@@ -161,30 +196,29 @@ let check (globals, functions) =
       | StrLit s   -> (Str, SStrLit s)
       | NodeLit n ->  let (t, d) = expr n in (Node t, SNodeLit (t, d))
       | ListLit l -> let (t, l) = expr_list l expr in (List t, SListLit l) 
-      | ListIndex (e, i) -> 
+      | Index (e, i) -> 
           let (te, _) as e' = expr e in 
           let (ti, _) as i' = expr i in 
           if ti != Int then raise (Failure ("list index not integer"))
           else (match te with 
-              List x -> (x, SListIndex (e', i')) 
-            | Str -> (Str, SListIndex (e', i')) 
+              List x -> (x, SIndex (e', i')) 
+            | Str -> (Str, SIndex (e', i')) 
             | _ -> raise (Failure ("not iterable")))
       | GraphLit g -> let ((n, e), l) = expr_graph g expr in 
         (Graph (n, e), SGraphLit l)       
-      | EdgeLit s -> let t = expr s in (Edge ((fst t), Void), SEdgeLit t)  
-      | DirEdgeLit s -> let t = expr s in (Edge ((fst t), Void), SDirEdgeLit t)
+      | EdgeLit s -> let t = expr s in (Edge ((fst t), Any), SEdgeLit t)  
+      | DirEdgeLit s -> let t = expr s in (Edge ((fst t), Any), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
       | Prop (e, p) -> 
-          let (et, _) as e' = expr e in
-          let pt = (match (et, p) with
-              (Node t,      "val") -> t
-            | (Edge (t, _), "val") -> t
-            | (Edge (_, t), "to") -> Node t
-            | (Edge (_, t), "from") -> Node t
-            | (Node t,      "adj") -> List (Edge (Void, t))
-            | (_, _) -> raise (Failure ("no such property"))) in
-          (pt, SProp (e', p))
+        let (et, _) as e' = expr e in
+        let pt = (match (et, p) with
+            (Node t,      "val") -> t
+          | (Edge (t, _), "val") -> t
+          | (Edge (_, t), "to") -> Node t
+          | (Edge (_, t), "from") -> Node t
+          | (_, _) -> raise (Failure ("no such property"))) in
+        (pt, SProp (e', p))
       | Assign (var, e) as ex -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in
@@ -218,20 +252,18 @@ let check (globals, functions) =
                        string_of_typ t1 ^ " " ^ string_of_op op ^ " " ^
                        string_of_typ t2 ^ " in " ^ string_of_expr e))
           in (ty, SBinop((t1, e1'), op, (t2, e2')))
-      | Call(fname, args) as call -> 
-          let fd = find_func fname in
-          let param_length = List.length fd.formals in
-          if List.length args != param_length then
-            raise (Failure ("expecting " ^ string_of_int param_length ^ 
-                            " arguments in " ^ string_of_expr call))
-          else let check_call (ft, _) e = 
-            let (et, e') = expr e in 
-            let err = "illegal argument found " ^ string_of_typ et ^
-              " expected " ^ string_of_typ ft ^ " in " ^ string_of_expr e
-            in (check_assign ft et err, e')
-          in 
-          let args' = List.map2 check_call fd.formals args
-          in (fd.typ, SCall(fname, args'))
+      | Call(fname, args) -> 
+          let args' = List.map expr args in
+          let fd = find_func fname args' in
+          (fd.typ, SCall(fname, args'))
+      | Method(obj, mname, args) ->
+          let (t, _) as o' = expr obj in
+          let args' = List.map expr args in
+          let md = find_method t mname args' in
+          match (t, mname) with 
+              (Graph (_, Edge (e, n)), "outgoing") -> 
+                ((List (Edge (e, n))), SMethod(o', mname, args'))
+            | _ -> raise (Failure "no such method")
     in
 
     let check_bool_expr e = 

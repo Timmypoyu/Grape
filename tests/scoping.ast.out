@@ -1,1 +1,10 @@
-Fatal error: exception Parsing.Parse_error
+
+fun Int main() {
+Int a = 3;
+Int b = 5;
+print(a + b);
+print(a * 3000);
+String z = "Hello";
+Graph<Node<Int>, Edge<String->Int>> g = <<'3' -5- '6' >>;
+return 0;
+}

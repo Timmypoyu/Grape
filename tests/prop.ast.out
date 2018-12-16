@@ -2,7 +2,7 @@
 fun Int main() {
 Int a = 3;
 Node<Int> b = 'a';
-Edge<String->Void> e = -"WASSUP"-;
+Edge<String->*> e = -"WASSUP"-;
 print(b.val);
 prints(e.val);
 return 0;

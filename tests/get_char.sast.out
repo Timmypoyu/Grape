@@ -2,6 +2,6 @@
 fun Int main() {
 String a;
 (String : a = (String : applejacks));
-(Void : prints((String : get_char((Int : 5), (String : a)))));
+(* : prints((String : (String : a)[(Int : 5)])));
 return (Int : 0);
 }

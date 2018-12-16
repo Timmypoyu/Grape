@@ -1,39 +1,37 @@
-fun Int dfa(Graph<Int, String> dfa, String input) {
+fun Bool dfa(Graph<Bool, String> dfa, Node<Bool> start, String input) {
 
     Int i = 0;
     Int token = 0;
 
     String character;
+
     Bool found = No;
     Edge<String> aEdge;
 
-    Node<Int> start = '0';
-    Node<Int> state = start;
+    Node<Bool> state = start;
 
     List<Edge<String> > transitions;
 
-    while( token < str_size(input)) {
+    while(token < str_size(input)) {
 
-	character = get_char(input, token);
-        transitions = get_outgoing(state);
+	character = input[token];
+        transitions = dfa.outgoing(state);
 
 	i = 0;
-	while ((i < size(transitions)) and (found == No)) {
-	    aEdge = transitions[i];
-	    if (aEdge.val == character) {
-		state = get_to(aEdge);
+	while ((i < size(transitions)) and (not found)) {
+	    if (transitions[i].val == character) {
+		state = transitions[i].to;
                 found = Yes;
 	    }
 	    i = i + 1;
 	}
-        if ( found == No){
-            prints("REJECT");
-            return 0;
+        if (not found) {
+            return No;
         }
+
         found = No;
 	token = token + 1;
     }
 
-    if (state.val == 1) { prints("ACCEPT"); }
-    else { prints("REJECT"); }
+    return state.val;
 }

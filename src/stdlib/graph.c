@@ -72,6 +72,22 @@ struct List *get_outgoing(struct Node *node) {
     return outgo;
 }
 
+struct List *get_outgoing2(struct Graph *graph, struct Node *node) {
+    struct List *adj = graph->edges;
+    struct List *outgo = init_list();
+    struct ListNode *lnode = adj->head;
+    struct Node *tnode;
+    struct Edge *tedge;
+    while( lnode ) {
+        tedge = (struct Edge *)lnode->data;
+        tnode = (struct Node *)tedge->from;
+        if( tnode == node )
+            push_list(outgo, tedge);
+        lnode = lnode->next;
+    }
+    return outgo;
+}
+
 int GraphSize(struct Graph *graph) {
 	return size(graph->nodes);	
 }
