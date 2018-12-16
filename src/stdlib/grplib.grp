@@ -14,14 +14,14 @@ fun Int dfa(Graph<Int, String> dfa, String input) {
 
     while( token < str_size(input)) {
 
-	character = get_char(input, token);
+	character = input[token];
         transitions = get_outgoing(state);
 
 	i = 0;
 	while ((i < size(transitions)) and (found == No)) {
 	    aEdge = transitions[i];
 	    if (aEdge.val == character) {
-		state = get_to(aEdge);
+		state = aEdge.to;
                 found = Yes;
 	    }
 	    i = i + 1;

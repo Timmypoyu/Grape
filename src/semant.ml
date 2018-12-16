@@ -41,7 +41,7 @@ let check (globals, functions) =
   in
 
   let method_key typ name args = match typ with
-      Graph _ -> "graph," ^ (func_key name args)
+      Graph _ -> "graph:" ^ (func_key name args)
     | _ -> "" 
   in
 
@@ -72,10 +72,9 @@ let check (globals, functions) =
       StringMap.add key {
         typ = ret;
         fname = name; 
-        formals = frm;
-        body = []} map 
+        formals = frm; 
+        body = [] } map 
       in List.fold_left add_bind StringMap.empty [ 
-        ("edges", Graph (v, v), [(Node v, "x")], List (Edge (v, v)));
         ("outgoing", Graph (v, v), [(Node v, "x")], List (Edge (v, v)));
     ] 
   in
@@ -151,9 +150,9 @@ let check (globals, functions) =
         let rec helper typ tlist = function
             [] -> (typ, tlist)
           | hd :: _ when (match (typ, fst (expr hd)) with 
-                            (Node a , Node b) -> a <> b
-                          | (Edge (a, b), Edge (c, d)) -> a <> c && b <> d
-                          | (a, b) -> a <> b) ->
+                (Node a , Node b) -> a <> b
+              | (Edge (a, b), Edge (c, d)) -> a <> c && b <> d
+              | (a, b) -> a <> b) ->
           	raise (Failure ("Type inconsistency with list "))
           | hd :: tl -> helper typ (expr hd :: tlist) tl
         in
@@ -213,7 +212,6 @@ let check (globals, functions) =
             | (Edge (t, _), "val") -> t
             | (Edge (_, t), "to") -> Node t
             | (Edge (_, t), "from") -> Node t
-            | (Node t,      "adj") -> List (Edge (Void, t))
             | (_, _) -> raise (Failure ("no such property"))) in
           (pt, SProp (e', p))
       | Assign (var, e) as ex -> 
@@ -257,7 +255,10 @@ let check (globals, functions) =
           let (t, _) as o' = expr obj in
           let args' = List.map expr args in
           let md = find_method t mname args' in
-          (md.typ, SMethod(o', mname, args'))
+          match (t, mname) with 
+              (Graph (_, Edge (e, n)), "outgoing") -> 
+                ((List (Edge (e, n))), SMethod(o', mname, args'))
+            | _ -> raise (Failure "no such method")
     in
 
     let check_bool_expr e = 
