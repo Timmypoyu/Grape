@@ -258,24 +258,25 @@ let translate (globals, functions) =
       let tobj = fst o in
       let o' = expr builder o in
       (match (tobj, p) with
-        (_, "val") ->
-          let dest_ptr = L.pointer_type (ltype_of_typ typ) in
+        (A.Edge (t, _), "val") ->
+          let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_val [|o'|] "val" builder in  
-          let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in 
-          L.build_load data_ptr "data" builder
+          L.build_bitcast data_ptr dest_ptr "data" builder
+      | (A.Node t, "val") ->
+          let dest_ptr = L.pointer_type (ltype_of_typ t) in
+          let data_ptr = L.build_call get_val [|o'|] "val" builder in  
+          L.build_bitcast data_ptr dest_ptr "data" builder
       | (A.Edge (_, t), "to") ->
           let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_to [|o'|] "to" builder in  
-          let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in 
-          L.build_load data_ptr "data" builder
+          L.build_bitcast data_ptr dest_ptr "data" builder
       | (A.Edge (_, t), "from") ->
           let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_from [|o'|] "from" builder in  
-          let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in 
-          L.build_load data_ptr "data" builder
+          L.build_bitcast data_ptr dest_ptr "data" builder
       | (_, _) -> raise (Failure "no such property"))
     | SAssign (s, e) -> let e' = expr builder e in
-                        ignore(L.build_store e' (lookup s) builder); e'
+      ignore(L.build_store e' (lookup s) builder); e'
     | SNodeLit (t, v) -> (* Cast data type into void pointer to init node *)
       let data_value = expr builder (t, v) in 
       let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
@@ -323,6 +324,7 @@ let translate (globals, functions) =
           A.Str -> L.build_call get_char [|i'; e'|] "get_char" builder 
         | A.List t -> 
           let data_ptr = L.build_call list_get [|i'; e'|] "list_get" builder in  
+            ignore ( L.build_store data_value data builder);
           let data_ptr = L.build_bitcast data_ptr (L.pointer_type (ltype_of_typ t)) "data" builder in
           L.build_load data_ptr "data" builder
         | _ -> raise (Failure "Cannot index type"))
@@ -332,10 +334,10 @@ let translate (globals, functions) =
       |sx :: tail ->
       let (atyp,_) = sx in
       let data_ptr = (match atyp with
-          A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
-          | _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
-                let data_value = expr builder sx in  
-                ignore (L.build_store data_value data builder); data) in 
+        A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
+        | _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
+          let data_value = expr builder sx in  
+          ignore (L.build_store data_value data builder); data) in 
       let data = L.build_bitcast data_ptr void_ptr_t "data" builder in 
       ignore(L.build_call push_list [|lst; data|] "" builder); fill_list lst tail) in
       let lst = L.build_call init_list [||] "init_list" builder in 
