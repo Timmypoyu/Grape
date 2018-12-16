@@ -6,7 +6,7 @@ Int (Int : a = (Int : 5));
 Node<Int> (Node<Int> : start = (Node<Int> : '(Int : 0)'));
 Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : g = (Graph<Node<Int>, Edge<String->Void>> : <(Node<Int> : start) (Edge<String->Void> : -(String : h)-) (Node<Int> : '(Int : 0)') (Edge<String->Void> : -(String : i)-) (Node<Int> : '(Int : 1)') (Void : ), (Node<Int> : start) (Edge<String->Void> : -(String : h)-) (Node<Int> : '(Int : 0)') (Edge<String->Void> : -(String : o)-) (Node<Int> : '(Int : 1)') (Void : ), (Node<Int> : start) (Edge<String->Void> : -(String : s)-) (Node<Int> : '(Int : 0)') (Edge<String->Void> : -(String : u)-) (Node<Int> : start) (Edge<String->Void> : -(String : p)-) (Node<Int> : '(Int : 1)') (Void : )>));
 (Void : prints((String : Hell oWorld )));
-List<Edge<String->Void>> (List<Edge<String->Void>> : adjacent = (List<Edge<String->Int>> : (Graph<Node<Int>, Edge<String->Int>> : g)outgoing((Node<Int> : start))));
+List<Edge<String->Void>> (List<Edge<String->Int>> : adjacent = (List<Edge<String->Int>> : (Graph<Node<Int>, Edge<String->Int>> : g)outgoing((Node<Int> : start))));
 Int (Int : i = (Int : 0));
 while ((Bool : (Int : i) < (Int : size((List<Edge<String->Void>> : adjacent))))) {
 (Void : prints((String : (Edge<String->Void> : (List<Edge<String->Void>> : adjacent)[(Int : i)]).val)));

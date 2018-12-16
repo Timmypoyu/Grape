@@ -156,7 +156,10 @@ let check (globals, functions) =
           	raise (Failure ("Type inconsistency with list "))
           | hd :: tl -> helper typ (expr hd :: tlist) tl
         in
-      helper (fst (expr (List.hd lst))) [] lst 
+      let typ = match (List.length lst) with  
+          0 -> Void
+        | _ -> (fst (expr (List.hd lst))) in
+      helper typ [] lst 
     in
 
     let expr_graph graph expr = 
