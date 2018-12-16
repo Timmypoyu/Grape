@@ -261,11 +261,13 @@ let translate (globals, functions) =
         (A.Edge (t, _), "val") ->
           let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_val [|o'|] "val" builder in  
-          L.build_bitcast data_ptr dest_ptr "data" builder
+          let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
+          L.build_load data_ptr "data" builder
       | (A.Node t, "val") ->
           let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_val [|o'|] "val" builder in  
-          L.build_bitcast data_ptr dest_ptr "data" builder
+          let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
+          L.build_load data_ptr "data" builder
       | (A.Edge (_, t), "to") ->
           let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_to [|o'|] "to" builder in  
@@ -325,7 +327,7 @@ let translate (globals, functions) =
         | A.List t -> 
           let data_ptr = L.build_call list_get [|i'; e'|] "list_get" builder in  
           match t with 
-              A.List _ -> data_ptr
+              A.List _ | A.Node _ | A.Edge (_,_) | A.Graph _ -> data_ptr
             | _ -> 
               let dest_ptr = L.pointer_type (ltype_of_typ t) in
               let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
