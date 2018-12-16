@@ -175,4 +175,26 @@ bool GraphFind(struct Graph *graph, void *value) {
 	return false;
 }
 
+struct List *graph_to_list(struct Graph *graph) {
+	return graph->nodes;
+}
+
+struct List *neighbor(struct Node *node){
+	struct List *list = (struct List *)malloc(sizeof(struct List));
+	struct List *edgelist = node->edges;
+	struct ListNode *target = edgelist->head;
+	while (target) {
+		push_list(list, ((struct Edge *)(target->data))->to);
+		target = target->next;
+	}
+	return list;
+}
+bool node_same(struct Node *a, struct Node *b){
+	if (a == b) {
+		return true;
+	} else {
+		return false;
+	}
+
+}
 
