@@ -4,7 +4,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | An
 
 type uop = Neg | Not
 
-type typ = Int | Float | Bool | Void | Str 
+type typ = Int | Float | Bool | Void | Str | Any
   | Graph of typ * typ
 	| Edge of typ * typ
 	| Node of typ
@@ -100,7 +100,8 @@ let rec string_of_expr = function
   | Noexpr -> ""
 
 let rec string_of_typ = function
-    Int -> "Int"
+    Any -> "*"
+  | Int -> "Int"
   | Bool -> "Bool"
   | Void -> "Void"
   | Float -> "Float"

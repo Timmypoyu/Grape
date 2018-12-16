@@ -66,7 +66,7 @@ typ:
   | BOOL                        { Bool }
   | LIST LT typ GT              { List($3) }
   | NODE LT typ GT              { Node($3) }
-  | EDGE LT typ GT              { Edge($3, Void) }
+  | EDGE LT typ GT              { Edge($3, Any) }
   | GRAPH LT typ COMMA typ GT   { Graph(Node($3), Edge($5,$3)) }
 
 stmt_list:
