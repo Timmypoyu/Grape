@@ -1,8 +1,8 @@
 
 fun Int main() {
 List<Int> (List<Int> : a = (List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)]));
-(Void : print((Int : a[(Int : 3)])));
+(Void : print((Int : (List<Int> : a)[(Int : 3)])));
 List<String> (List<String> : b = (List<String> : [(String : hi),(String : how),(String : are),(String : you)]));
 List<Node<Int>> (List<Node<Int>> : c = (List<Node<Int>> : [(Node<Int> : '(Int : 3)'),(Node<Int> : '(Int : 4)'),(Node<Int> : '(Int : 5)'),(Node<Int> : '(Int : 6)')]));
-(Void : prints((String : b[(Int : 2)])));
+(Void : prints((String : (List<String> : b)[(Int : 2)])));
 }

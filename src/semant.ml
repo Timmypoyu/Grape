@@ -119,8 +119,8 @@ let check (globals, functions) =
        the given lvalue type *)
     let rec check_assign lvaluet rvaluet err =
       match (lvaluet, rvaluet) with
-          (Edge (a, b), Edge(c, _)) -> 
-            Edge (check_assign a c err, b)
+          (Edge (a, _), Edge(c, d)) -> 
+            Edge (check_assign a c err, d)
         | (List a, List b) -> 
             List (check_assign a b err)
         | (Graph (a, b), Graph (c, _)) -> 
@@ -160,28 +160,27 @@ let check (globals, functions) =
     in
 
     let expr_graph graph expr = 
+      let rec type_of_path ntyp etyp plist = function
+          [] -> ((ntyp, etyp), List.rev plist)
+        | hd :: _ when fst (expr (fst hd)) <> ntyp ->
+          raise (Failure ("node type inconsistency with path " ^ string_of_typ (fst (expr (fst hd))) ^ string_of_typ ntyp ))
+        | hd :: tl when (List.length tl) = 0 && fst (expr (snd hd)) <> Void ->  
+          raise (Failure ("edge type inconsistency with path "))
+        | hd :: tl when (List.length tl) <> 0 && fst (expr (snd hd)) <> etyp ->
+          raise (Failure ("edge type inconsistency with path "))
+        | hd :: tl -> type_of_path ntyp etyp (((expr (fst hd)), (expr (snd hd)))::plist) tl 
+      in
 
-        let rec type_of_path ntyp etyp plist = function
-            [] -> ((ntyp, etyp), List.rev plist)
-          | hd :: _ when fst (expr (fst hd)) <> ntyp ->
-          	raise (Failure ("node type inconsistency with path " ^ string_of_typ (fst (expr (fst hd))) ^ string_of_typ ntyp ))
-          | hd :: tl when (List.length tl) = 0 && fst (expr (snd hd)) <> Void ->  
-          	raise (Failure ("edge type inconsistency with path "))
-          | hd :: tl when (List.length tl) <> 0 && fst (expr (snd hd)) <> etyp ->
-          	raise (Failure ("edge type inconsistency with path "))
-          | hd :: tl -> type_of_path ntyp etyp (((expr (fst hd)), (expr (snd hd)))::plist) tl 
-        in
-
-        let rec expr_graph ntyp etyp type_of_path glist = function
-            [] -> ((ntyp, etyp), List.rev glist)
-          | hd :: _ when fst (type_of_path ntyp etyp [] hd) <> (ntyp, etyp) ->
-            raise (Failure ("path type inconsistency"))
-          | hd :: tl -> expr_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
-        in
+      let rec expr_graph ntyp etyp type_of_path glist = function
+          [] -> ((ntyp, etyp), List.rev glist)
+        | hd :: _ when fst (type_of_path ntyp etyp [] hd) <> (ntyp, etyp) ->
+          raise (Failure ("path type inconsistency"))
+        | hd :: tl -> expr_graph ntyp etyp type_of_path ((snd (type_of_path ntyp etyp [] hd))::glist) tl
+      in
              
-        let edgeType = fst (expr (snd (List.hd (List.hd graph)))) in
-        let nodeType = fst (expr (fst (List.hd (List.hd graph)))) in
-        expr_graph nodeType edgeType type_of_path [] graph in
+    let edgeType = fst (expr (snd (List.hd (List.hd graph)))) in
+    let nodeType = fst (expr (fst (List.hd (List.hd graph)))) in
+    expr_graph nodeType edgeType type_of_path [] graph in
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
