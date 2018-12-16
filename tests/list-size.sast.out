@@ -3,6 +3,6 @@ fun Int main() {
 List<Edge<String->Void>> a;
 Edge<String->Void> (Edge<String->Void> : b = (Edge<String->Void> : -(String : hi)-));
 (List<Edge<String->Void>> : a = (List<Edge<String->Void>> : [(Edge<String->Void> : b)]));
-(Void : print((Int : size((List<Edge<String->Int>> : a)))));
+(Void : print((Int : size((List<Edge<String->Void>> : a)))));
 return (Int : 0);
 }
