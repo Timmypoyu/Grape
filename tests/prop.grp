@@ -5,7 +5,7 @@ fun Int main() {
         Edge<String> e = << -"WASSUP"- >>;
 
         print(b.val);
-        prints(e.val);
+        print(e.val);
 
         return 0;
 }

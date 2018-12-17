@@ -2,9 +2,14 @@
 fun Int main() {
 Bool a;
 (Bool : a = (Bool : true));
+Bool (Bool : b = (Bool : false));
 if ((Bool : a))
 {
-(* : prints((String : Bool works)));
+(* : print((String : Bool works)));
+}
+if ((Bool : not(Bool : b)))
+{
+(* : print((String : Not works)));
 }
 return (Int : 0);
 }

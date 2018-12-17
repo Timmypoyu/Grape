@@ -9,7 +9,6 @@ and sx =
   | SBoolLit of bool
   | SId of string
   | SProp of sexpr * string
-  | SMethod of sexpr * string * sexpr list
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr
   | SAssign of string * sexpr
@@ -33,11 +32,12 @@ type sstmt =
   | SWhile of sexpr * sstmt
 
 type sfunc_decl = {
-    styp : typ;
-    sfname : string;
-    sformals : bind list;
-    sbody : sstmt list;
-  }
+  styp : typ list;
+  otyp : typ list -> typ;
+  sfname : string;
+  sformals : bind list;
+  sbody : sstmt list;
+}
 
 type sprogram = bind list * sfunc_decl list
 
@@ -64,8 +64,6 @@ let rec string_of_sexpr (t, e) =
   | SAssign(v, e) -> v ^ " = " ^ string_of_sexpr e
   | SCall(f, el) ->
       f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
-  | SMethod(o, f, el) ->
-      string_of_sexpr o ^ f ^ "(" ^ String.concat ", " (List.map string_of_sexpr el) ^ ")"
   | SNoexpr -> ""
 				  ) ^ ")"				     
 
@@ -83,7 +81,7 @@ let rec string_of_sstmt = function
   | SEach(e, s) -> "each (" ^ string_of_sexpr e ^ ")" ^ string_of_sstmt s
 
 let string_of_sfdecl fdecl =
-  "fun " ^ string_of_typ fdecl.styp ^ " " ^
+  "fun Any " ^
   fdecl.sfname ^ "(" ^ String.concat ", " (List.map snd fdecl.sformals) ^
   ") {\n" ^
   String.concat "" (List.map string_of_sstmt fdecl.sbody) ^

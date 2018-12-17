@@ -1,8 +1,12 @@
 fun Int main() {
     Bool a;
     a = Yes;
+    Bool b = No;
     if(a) {
-        prints("Bool works");
+        print("Bool works");
+    }
+    if(not b) {
+        print("Not works");
     }
     return 0;
 }

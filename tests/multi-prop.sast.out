@@ -2,5 +2,6 @@
 fun Int main() {
 List<Node<Int>> (List<Node<Int>> : a = (List<Node<Int>> : [(Node<Int> : '(Int : 3)'),(Node<Int> : '(Int : 4)')]));
 (* : print((Int : (Node<Int> : (List<Node<Int>> : a)[(Int : 0)]).val)));
-return (Int : (Node<Int> : (List<Node<Int>> : a)[(Int : 1)]).val);
+(* : print((Int : (Node<Int> : '(Int : 3)').val)));
+return (Int : 0);
 }

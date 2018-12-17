@@ -12,7 +12,7 @@ fun Bool dfa(Graph<Bool, String> dfa, Node<Bool> start, String input) {
 
     List<Edge<String> > transitions;
 
-    while(token < str_size(input)) {
+    while(token < size(input)) {
 
 	character = input[token];
         transitions = dfa.outgoing(state);

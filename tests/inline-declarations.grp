@@ -1,5 +1,5 @@
 fun Int main() {
-        prints("HI DUDE!");
+        print("HI DUDE!");
 
         Int a = 5;
 
@@ -7,7 +7,7 @@ fun Int main() {
 
         String b = "Hi People!";
 
-        prints(b);
+        print(b);
 
         return a;
 }

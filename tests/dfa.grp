@@ -29,7 +29,7 @@ fun Int main() {
 	    i = i + 1;
 	}
         if ( found == No){
-            prints("REJECT");
+            print("REJECT");
             return 0;
         }
         found = No;
@@ -37,9 +37,9 @@ fun Int main() {
     }
 
     if (state.val == 1) {		// Get accepting
-        prints("ACCEPT");
+        print("ACCEPT");
     } else {
-        prints("REJECT");
+        print("REJECT");
     }
 
     return 0;

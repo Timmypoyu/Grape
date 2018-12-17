@@ -6,7 +6,7 @@
 
 struct List *init_list();
 
-void *list_get(struct List *list, int n);
+void *list_get(int n, struct List *list);
 
 bool isEmptyList(struct List *list);
 
@@ -14,7 +14,7 @@ int size(struct List *list);
 
 void reverseList(struct List *list);
 
-void push_list(void *data, struct List *list);
+void push_list(struct List *list, void *data);
 
 void push_front_list(void *data, struct List *list);
 

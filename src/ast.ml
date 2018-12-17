@@ -41,14 +41,13 @@ type stmt =
   | If of expr * stmt * stmt
   | Each of expr * stmt
   | While of expr * stmt
-  (* | DecAsn of typ * string * expr *)
 
 type func_decl = {
-    typ : typ;
-    fname : string;
+    typ: typ;
+    name : string;
     formals : bind list;
     body : stmt list;
-  }
+}
 
 type program = bind list * func_decl list
 
@@ -59,13 +58,13 @@ let string_of_op = function
   | Sub -> "-"
   | Mult -> "*"
   | Div -> "/"
-  | Equal -> "=="
   | Neq -> "!="
   | Mod -> "%"
   | Exp -> "**"
   | Amp -> "&"
   | Less -> "<"
   | Leq -> "<="
+  | Equal -> "=="
   | Greater -> ">"
   | Geq -> ">="
   | And -> "and"
@@ -127,7 +126,7 @@ let string_of_vdecl (t, id) = string_of_typ t ^ " " ^ id ^ ";\n"
 
 let string_of_fdecl fdecl =
   "fun " ^ string_of_typ fdecl.typ ^ " " ^
-  fdecl.fname ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
+  fdecl.name ^ "(" ^ String.concat ", " (List.map snd fdecl.formals) ^
   ") {\n" ^
   String.concat "" (List.map string_of_stmt fdecl.body) ^
   "}\n"

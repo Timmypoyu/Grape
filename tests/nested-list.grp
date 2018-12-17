@@ -1,6 +1,6 @@
 fun Int main() {
         String hi = "hi";
-        prints(hi[0]);
+        print(hi[0]);
 
         List<List<Int> > a = [
                 [1,2,3,4,5],

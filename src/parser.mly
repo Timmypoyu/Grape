@@ -48,7 +48,7 @@ vdecl:
 fdecl:
    FUN typ ID LPAREN formals_opt RPAREN LBRACE stmt_list RBRACE
      { { typ = $2;
-	       fname = $3;
+	       name = $3;
 	       formals = $5;
 	       body = List.rev $8 } }
 

@@ -4,9 +4,9 @@ fun Int main() {
 
         Node<String> n = 'a';
 
-        prints("hi"[0]);
-        prints(a[0]);
-        prints(n.val[0]);
+        print("hi"[0]);
+        print(a[0]);
+        print(n.val[0]);
 
         return 0;
 }
