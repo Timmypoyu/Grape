@@ -2,6 +2,6 @@
 fun Int main() {
 String a;
 (String : a = (String : applejacks));
-(Void : print((Int : str_size((String : a)))));
+(* : print((Int : str_size((String : a)))));
 return (Int : 0);
 }

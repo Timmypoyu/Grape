@@ -8,7 +8,7 @@ fun Int main() {
     Graph<Int, String> dfa = << start  -"b"-  '1'  -"b"-  '0'  -"b"-  '1' >>;
     Int token = 0;
     Int i = 0;
-    Bool found = False;
+    Bool found = No;
 
     String character;
     List<Edge<String> > transitions;
@@ -16,23 +16,23 @@ fun Int main() {
     Node<Int> state = start;
     while( token < str_size(input)) { 			// String size
 
-	character = get_char(input, token);		// Get char at token
-        transitions = get_outgoing(state); 			// Get outgoing edges
+	character = input[token];		        // Get char at token
+        transitions = dfa.outgoing(state); 	        // Get outgoing edges
 
 	i = 0;
-	while ((i < size(transitions)) and (found == False)) { 			// List size
-	    aEdge = transitions[i]; 	// Get list item
-	    if (str_equal(aEdge.val, character)) { 	// Get list string
-		state = get_to(aEdge);			// Get edge destination
-                found = True;
+	while ((i < size(transitions)) and (found == No)) { 			// List size
+	    if (transitions[i].val == character) { 	// Get list string
+		state = transitions[i].to;		// Get edge destination
+                found = Yes;
 	    }
+
 	    i = i + 1;
 	}
-        if ( found == False){
+        if ( found == No){
             prints("REJECT");
             return 0;
         }
-        found = False;
+        found = No;
 	token = token + 1;
     }
 

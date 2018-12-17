@@ -15,10 +15,10 @@ fun Int main() {
 
         prints("Hell oWorld ");
 
-        List<Edge<String> > adjacent = get_outgoing(start);
+        List<Edge<String> > adjacent = g.outgoing(start);
 
         Int i = 0;
-        while (i < size(adjacent) {
+        while (i < size(adjacent)) {
                 prints(adjacent[i].val);
                 i = i + 1;
         }

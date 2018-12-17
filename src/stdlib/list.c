@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "types.h"
+#include "list.h"
 
 struct Node global;
 
@@ -11,6 +11,7 @@ struct List *init_list() {
 	list->head = NULL;
 	return list;
 }
+
 
 bool isEmptyList(struct List *list) {
     return (list->head == NULL);
@@ -31,7 +32,12 @@ int size(struct List *list) {
 	return i;	
 }
 
-void *list_get(struct List *list, int n){
+void *list_get(int n, struct List *list){
+    if( n >= size(list) ) {
+        fprintf(stderr, "List Index out of bounds: given %d for list of size %d\n",n,size(list));
+	exit(-1);
+    }
+
     struct ListNode *node = list->head;
     if( n == 0 ){
        return node->data;
@@ -152,7 +158,6 @@ struct List *copy(struct List *list) {
 	
 }
 */
-
 
 bool isEqual(struct ListNode *a, struct ListNode *b) {
 	
