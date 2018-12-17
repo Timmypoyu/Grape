@@ -26,11 +26,7 @@ struct Node *get_to(struct Edge *edge);
 
 struct Node *get_from(struct Edge *edge);
 
-struct List *get_outgoing(struct Node *node);
-
-void *node_get(struct Node *node);
-
-void *edge_get(struct Edge *edge);
+struct List *get_outgoing2(struct Node *node, struct Graph *graph);
 
 int GraphSize(struct Graph *graph);
 
@@ -38,14 +34,18 @@ bool GraphIsEmpty(struct Graph *graph);
 
 struct List *GraphLeaves(struct Graph *graph);
 
-bool GraphFind(struct Graph *graph, void *value);
+struct List *GraphAdjacent(struct Node *node, struct Graph *graph);
 
-struct List *GraphAdjacent(struct Graph *graph, struct Node *node);
+void *node_get(struct Node *node);
+
+void *edge_get(struct Edge *edge);
+
+bool GraphFind(void *value, struct Graph *graph);
 
 struct List *graph_to_list(struct Graph *graph);
 
 struct List *neighbor(struct Node *node);
 
-Bool node_same(struct Node *a, struct Node *b);
+bool node_same(struct Node *a, struct Node *b);
 
 

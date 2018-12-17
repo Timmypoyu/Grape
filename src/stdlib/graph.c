@@ -73,7 +73,7 @@ struct List *get_outgoing(struct Node *node) {
 }
 
 //---------
-struct List *get_outgoing2(struct Graph *graph, struct Node *node) {
+struct List *get_outgoing2(struct Node *node, struct Graph *graph) {
     struct List *adj = graph->edges;
     struct List *outgo = init_list();
     struct ListNode *lnode = adj->head;
@@ -119,7 +119,7 @@ struct List *GraphLeaves(struct Graph *graph) {
 	return leavesList;
 }
 
-struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
+struct List *GraphAdjacent(struct Node *node, struct Graph *graph) {
 	
 	struct List *adjacentList = (struct List *)malloc(sizeof(struct List));
 	struct ListNode *target = (graph->nodes)->head;
@@ -142,7 +142,7 @@ struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
 
 
 
-
+/*
 // when the node already exists
 void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struct Node *inputFrom, void *value) {
 	
@@ -161,9 +161,9 @@ void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struc
 		}
 		node = node->next;
 	}
-}
+}*/
 
-bool GraphFind(struct Graph *graph, void *value) {
+bool GraphFind(void *value, struct Graph *graph) {
 
     struct ListNode *node = (graph->nodes)->head;
 	
