@@ -84,31 +84,21 @@ let check (globals, functions) =
        the given lvalue type *)
     let rec check_assign lvaluet rvaluet err =
       match (lvaluet, rvaluet) with
-          (Edge (_,_), Edge (a,b)) -> Edge (a,b)
-        | (Node _, Node a) -> Node a
-        | (List a, List Any) -> List a
-        | (List a, List b) -> List (check_assign a b err)
-        | (Graph (a, b), Graph (c, _)) -> 
-            Graph (check_assign a c err, b)
-        | (a, b) -> if a = b then a else raise (Failure err)
+        (a, b) -> if a = b then a else raise (Failure err)
     in   
-
-    let rec concat_statements locals = function
-        [] -> locals
-      | hd::tl -> concat_statements (match hd with
-           Declare (t, id, a) -> (t, id) :: locals
-         | _ -> locals) tl
-    in
 
     (* Build local symbol table of variables for this function *)
     let symbols = List.fold_left (fun m (ty, name) -> StringMap.add name ty m)
-      StringMap.empty (globals @ func.formals @ (concat_statements [] func.body))
+      StringMap.empty (globals @ func.formals)
     in
 
     (* Return a variable from our local symbol table *)
-    let type_of_identifier s =
-      try StringMap.find s symbols
-      with Not_found -> raise (Failure ("Undeclared identifier " ^ s))
+    let type_of_identifier locals s =
+      try StringMap.find s locals
+      with Not_found -> 
+        try StringMap.find s symbols
+        with Not_found ->
+          raise (Failure ("Undeclared identifier " ^ s))
     in
 
     let expr_list lst expr =
@@ -174,7 +164,7 @@ let check (globals, functions) =
       | EdgeLit s -> let t = expr locals s in (Edge ((fst t), Any), SEdgeLit t)  
       | DirEdgeLit s -> let t = expr locals s in (Edge ((fst t), Any), SDirEdgeLit t)
       | Noexpr     -> (Void, SNoexpr)
-      | Id s       -> (type_of_identifier s, SId s)
+      | Id s       -> (type_of_identifier locals s, SId s)
       | Prop (e, p) -> 
         let (et, _) as e' = expr locals e in
         let pt = (match (et, p) with
@@ -185,7 +175,7 @@ let check (globals, functions) =
           | (_, _) -> raise (Failure ("no such property"))) in
         (pt, SProp (e', p))
       | Assign (var, e) as ex -> 
-          let lt = type_of_identifier var
+          let lt = type_of_identifier locals var
           and (rt, e') = expr locals e in
           let err = "illegal assignment " ^ string_of_typ lt ^ " = " ^ 
             string_of_typ rt ^ " in " ^ string_of_expr ex in 
@@ -252,24 +242,25 @@ let check (globals, functions) =
 	       follows any Return statement.  Nested blocks are flattened. *)
       | Block sl ->
         (* Copy locals into new block *)
-        let newLocals = StringMap.map (fun a -> a) locals in
+        let copy_locals = StringMap.map (fun a -> a) locals in
         let rec check_stmt_list locals = function
             [Return _ as s] -> [check_stmt locals s]
           | Return _ :: _   -> raise (Failure "nothing may follow a return")
           | Block sl :: ss  -> check_stmt_list locals (sl @ ss) (* Flatten blocks *)
           | Declare (t, i, a) :: ss ->
-            let a' = expr locals a in
             let new_locals = match i with
                 _ when StringMap.mem i built_in_functions ->
-                raise (Failure "overwrites built in function") 
+                  raise (Failure "overwrites built in function") 
               | _ when StringMap.mem i locals ->
-                let clean_locals = StringMap.remove i locals in
-                StringMap.add i t clean_locals
-              | _ -> StringMap.add i t locals in
-                check_stmt_list newLocals ss
+                  let clean_locals = StringMap.remove i locals in
+                  StringMap.add i t clean_locals
+              | _ -> 
+                  StringMap.add i t locals in
+            let (ta, _) as a' = expr new_locals a in
+            SDeclare(ta, i, a') :: check_stmt_list new_locals ss
           | s :: ss         -> check_stmt locals s :: check_stmt_list locals ss
           | []              -> []
-        in SBlock(check_stmt_list newLocals sl)
+        in SBlock(check_stmt_list copy_locals sl)
 
     in (* body of check_function *)
     { styp = func.typ;

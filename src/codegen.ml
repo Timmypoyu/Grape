@@ -228,22 +228,14 @@ let translate (globals, functions) =
       in
 
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
-          (Array.to_list (L.params the_function)) in
+        (Array.to_list (L.params the_function)) in
 
-      let rec add_declaration locals = function
-          [] -> locals
-        | hd::tl -> add_declaration (match hd with
-             SDeclare (t, id, _) -> (t, id) :: locals
-           | _ -> locals) tl
-      in
-          (* slocals: typ * string list *)
-      let declarations = add_declaration [] fdecl.sbody in
       List.fold_left add_local formals declarations
     in
 
     (* Return the value for a variable or formal argument.
        Check local names first, then global names *)
-    let lookup n = try StringMap.find n local_vars
+    let lookup locals n = try StringMap.find n local_vars
         with Not_found -> StringMap.find n global_vars
     in
 
