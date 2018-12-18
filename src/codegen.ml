@@ -444,10 +444,14 @@ let rec stmt locals builder = function
     SBlock sl -> 
       let rec build_block locals = function
         [] -> builder;
+      | SAssign(i, e) :: ss ->
+          let e' = 
+
       | SDeclare(t, i, (atyp, a)) :: ss -> 
           let a' = match a with 
               SAssign (_, a) -> expr locals builder a 
-            | _ -> raise (Failure "internal error") in
+            | SNoexpr -> L.const
+            | _ -> raise (Failure "Internal error") in
           let local : L.llvalue = L.build_alloca (ltype_of_typ atyp) i builder in
             ignore(L.build_store a' local builder);
           let new_locals = (match i with
