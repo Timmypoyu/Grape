@@ -4,7 +4,7 @@ Bool a;
 a = true;
 if (a)
 {
-prints("Bool works");
+print("Bool works");
 }
 return 0;
 }

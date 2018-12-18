@@ -1,0 +1,117 @@
+fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int> y){
+	
+	List<Node<Int> > visited;
+	List<Node<Int> > result;
+	List<Node<Int> > nodeList;
+	List<Node<Int> > previous_record; 
+
+	nodeList = graph_to_list(iter_graph);
+	Node<Int> current_node = start_node;
+	Int graph_size = size(nodeList);
+	Int count = 0;
+	
+	//initializing previous_record with current node
+	while(count < graph_size){
+		previous_record[count] = current_node;  	
+		count = count + 1;
+	}
+	
+	//run until all nodes are visited
+	while(size(visited) != size(nodeList){
+		List<Node<Int> > neighbor_list = neighbor(current_node);
+		Int i = size(neighbor_list);
+		Int j = 0; 
+		
+		//iter through neighbor list updating node value
+		while (j < i){
+			next_node = neighbor_list[j];
+			dist = distance(current_node, next_node) + current_node.val;
+			
+			//update previous record and distance 			
+			if (next_node.val > dist){
+				next_node.val = dist;
+
+				Int x = 0;
+
+				//update previous record 
+				while(x < size(nodeList)){
+					if(node_same(nodeList[x],next_node)){
+						previous_record[x] = current_node;
+					}
+					x = x+1;
+				}
+			} 
+			j = j+1;
+		}
+
+		//add_to visited and change current node
+		push_list_front(visited, current_node);
+		current_node = minNode(visited, iter_graph);
+	}
+
+	Node<Int> follow = end_node; 
+	while(!node_same(follow, start_node)){
+		result = (result, follow);
+		Int temp = 0;
+		while (temp < graph_size){
+			if(node_same(nodeList[temp], follow)){
+				follow = previous_record[temp];
+				}
+			}
+		}	
+
+	result = push_front_list(result, start_node);
+	return result;
+}
+
+fun List<Node<Int> > minNode(List<Node<Int> > visited, List<Node<Int> > nodeList){
+
+	Node<Int> target; 
+
+	Int min = 10000;
+	Int j = 0;
+	while ( j < size(nodeList) ){
+
+			Int k = 0;
+			Int present = 0; 
+			
+			while(k < size(visited)){
+				
+				if(node_same(visited[k], nodeList[j])){
+				    present = 1;
+				}
+ 
+				k = k + 1; 
+			}
+		
+		if (nodeList[j] < min and present == 0){
+			target = nodeList[j];
+		}
+
+		j = j + 1; 
+	}
+
+    return target; 
+}
+
+fun Int main(){
+
+    Node<Int> A = '0';
+    Node<Int> B = '10000';
+    Node<Int> C = '10000';
+    Node<Int> D = '10000';
+    Node<Int> E = '10000';
+    Node<Int> F = '10000';
+    Node<Int> G = '10000';
+
+    Graph<Int, Int> mainGraph = << A -2-> B -5-> D -3-> G , 
+			       A -3-> C -7-> E -4-> F -2-> G,
+			       D -2-> F >>; 
+
+    List<Node<Int> > result;
+    result = dijkstra(mainGraph, A, B);
+        //don't know how to print a list of nodes
+    return 0;
+}
+
+

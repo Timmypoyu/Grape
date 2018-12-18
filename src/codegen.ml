@@ -107,6 +107,11 @@ let translate (globals, functions) =
       L.declare_function "link_edge_from" link_edge_t the_module in
   (* This must match the C library function name *)
 
+ let node_same_t : L.lltype = 
+      L.var_arg_function_type i1_t [|obj_ptr_t; obj_ptr_t|] in
+ let node_same : L.llvalue = 
+      L.declare_function "node_same" node_same_t the_module in
+
   (* list functions*)
 
   let init_list_t : L.lltype = 
@@ -190,6 +195,26 @@ let translate (globals, functions) =
   let get_from : L.llvalue = 
       L.declare_function "get_from" get_from_t the_module in
 
+ let get_from_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let get_from : L.llvalue = 
+      L.declare_function "get_from" get_from_t the_module in
+
+ let graph_to_list_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let graph_to_list : L.llvalue = 
+      L.declare_function "graph_to_list" graph_to_list_t the_module in
+
+ let neighbor_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let neighbor : L.llvalue = 
+      L.declare_function "neighbor" neighbor_t the_module in
+
+ let distance_t : L.lltype = 
+      L.var_arg_function_type i32_t [|obj_ptr_t; obj_ptr_t|] in
+  let distance : L.llvalue = 
+      L.declare_function "distance" distance_t the_module in
+ 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -249,168 +274,178 @@ let translate (globals, functions) =
 
     (* Construct code for an expression; return its value *)
     let rec expr builder ((typ, e) : sexpr) = match e with
-      SIntLit i   -> L.const_int i32_t i
-    | SStrLit s   -> L.build_global_stringptr s "string" builder
-    | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
-    | SFloatLit l -> L.const_float_of_string float_t l
-    | SNoexpr     -> L.const_int i32_t 0
-    | SId s       -> L.build_load (lookup s) s builder
-    | SProp (o, p) ->
-      let tobj = fst o in
-      let o' = expr builder o in
-      (match (tobj, p) with
-        (A.Edge (t, _), "val") ->
-          let dest_ptr = L.pointer_type (ltype_of_typ t) in
-          let data_ptr = L.build_call get_val [|o'|] "val" builder in  
-          let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
-          L.build_load data_ptr "data" builder
-      | (A.Node t, "val") ->
-          let dest_ptr = L.pointer_type (ltype_of_typ t) in
-          let data_ptr = L.build_call get_val [|o'|] "val" builder in  
-          let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
-          L.build_load data_ptr "data" builder
-      | (A.Edge (_, t), "to") ->
-          L.build_call get_to [|o'|] "to" builder
-      | (A.Edge (_, t), "from") ->
-          let dest_ptr = L.pointer_type (ltype_of_typ t) in
-          let data_ptr = L.build_call get_from [|o'|] "from" builder in  
-          L.build_bitcast data_ptr dest_ptr "data" builder
-      | (_, _) -> raise (Failure "no such property"))
+        SIntLit i   -> L.const_int i32_t i
+      | SStrLit s   -> L.build_global_stringptr s "string" builder
+      | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
+      | SFloatLit l -> L.const_float_of_string float_t l
+      | SNoexpr     -> L.const_int i32_t 0
+      | SId s       -> L.build_load (lookup s) s builder
+      | SProp (e, p) ->
+        let obj = expr builder e in
+        (match (typ, p) with
+            (_, "val") ->
+              let dest_ptr = L.pointer_type (ltype_of_typ typ) in
+              let data_ptr = L.build_call get_val [|obj|] "edge_val" builder in  
+              let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in 
+              L.build_load data_ptr "data" builder
+          | (Edge (_, _), "to") ->
+              let dest_ptr = L.pointer_type (ltype_of_typ typ) in
+              let data_ptr = L.build_call get_val [|obj|] "edge_val" builder in  
+              let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in 
+              L.build_load data_ptr "data" builder
+        )
+      | SAssign (s, e) -> let e' = expr builder e in
+                          ignore(L.build_store e' (lookup s) builder); e'
+      | SNodeLit (t, v) -> (* Cast data type into void pointer to init node *)
+        let data_value = expr builder (t, v) in 
+        let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
+          ignore ( L.build_store data_value data builder);
+        let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
+        let node = L.build_call init_node [|data|] "init_node" builder in node
+      | SEdgeLit (t, v) -> 
+        let data_value = expr builder (t, v) in 
+        let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
+          ignore ( L.build_store data_value data builder);
+        let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
+        let edge = L.build_call init_edge [|data|] "init_edge" builder in edge
+	(* TODO: Initialize with empty lists *)
+      | SDirEdgeLit i -> raise (Failure "Unimplemented")
+      | SGraphLit l -> 
+        let graph = L.build_call init_graph [||] "init_graph" builder in 
+        let rec init_path lastEdge isLast = function
+          | [] -> graph
+          | [hd] when isLast = 1 ->
+            let node = expr builder (fst hd) in
+            ignore(L.build_call add_node [|graph; node|] "" builder);
+            ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder);
+            graph
+          | hd::tl when isLast = 0 -> 
+            let edge = expr builder (snd hd) in 
+            let node = expr builder (fst hd) in
+            ignore(L.build_call add_node [|graph; node|] "" builder);
+            ignore(L.build_call add_edge [|graph; edge|] "" builder);
+            ignore(L.build_call link_edge_from [|edge; node|] "" builder);
+            init_path edge 1 tl
+          | hd::tl  -> 
+            let edge = expr builder (snd hd) in 
+            let node = expr builder (fst hd) in
+            ignore(L.build_call add_node [|graph; node|] "" builder);
+            ignore(L.build_call add_edge [|graph; edge|] "" builder);
+            ignore(L.build_call link_edge_from [|edge; node|] "" builder); 
+            ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder); 
+            init_path edge 1 tl
+        in 
+        ignore(List.map (init_path (L.const_int i8_t 0) 0) l); graph
+      | SIndex (e, i) ->
+        let theList = expr builder e in
+        let theIndex = expr builder i in 
+        let data_ptr = L.build_call list_get [|theIndex; theList|] "list_get" builder in  
+        (match typ with
+          | A.Edge _ ->
+              L.build_bitcast data_ptr obj_ptr_t "data" builder
+          | A.Node _ ->
+              L.build_bitcast data_ptr obj_ptr_t "data" builder
+          | A.Int ->
+              let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t) "data" builder in 
+              L.build_load data_ptr "data" builder  
+          | A.Str ->
+              let data_ptr = L.build_bitcast data_ptr (L.pointer_type str_t) "data" builder in 
+              L.build_load data_ptr "data" builder  
+          | A.Float ->
+              let data_ptr = L.build_bitcast data_ptr (L.pointer_type float_t) "data" builder in 
+              L.build_load data_ptr "data" builder)
+      | SListLit i ->
+        let rec fill_list lst = (function 
+        [] -> lst
+        |sx :: tail ->
+        let (atyp,_) = sx in
+        let data_ptr = (match atyp with
+        		A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
+        		| _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
+                	let data_value = expr builder sx in  
+                	ignore (L.build_store data_value data builder); data) in 
 
-    | SAssign (s, e) -> let e' = expr builder e in
-      ignore(L.build_store e' (lookup s) builder); e'
-
-    | SNodeLit (t, v) -> (* Cast data type into void pointer to init node *)
-      let data_value = expr builder (t, v) in 
-      let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
-        ignore ( L.build_store data_value data builder);
-      let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
-      let node = L.build_call init_node [|data|] "init_node" builder in node
-    | SEdgeLit (t, v) -> 
-      let data_value = expr builder (t, v) in 
-      let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
-        ignore ( L.build_store data_value data builder);
-      let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
-      let edge = L.build_call init_edge [|data|] "init_edge" builder in edge
-      (* TODO: Initialize with empty lists *)
-    | SDirEdgeLit _ -> raise (Failure "Unimplemented")
-    | SGraphLit l -> 
-      let graph = L.build_call init_graph [||] "init_graph" builder in 
-      let rec init_path lastEdge isLast = function
-        | [] -> graph
-        | [hd] when isLast = 1 ->
-          let node = expr builder (fst hd) in
-          ignore(L.build_call add_node [|graph; node|] "" builder);
-          ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder);
-          graph
-        | hd::tl when isLast = 0 -> 
-          let edge = expr builder (snd hd) in 
-          let node = expr builder (fst hd) in
-          ignore(L.build_call add_node [|graph; node|] "" builder);
-          ignore(L.build_call add_edge [|graph; edge|] "" builder);
-          ignore(L.build_call link_edge_from [|edge; node|] "" builder);
-          init_path edge 1 tl
-        | hd::tl  -> 
-          let edge = expr builder (snd hd) in 
-          let node = expr builder (fst hd) in
-          ignore(L.build_call add_node [|graph; node|] "" builder);
-          ignore(L.build_call add_edge [|graph; edge|] "" builder);
-          ignore(L.build_call link_edge_from [|edge; node|] "" builder); 
-          ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder); 
-          init_path edge 1 tl
-      in 
-      ignore(List.map (init_path (L.const_int i8_t 0) 0) l); graph
-    | SIndex (e, i) ->
-      let e' = expr builder e in
-      let i' = expr builder i in 
-      (match (fst e) with 
-          A.Str -> L.build_call get_char [|i'; e'|] "get_char" builder 
-        | A.List t -> 
-          let data_ptr = L.build_call list_get [|i'; e'|] "list_get" builder in  
-          match t with 
-              A.List _ | A.Node _ | A.Edge (_,_) | A.Graph _ -> data_ptr
-            | _ -> 
-              let dest_ptr = L.pointer_type (ltype_of_typ t) in
-              let data_ptr = L.build_bitcast data_ptr dest_ptr "data" builder in
-              L.build_load data_ptr "data" builder 
-        | _ -> raise (Failure "Cannot index type"))
-    | SListLit i ->
-      let rec fill_list lst = (function 
-      [] -> lst
-      |sx :: tail ->
-      let (atyp,_) = sx in
-      let data_ptr = (match atyp with
-        A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
-        | _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
-          let data_value = expr builder sx in  
-          ignore (L.build_store data_value data builder); data) in 
-      let data = L.build_bitcast data_ptr void_ptr_t "data" builder in 
-      ignore(L.build_call push_list [|lst; data|] "" builder); fill_list lst tail) in
-      let lst = L.build_call init_list [||] "init_list" builder in 
-      fill_list lst i 
-    | SBinop ((A.Float,_ ) as e1, op, e2) ->
-      let e1' = expr builder e1
-      and e2' = expr builder e2 in
-      (match op with 
-          A.Add     -> L.build_fadd
-        | A.Sub     -> L.build_fsub
-        | A.Mult    -> L.build_fmul
-        | A.Div     -> L.build_fdiv 
-        | A.Exp     -> raise (Failure "Unimplemented")
-        | A.Mod     -> raise (Failure "Unimplemented")
-        | A.Amp     -> raise (Failure "Unimplemented")
-        | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
-        | A.Neq     -> L.build_fcmp L.Fcmp.One
-        | A.Less    -> L.build_fcmp L.Fcmp.Olt
-        | A.Leq     -> L.build_fcmp L.Fcmp.Ole
-        | A.Greater -> L.build_fcmp L.Fcmp.Ogt
-        | A.Geq     -> L.build_fcmp L.Fcmp.Oge
-        | A.And | A.Or ->
-          raise (Failure "internal error: semant should have rejected and/or on float")
-      ) e1' e2' "tmp" builder
-    | SBinop ((A.Str, _) as e1, A.Equal, e2) ->
-      let e1' = expr builder e1
-      and e2' = expr builder e2 in
-      L.build_call str_equal [|e1'; e2'|] "str_equal" builder
-    | SBinop (e1, op, e2) ->
-      let e1' = expr builder e1
-      and e2' = expr builder e2 in
-      (match op with
-          A.Add     -> L.build_add
-        | A.Sub     -> L.build_sub
-        | A.Exp     -> raise(Failure "Unimplemented")
-        | A.Mod     -> raise(Failure "Unimplemented")
-        | A.Amp     -> raise(Failure "Unimplemented")
-        | A.Mult    -> L.build_mul
-        | A.Div     -> L.build_sdiv
-        | A.And     -> L.build_and
-        | A.Or      -> L.build_or
-        | A.Equal   -> L.build_icmp L.Icmp.Eq
-        | A.Neq     -> L.build_icmp L.Icmp.Ne
-        | A.Less    -> L.build_icmp L.Icmp.Slt
-        | A.Leq     -> L.build_icmp L.Icmp.Sle
-        | A.Greater -> L.build_icmp L.Icmp.Sgt
-        | A.Geq     -> L.build_icmp L.Icmp.Sge
-      ) e1' e2' "tmp" builder
-    | SUnop(op, ((t, _) as e)) ->
-      let e' = expr builder e in
-      (match op with
-          A.Neg when t = A.Float -> L.build_fneg 
-        | A.Neg                  -> L.build_neg
-        | A.Not                  -> L.build_not
-      ) e' "tmp" builder
-    | SCall ("print", [e]) -> 
-        let e' = expr builder e in
-        (match fst e with 
-          Int -> L.build_call printf [| int_format_str; e' |] "printf" builder
-        | Float -> L.build_call printf [| float_format_str; e' |] "printf" builder
-        | Str -> L.build_call printf [| str_format_str; e' |] "prints" builder)
-    | SCall ("size", [e]) -> 
-        let e' = expr builder e in
-        (match fst e with
-          List _ -> L.build_call size [|e'|] "size" builder
-        | Str -> L.build_call str_size [|e'|] "str_size" builder)
-    | SCall (f, args) ->
+        let data = L.build_bitcast data_ptr void_ptr_t "data" builder in 
+	ignore(L.build_call push_list [|lst; data|] "" builder); fill_list lst tail)
+        in
+        let lst = L.build_call init_list [||] "init_list" builder in 
+	fill_list lst i 
+   
+      | SBinop ((A.Float,_ ) as e1, op, e2) ->
+    let e1' = expr builder e1
+    and e2' = expr builder e2 in
+    (match op with 
+      A.Add     -> L.build_fadd
+    | A.Sub     -> L.build_fsub
+    | A.Mult    -> L.build_fmul
+    | A.Div     -> L.build_fdiv 
+    | A.Exp     -> raise (Failure "Unimplemented")
+    | A.Mod     -> raise (Failure "Unimplemented")
+    | A.Amp     -> raise (Failure "Unimplemented")
+    | A.Equal   -> L.build_fcmp L.Fcmp.Oeq
+    | A.Neq     -> L.build_fcmp L.Fcmp.One
+    | A.Less    -> L.build_fcmp L.Fcmp.Olt
+    | A.Leq     -> L.build_fcmp L.Fcmp.Ole
+    | A.Greater -> L.build_fcmp L.Fcmp.Ogt
+    | A.Geq     -> L.build_fcmp L.Fcmp.Oge
+    | A.And | A.Or ->
+        raise (Failure "internal error: semant should have rejected and/or on float")
+    ) e1' e2' "tmp" builder
+      | SBinop ((A.Str, _) as e1, A.Equal, e2) ->
+    let e1' = expr builder e1
+    and e2' = expr builder e2 in
+    L.build_call str_equal [|e1'; e2'|] "str_equal" builder
+      | SBinop (e1, op, e2) ->
+    let e1' = expr builder e1
+    and e2' = expr builder e2 in
+    (match op with
+      A.Add     -> L.build_add
+      | A.Sub     -> L.build_sub
+      | A.Exp     -> raise(Failure "Unimplemented")
+      | A.Mod     -> raise(Failure "Unimplemented")
+      | A.Amp     -> raise(Failure "Unimplemented")
+      | A.Mult    -> L.build_mul
+      | A.Div     -> L.build_sdiv
+      | A.And     -> L.build_and
+      | A.Or      -> L.build_or
+      | A.Equal   -> L.build_icmp L.Icmp.Eq
+      | A.Neq     -> L.build_icmp L.Icmp.Ne
+      | A.Less    -> L.build_icmp L.Icmp.Slt
+      | A.Leq     -> L.build_icmp L.Icmp.Sle
+      | A.Greater -> L.build_icmp L.Icmp.Sgt
+      | A.Geq     -> L.build_icmp L.Icmp.Sge
+        ) e1' e2' "tmp" builder
+      | SUnop(op, ((t, _) as e)) ->
+          let e' = expr builder e in
+    (match op with
+      A.Neg when t = A.Float -> L.build_fneg 
+    | A.Neg                  -> L.build_neg
+          | A.Not                  -> L.build_not) e' "tmp" builder
+      | SCall ("print", [e]) | SCall ("printb", [e]) ->
+    L.build_call printf [| int_format_str ; (expr builder e) |]
+      "printf" builder
+      | SCall ("printbig", [e]) ->
+    L.build_call printbig [| (expr builder e) |] 
+        "printbig" builder
+      | SCall ("printf", [e]) -> 
+    L.build_call printf [| float_format_str ; (expr builder e) |] (* Links function to C *)
+      "printf" builder (* LLVM Name *)
+      | SCall ("prints", [e]) ->
+      L.build_call printf [| str_format_str ; (expr builder e) |]
+        "prints" builder
+      | SCall ("get_outgoing", [e]) -> 
+          L.build_call get_outgoing [|expr builder e|] "outgoing" builder  
+      | SCall ("get_to", [e]) -> L.build_call get_to [|expr builder e|] "get_to" builder  
+      | SCall ("get_from", [e]) -> L.build_call get_from [|expr builder e|] "get_from" builder  
+      | SCall ("size", [e]) -> L.build_call size [|expr builder e|] "size" builder  
+      | SCall ("str_size", [e]) -> L.build_call str_size [|expr builder e|] "str_size" builder  
+      | SCall ("get_char", [e;f]) -> L.build_call get_char [|expr builder e; expr builder f|] "get_char" builder  
+      | SCall ("node_same", [e;f]) -> L.build_call node_same [|expr builder e; expr builder f|] "node_same" builder  
+      | SCall ("graph_to_list", [e]) -> L.build_call graph_to_list [|expr builder e|] "graph_to_list" builder  
+      | SCall ("neighbor", [e]) -> L.build_call neighbor [|expr builder e|] "neighbor" builder  
+      | SCall ("distance", [e;f]) -> L.build_call distance [|expr builder e; expr builder f|] "distance" builder  
+      | SCall ("push_front_list", [e;f]) -> L.build_call push_front_list [|expr builder e; expr builder f|] "" builder  
+   | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     
         let llargs = List.rev (List.map (expr builder) (List.rev args)) in
         let result = (match fdecl.styp with 

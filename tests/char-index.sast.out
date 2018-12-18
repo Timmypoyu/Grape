@@ -2,8 +2,8 @@
 fun Int main() {
 String (String : a = (String : hi));
 Node<String> (Node<String> : n = (Node<String> : '(String : a)'));
-(* : prints((String : (String : hi)[(Int : 0)])));
-(* : prints((String : (String : a)[(Int : 0)])));
-(* : prints((String : (String : (Node<String> : n).val)[(Int : 0)])));
+(* : print((String : (String : hi)[(Int : 0)])));
+(* : print((String : (String : a)[(Int : 0)])));
+(* : print((String : (String : (Node<String> : n).val)[(Int : 0)])));
 return (Int : 0);
 }

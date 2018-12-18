@@ -10,7 +10,7 @@ Bool (Bool : found = (Bool : false));
 String character;
 List<Edge<String->*>> transitions;
 Node<Int> (Node<Int> : state = (Node<Int> : start));
-while ((Bool : (Int : token) < (Int : str_size((String : input))))) {
+while ((Bool : (Int : token) < (Int : size((String : input))))) {
 (String : character = (String : (String : input)[(Int : token)]));
 (List<Edge<String->Int>> : transitions = (List<Edge<String->Int>> : (Graph<Node<Int>, Edge<String->Int>> : dfa)outgoing((Node<Int> : state))));
 (Int : i = (Int : 0));
@@ -24,7 +24,7 @@ if ((Bool : (String : (Edge<String->*> : (List<Edge<String->*>> : transitions)[(
 }
 if ((Bool : (Bool : found) == (Bool : false)))
 {
-(* : prints((String : REJECT)));
+(* : print((String : REJECT)));
 return (Int : 0);
 }
 (Bool : found = (Bool : false));
@@ -32,11 +32,11 @@ return (Int : 0);
 }
 if ((Bool : (Int : (Node<Int> : state).val) == (Int : 1)))
 {
-(* : prints((String : ACCEPT)));
+(* : print((String : ACCEPT)));
 }
 else
 {
-(* : prints((String : REJECT)));
+(* : print((String : REJECT)));
 }
 return (Int : 0);
 }

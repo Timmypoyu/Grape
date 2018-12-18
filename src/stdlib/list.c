@@ -12,6 +12,11 @@ struct List *init_list() {
 	return list;
 }
 
+
+bool isEmptyList(struct List *list) {
+    return (list->head == NULL);
+}
+
 int size(struct List *list) {
 	
 	if (isEmptyList(list)) {
@@ -32,6 +37,7 @@ void *list_get(int n, struct List *list){
         fprintf(stderr, "List Index out of bounds: given %d for list of size %d\n",n,size(list));
 	exit(-1);
     }
+
     struct ListNode *node = list->head;
     if( n == 0 ){
        return node->data;
@@ -40,10 +46,6 @@ void *list_get(int n, struct List *list){
         node = node->next;
     }
     return node->data;
-}
-
-int isEmptyList(struct List *list) {
-    return (list->head == NULL);
 }
 
 void reverseList(struct List *list) {
@@ -61,7 +63,7 @@ void reverseList(struct List *list) {
     list->head = prv;
 }
 
-void push_list(struct List *list, void *data) {
+void push_list(void *data, struct List *list) {
     struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
     
     node->data = data;
@@ -78,7 +80,7 @@ void push_list(struct List *list, void *data) {
     }
 }
 
-void push_front_list(struct List *list, void *data) {
+void push_front_list(void *data, struct List *list) {
     struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
  
     node->data = data;
@@ -157,8 +159,23 @@ struct List *copy(struct List *list) {
 }
 */
 
+bool isEqual(struct ListNode *a, struct ListNode *b) {
+	
+	if (a == NULL || b == NULL) {
+		return NULL;
+	}
+	
+	int *dataA = (int *) a->data;
+	int *dataB = (int *) b->data;
+	
+	if (*dataA == *dataB) {
+		return true;
+	}
+	
+	return 0; 
+}
 
-struct List *insert(int x, struct List *list, void *y) {	
+struct List *insert(void *y, struct List *list, int x) {	
 	if(isEmptyList(list)) {
 		return list;
 	}
@@ -192,23 +209,8 @@ struct List *insert(int x, struct List *list, void *y) {
 	return list; 			 
 }
 
-bool isEqual(struct ListNode *a, struct ListNode *b) {
-	
-	if (a == NULL || b == NULL) {
-		return NULL;
-	}
-	
-	int *dataA = (int *) a->data;
-	int *dataB = (int *) b->data;
-	
-	if (*dataA == *dataB) {
-		return 1;
-	}
-	
-	return 0; 
-}
 
-struct List *list_remove(struct List *list, void *y) {
+struct List *list_remove(void *y, struct List *list) {
 	
 	if (isEmptyList(list)) {
 		return NULL;

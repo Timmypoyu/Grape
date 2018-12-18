@@ -4,6 +4,6 @@ Int a = 3;
 Node<Int> b = 'a';
 Edge<String->*> e = -"WASSUP"-;
 print(b.val);
-prints(e.val);
+print(e.val);
 return 0;
 }
