@@ -30,14 +30,7 @@ let check (globals, functions) =
   check_binds "global" globals;
 
   (**** Check functions ****)
-  let func_key name args = 
-    let rec args_str str = function
-        [] -> str
-      | (t, _)::tl -> args_str (str ^ (match t with
-            Int -> "int."
-          | Bool -> "bool."
-          | _ -> "" )) tl in
-    (name ^ (args_str ":" args))
+  let func_key name args = name
   in
 
   let method_key typ name args = match typ with
@@ -56,12 +49,7 @@ let check (globals, functions) =
         body = [] } map
     in List.fold_left add_bind StringMap.empty [ 
       ("print",     [(Int, "x")],   Any);
-      ("printb",    [(Bool, "x")],  Any);
-      ("printf",    [(Float, "x")], Any);
-      ("prints",    [(Str, "x")],   Any);
-      ("printbig",  [(Int, "x")],   Any); 
       ("size",      [(List (Edge (Str, Int)), "x")], Int); 
-      ("str_size" , [(Str, "x")],   Int);
     ]      
   in
 
