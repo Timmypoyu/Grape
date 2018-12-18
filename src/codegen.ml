@@ -112,6 +112,10 @@ let translate (globals, functions) =
       L.declare_function "node_same" node_same_t the_module in
 
 
+  let update_node_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|i32_t; obj_ptr_t|] in
+  let update_node : L.llvalue = 
+      L.declare_function "update_node" update_node_t the_module in
 
   (* This must match the C library function name *)
 
@@ -461,6 +465,7 @@ let translate (globals, functions) =
 | SCall ("get_val", [e]) -> let data_ptr = L.build_call get_val [|expr builder e|] "get_val" builder in 
 			let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t) "data" builder in
                 	L.build_load data_ptr "data" builder  
+ | SCall ("update_node", [e;f]) -> L.build_call update_node [|expr builder e; expr builder f|] "update_node" builder  
 
 	 | SMethod (o, m, args) ->
       let tobj = fst o in

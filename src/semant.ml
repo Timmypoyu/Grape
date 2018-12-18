@@ -58,7 +58,8 @@ let check (globals, functions) =
 	("list_get", [(Int, "x"); (List(Node Int), "y")], Node Int); 
         ("update_at", [(Int, "x"); (List(Node Int), "y"); (Node Int, "z")], List (Node Int)); 
         ("get_val", [(Node Int, "x")], Int); 
-        ("push_front_list_node", [(Node Int, "x"); (List(Node Int), "y")], Void)] 
+        ("push_front_list_node", [(Node Int, "x"); (List(Node Int), "y")], Void); 
+         ("update_node", [(Int, "x"); (Node Int, "y")], Node Int)]
 
   in
 

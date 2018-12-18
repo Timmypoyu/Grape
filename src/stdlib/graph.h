@@ -40,3 +40,4 @@ bool GraphFind(struct Graph *graph, void *value);
 
 struct List *GraphAdjacent(struct Graph *graph, struct Node *node);
 
+//struct Node *update_node(int val, struct Node *a);

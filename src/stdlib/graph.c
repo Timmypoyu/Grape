@@ -175,4 +175,9 @@ bool GraphFind(struct Graph *graph, void *value) {
 	return false;
 }
 
+struct Node *  update_node(int val, struct Node * a){
+	a->data = &val; 
+	return a; 
+}
+
 
