@@ -54,8 +54,12 @@ let check (globals, functions) =
       ("get_char", [(Int, "x"); (Str, "y")], Str);
       ("size", [(List (Edge (Str, Int)) , "x")], Int); 
       ("str_size" , [(Str, "x")], Int);
-			("str_equal", [(Str, "x"); (Str, "x")], Bool)]      
-  in
+			("str_equal", [(Str, "x"); (Str, "x")], Bool);
+	("node_same", [(Node Int, "x"); (Node Int, "y")], Bool);
+	("graph_to_list", [(Graph (Int, Int), "x")], List (Node Int));      
+	("neighbor", [(Node Int, "x")], List(Node Int));      
+	("distance", [(Node Int, "x"); (Node Int, "y")], Int)]      
+in
 
   (* Add function name to symbol table *)
   let add_func map fd = 

@@ -106,6 +106,11 @@ let translate (globals, functions) =
       L.declare_function "link_edge_from" link_edge_t the_module in
   (* This must match the C library function name *)
 
+ let node_same_t : L.lltype = 
+      L.var_arg_function_type i1_t [|obj_ptr_t; obj_ptr_t|] in
+ let node_same : L.llvalue = 
+      L.declare_function "node_same" node_same_t the_module in
+
   (* list functions*)
 
   let init_list_t : L.lltype = 
@@ -184,6 +189,26 @@ let translate (globals, functions) =
   let get_from : L.llvalue = 
       L.declare_function "get_from" get_from_t the_module in
 
+ let get_from_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let get_from : L.llvalue = 
+      L.declare_function "get_from" get_from_t the_module in
+
+ let graph_to_list_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let graph_to_list : L.llvalue = 
+      L.declare_function "graph_to_list" graph_to_list_t the_module in
+
+ let neighbor_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let neighbor : L.llvalue = 
+      L.declare_function "neighbor" neighbor_t the_module in
+
+ let distance_t : L.lltype = 
+      L.var_arg_function_type i32_t [|obj_ptr_t; obj_ptr_t|] in
+  let distance : L.llvalue = 
+      L.declare_function "distance" distance_t the_module in
+ 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -409,6 +434,12 @@ let translate (globals, functions) =
       | SCall ("size", [e]) -> L.build_call size [|expr builder e|] "size" builder  
       | SCall ("str_size", [e]) -> L.build_call str_size [|expr builder e|] "str_size" builder  
       | SCall ("get_char", [e;f]) -> L.build_call get_char [|expr builder e; expr builder f|] "get_char" builder  
+      | SCall ("node_same", [e;f]) -> L.build_call node_same [|expr builder e; expr builder f|] "node_same" builder  
+      | SCall ("graph_to_list", [e]) -> L.build_call graph_to_list [|expr builder e|] "graph_to_list" builder  
+      | SCall ("neighbor", [e]) -> L.build_call neighbor [|expr builder e|] "neighbor" builder  
+      | SCall ("distance", [e;f]) -> L.build_call distance [|expr builder e; expr builder f|] "distance" builder  
+      | SCall ("push_front_list", [e;f]) -> L.build_call push_front_list [|expr builder e; expr builder f|] "" builder  
+
 
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     

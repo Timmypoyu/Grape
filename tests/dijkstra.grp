@@ -25,17 +25,17 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int
 		//iter through neighbor list updating node value
 		while (j < i){
 			next_node = neighbor_list[j];
-			distance = distance(current_node, next_node) + current_node.val;
+			dist = distance(current_node, next_node) + current_node.val;
 			
 			//update previous record and distance 			
-			if (next_node.val > distance){
-				next_node.val = distance;
+			if (next_node.val > dist){
+				next_node.val = dist;
 
 				Int x = 0;
 
 				//update previous record 
 				while(x < size(nodeList)){
-					if(isEqual(nodeList[x],next_node)){
+					if(node_same(nodeList[x],next_node)){
 						previous_record[x] = current_node;
 					}
 					x = x+1;
@@ -45,22 +45,22 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int
 		}
 
 		//add_to visited and change current node
-		add_node_to_listfront(visited, current_node);
+		push_list_front(visited, current_node);
 		current_node = minNode(visited, iter_graph);
 	}
 
 	Node<Int> follow = end_node; 
-	while(!isEqual(follow, start_node)){
-		result = add_node_to_listfront(result, follow);
+	while(!node_same(follow, start_node)){
+		result = (result, follow);
 		Int temp = 0;
 		while (temp < graph_size){
-			if(isEqual(nodeList[temp], follow)){
+			if(node_same(nodeList[temp], follow)){
 				follow = previous_record[temp];
 				}
 			}
 		}	
 
-	result = addNode_tofront(result, start_node);
+	result = push_front_list(result, start_node);
 	return result;
 }
 
@@ -77,7 +77,7 @@ fun List<Node<Int> > minNode(List<Node<Int> > visited, List<Node<Int> > nodeList
 			
 			while(k < size(visited)){
 				
-				if(isEqual_Node(visited[k], nodeList[j])){
+				if(node_same(visited[k], nodeList[j])){
 				    present = 1;
 				}
  
