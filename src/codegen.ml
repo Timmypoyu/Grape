@@ -105,6 +105,14 @@ let translate (globals, functions) =
 
   let link_edge_from : L.llvalue = 
       L.declare_function "link_edge_from" link_edge_t the_module in
+
+  let node_same_t : L.lltype = 
+      L.var_arg_function_type i1_t [|obj_ptr_t; obj_ptr_t|] in
+  let node_same : L.llvalue = 
+      L.declare_function "node_same" node_same_t the_module in
+
+
+
   (* This must match the C library function name *)
 
   (* list functions*)
