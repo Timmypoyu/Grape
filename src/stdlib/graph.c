@@ -1,3 +1,21 @@
+_list();
+        return node;
+}
+
+struct Graph *init_graph() {
+        struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
+        graph->nodes = init_list();
+        graph->edges = init_list();
+        return graph;
+}
+
+struct Edge *init_edge(void *data) {
+        struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
+        edge->data = data;
+        edge->to = NULL;
+        edge->from = NULL;
+        return edge;
+}
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
@@ -180,4 +198,27 @@ struct Node *  update_node(int val, struct Node * a){
 	return a; 
 }
 
+
+struct List *graph_to_list(struct Graph *graph) {
+	return graph->nodes;
+}
+
+struct List *neighbor(struct Node *node){
+	struct List *list = (struct List *)malloc(sizeof(struct List));
+	struct List *edgelist = node->edges;
+	struct ListNode *target = edgelist->head;
+	while (target) {
+		push_list(list, ((struct Edge *)(target->data))->to);
+		target = target->next;
+	}
+	return list;
+}
+bool node_same(struct Node *a, struct Node *b){
+	if (a == b) {
+		return true;
+	} else {
+		return false;
+	}
+
+}
 
