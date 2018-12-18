@@ -12,6 +12,7 @@ do
     AST_RESULT=$(eval "$GRAPENATIVE -a $TEST" 2>&1)
     SAST_RESULT=$(eval "$GRAPENATIVE -s $TEST" 2>&1)
 
+    rm $FAILFILE;
     OUTFILE="${TEST%.*}.out"
     FAILFILE="${TEST%.*}.fail"
     AST_OUTFILE="${TEST%.*}.ast.out"
@@ -23,9 +24,9 @@ do
         if [ "$RESULT" == "$(cat $OUTFILE)" ]; then
             echo "PASS $OUTFILE";
         else
-            echo "FAIL $TEST differs from $OUTFILE"; fi
+            echo "FAIL $TEST differs from $OUTFILE";
             echo "OUT: " >> $FAILFILE
-            echo $RESULT >> $FAILFILE
+            echo $RESULT >> $FAILFILE; fi
     fi
 
     if [ ! -f $AST_OUTFILE ]; then
@@ -34,9 +35,9 @@ do
         if [ "$AST_RESULT" == "$(cat $AST_OUTFILE)" ]; then
             echo "PASS $AST_OUTFILE";
         else
-            echo "FAIL $TEST differs from $AST_OUTFILE"; fi
+            echo "FAIL $TEST differs from $AST_OUTFILE";
             echo "AST: " >> $FAILFILE
-            echo $AST_RESULT >> $FAILFILE
+            echo $AST_RESULT >> $FAILFILE; fi
     fi
 
     if [ ! -f $SAST_OUTFILE ]; then
@@ -45,9 +46,9 @@ do
         if [ "$SAST_RESULT" == "$(cat $SAST_OUTFILE)" ]; then
             echo "PASS $SAST_OUTFILE";
         else
-            echo "FAIL $TEST differs from $SAST_OUTFILE"; fi
+            echo "FAIL $TEST differs from $SAST_OUTFILE";
             echo "SAST: " >> $FAILFILE
-            echo $SAST_RESULT >> $FAILFILE
+            echo $SAST_RESULT >> $FAILFILE; fi
     fi
 done
 exit
