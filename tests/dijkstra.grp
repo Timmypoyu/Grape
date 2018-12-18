@@ -57,7 +57,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 		push_front_list_node(visited, current_node);
 		current_node = minNode(visited, iter_graph);
 	}
-Node<Itn>
+
 	Node<Int> follow = end_node; 
 	while( not(node_same(follow, start_node))){
 		push_front_list_node(result, follow);
@@ -117,9 +117,9 @@ fun Int main(){
     Node<Int> f = '10000';
     Node<Int> g = '10000';
 
-    Graph<Int, Int> mainGraph = << a -2-> b -5-> d -3-> g , 
-			       a -3-> c -7-> e -4-> f -2-> g,
-			       d -2-> f >>; 
+    Graph<Int, Int> mainGraph = << a -2- b -5- d -3- g , 
+			       a -3- c -7- e -4- f -2- g,
+			       d -2- f >>; 
 
     List<Node<Int> > result;
     result = dijkstra(mainGraph, a, g);
