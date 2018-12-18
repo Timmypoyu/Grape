@@ -230,7 +230,7 @@ let translate (globals, functions) =
       let formals = List.fold_left2 add_formal StringMap.empty fdecl.sformals
         (Array.to_list (L.params the_function)) in
 
-      List.fold_left add_local formals declarations
+      List.fold_left add_local formals []
     in
 
     (* Return the value for a variable or formal argument.
@@ -240,16 +240,16 @@ let translate (globals, functions) =
     in
 
     (* Construct code for an expression; return its value *)
-    let rec expr builder ((typ, e) : sexpr) = match e with
+    let rec expr locals builder ((typ, e) : sexpr) = match e with
       SIntLit i   -> L.const_int i32_t i
     | SStrLit s   -> L.build_global_stringptr s "string" builder
     | SBoolLit b  -> L.const_int i1_t (if b then 1 else 0)
     | SFloatLit l -> L.const_float_of_string float_t l
     | SNoexpr     -> L.const_int i32_t 0
-    | SId s       -> L.build_load (lookup s) s builder
+    | SId s       -> L.build_load (lookup locals s) s builder
     | SProp (o, p) ->
       let tobj = fst o in
-      let o' = expr builder o in
+      let o' = expr locals builder o in
       (match (tobj, p) with
         (A.Edge (t, _), "val") ->
           let dest_ptr = L.pointer_type (ltype_of_typ t) in
@@ -269,17 +269,17 @@ let translate (globals, functions) =
           L.build_bitcast data_ptr dest_ptr "data" builder
       | (_, _) -> raise (Failure "no such property"))
 
-    | SAssign (s, e) -> let e' = expr builder e in
-      ignore(L.build_store e' (lookup s) builder); e'
+    | SAssign (s, e) -> let e' = expr locals builder e in
+      ignore(L.build_store e' (lookup locals s) builder); e'
 
     | SNodeLit (t, v) -> (* Cast data type into void pointer to init node *)
-      let data_value = expr builder (t, v) in 
+      let data_value = expr locals builder (t, v) in 
       let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
         ignore ( L.build_store data_value data builder);
       let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
       let node = L.build_call init_node [|data|] "init_node" builder in node
     | SEdgeLit (t, v) -> 
-      let data_value = expr builder (t, v) in 
+      let data_value = expr locals builder (t, v) in 
       let data = L.build_malloc (ltype_of_typ t) "data_malloc" builder in
         ignore ( L.build_store data_value data builder);
       let data = L.build_bitcast data void_ptr_t "data_bitcast" builder in
@@ -291,20 +291,20 @@ let translate (globals, functions) =
       let rec init_path lastEdge isLast = function
         | [] -> graph
         | [hd] when isLast = 1 ->
-          let node = expr builder (fst hd) in
+          let node = expr locals builder (fst hd) in
           ignore(L.build_call add_node [|graph; node|] "" builder);
           ignore(L.build_call link_edge_to [|lastEdge; node|] "" builder);
           graph
         | hd::tl when isLast = 0 -> 
-          let edge = expr builder (snd hd) in 
-          let node = expr builder (fst hd) in
+          let edge = expr locals builder (snd hd) in 
+          let node = expr locals builder (fst hd) in
           ignore(L.build_call add_node [|graph; node|] "" builder);
           ignore(L.build_call add_edge [|graph; edge|] "" builder);
           ignore(L.build_call link_edge_from [|edge; node|] "" builder);
           init_path edge 1 tl
         | hd::tl  -> 
-          let edge = expr builder (snd hd) in 
-          let node = expr builder (fst hd) in
+          let edge = expr locals builder (snd hd) in 
+          let node = expr locals builder (fst hd) in
           ignore(L.build_call add_node [|graph; node|] "" builder);
           ignore(L.build_call add_edge [|graph; edge|] "" builder);
           ignore(L.build_call link_edge_from [|edge; node|] "" builder); 
@@ -313,8 +313,8 @@ let translate (globals, functions) =
       in 
       ignore(List.map (init_path (L.const_int i8_t 0) 0) l); graph
     | SIndex (e, i) ->
-      let e' = expr builder e in
-      let i' = expr builder i in 
+      let e' = expr locals builder e in
+      let i' = expr locals builder i in 
       (match (fst e) with 
           A.Str -> L.build_call get_char [|i'; e'|] "get_char" builder 
         | A.List t -> 
@@ -332,17 +332,17 @@ let translate (globals, functions) =
       |sx :: tail ->
       let (atyp,_) = sx in
       let data_ptr = (match atyp with
-        A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr builder sx 
+        A.List _ | A.Graph (_,_) | A.Edge _ | A.Node _  -> expr locals builder sx 
         | _  -> let data = L.build_malloc (ltype_of_typ atyp) "data" builder in
-          let data_value = expr builder sx in  
+          let data_value = expr locals builder sx in  
           ignore (L.build_store data_value data builder); data) in 
       let data = L.build_bitcast data_ptr void_ptr_t "data" builder in 
       ignore(L.build_call push_list [|lst; data|] "" builder); fill_list lst tail) in
       let lst = L.build_call init_list [||] "init_list" builder in 
       fill_list lst i 
     | SBinop ((A.Float,_ ) as e1, op, e2) ->
-      let e1' = expr builder e1
-      and e2' = expr builder e2 in
+      let e1' = expr locals builder e1
+      and e2' = expr locals builder e2 in
       (match op with 
           A.Add     -> L.build_fadd
         | A.Sub     -> L.build_fsub
@@ -361,12 +361,12 @@ let translate (globals, functions) =
           raise (Failure "internal error: semant should have rejected and/or on float")
       ) e1' e2' "tmp" builder
     | SBinop ((A.Str, _) as e1, A.Equal, e2) ->
-      let e1' = expr builder e1
-      and e2' = expr builder e2 in
+      let e1' = expr locals builder e1
+      and e2' = expr locals builder e2 in
       L.build_call str_equal [|e1'; e2'|] "str_equal" builder
     | SBinop (e1, op, e2) ->
-      let e1' = expr builder e1
-      and e2' = expr builder e2 in
+      let e1' = expr locals builder e1
+      and e2' = expr locals builder e2 in
       (match op with
           A.Add     -> L.build_add
         | A.Sub     -> L.build_sub
@@ -385,37 +385,37 @@ let translate (globals, functions) =
         | A.Geq     -> L.build_icmp L.Icmp.Sge
       ) e1' e2' "tmp" builder
     | SUnop(op, ((t, _) as e)) ->
-      let e' = expr builder e in
+      let e' = expr locals builder e in
       (match op with
           A.Neg when t = A.Float -> L.build_fneg 
         | A.Neg                  -> L.build_neg
         | A.Not                  -> L.build_not
       ) e' "tmp" builder
     | SCall ("print", [e]) | SCall ("printb", [e]) ->
-        L.build_call printf [| int_format_str ; (expr builder e) |] "printf" builder
+        L.build_call printf [| int_format_str ; (expr locals builder e) |] "printf" builder
     | SCall ("printbig", [e]) ->
-        L.build_call printbig [| (expr builder e) |] "printbig" builder
+        L.build_call printbig [| (expr locals builder e) |] "printbig" builder
     | SCall ("printf", [e]) -> 
-        L.build_call printf [| float_format_str ; (expr builder e) |] "printf" builder
+        L.build_call printf [| float_format_str ; (expr locals builder e) |] "printf" builder
     | SCall ("prints", [e]) ->
-        L.build_call printf [| str_format_str ; (expr builder e) |] "prints" builder
+        L.build_call printf [| str_format_str ; (expr locals builder e) |] "prints" builder
     | SCall ("size", [e]) -> 
-        L.build_call size [|expr builder e|] "size" builder  
+        L.build_call size [|expr locals builder e|] "size" builder  
     | SCall ("str_size", [e]) -> 
-        L.build_call str_size [|expr builder e|] "str_size" builder  
+        L.build_call str_size [|expr locals builder e|] "str_size" builder  
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     
-        let llargs = List.rev (List.map (expr builder) (List.rev args)) in
+        let llargs = List.rev (List.map (expr locals builder) (List.rev args)) in
         let result = (match fdecl.styp with 
             A.Void -> ""
           | _ -> f ^ "_result") in
         L.build_call fdef (Array.of_list llargs) result builder
     | SMethod (o, m, args) ->
       let tobj = fst o in
-      let o' = expr builder o in
+      let o' = expr locals builder o in
       (match (tobj, m) with
         (A.Graph (n, e), "outgoing") ->
-          let a' = expr builder (List.hd args) in
+          let a' = expr locals builder (List.hd args) in
           let ltype = ltype_of_typ (A.List (A.Edge (e, n))) in
           let data_ptr = L.build_call get_outgoing2 [|o'; a'|] "outgoing" builder in  
           L.build_bitcast data_ptr ltype "data" builder
@@ -435,25 +435,25 @@ let translate (globals, functions) =
    the statement's successor (i.e., the next instruction will be built
    after the one generated by this call) *)
 
-let rec stmt builder = function
-    SBlock sl -> List.fold_left stmt builder sl
-  | SExpr e -> ignore(expr builder e); builder
-  | SDeclare (_, _, a) -> ignore(expr builder a); builder 
+let rec stmt locals builder = function
+    SBlock sl -> List.fold_left (stmt locals) builder sl
+  | SExpr e -> ignore(expr locals builder e); builder
+  | SDeclare (_, _, a) -> ignore(expr locals builder a); builder 
   | SReturn e -> ignore(match fdecl.styp with 
         A.Void -> L.build_ret_void builder          (* return void instr *)
-      | _ -> L.build_ret (expr builder e) builder );  (* Build return statement *)
+      | _ -> L.build_ret (expr locals builder e) builder );  (* Build return statement *)
         builder
   | SIf (predicate, then_stmt, else_stmt) ->
-    let bool_val = expr builder predicate in
+    let bool_val = expr locals builder predicate in
     let merge_bb = L.append_block context "merge" the_function in
     let build_br_merge = L.build_br merge_bb in (* partial function *)
 
     let then_bb = L.append_block context "then" the_function in
-    add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+    add_terminal (stmt locals (L.builder_at_end context then_bb) then_stmt)
     build_br_merge;
 
     let else_bb = L.append_block context "else" the_function in
-    add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+    add_terminal (stmt locals (L.builder_at_end context else_bb) else_stmt)
     build_br_merge;
 
     ignore(L.build_cond_br bool_val then_bb else_bb builder);
@@ -464,11 +464,11 @@ let rec stmt builder = function
     ignore(L.build_br pred_bb builder);
 
     let body_bb = L.append_block context "while_body" the_function in
-    add_terminal (stmt (L.builder_at_end context body_bb) body)
+    add_terminal (stmt locals (L.builder_at_end context body_bb) body)
     (L.build_br pred_bb);
 
     let pred_builder = L.builder_at_end context pred_bb in
-    let bool_val = expr pred_builder predicate in
+    let bool_val = expr locals pred_builder predicate in
 
     let merge_bb = L.append_block context "merge" the_function in
     ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
@@ -478,7 +478,7 @@ let rec stmt builder = function
 in
 
 (* Build the code for each statement in the function *)
-let builder = stmt builder (SBlock fdecl.sbody) in
+let builder = stmt StringMap.empty builder (SBlock fdecl.sbody) in
 
   (* Add a return if the last block falls off the end *)
   add_terminal builder (match fdecl.styp with

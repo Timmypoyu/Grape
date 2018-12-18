@@ -82,7 +82,7 @@ let check (globals, functions) =
 
     (* Raise an exception if the given rvalue type cannot be assigned to
        the given lvalue type *)
-    let rec check_assign lvaluet rvaluet err =
+    let check_assign lvaluet rvaluet err =
       match (lvaluet, rvaluet) with
         (a, b) -> if a = b then a else raise (Failure err)
     in   
