@@ -119,7 +119,7 @@ let check (globals, functions) =
        the given lvalue type *)
     let rec check_assign lvaluet rvaluet err =
       match (lvaluet, rvaluet) with
-          (Edge (_,_), Edge (a,b)) -> Edge (a,b)
+          (Edge (a,_), Edge (b,c)) -> Edge (check_assign a b err, c)
         | (Node _, Node a) -> Node a
         | (List a, List Any) -> List a
         | (List a, List b) -> List (check_assign a b err)

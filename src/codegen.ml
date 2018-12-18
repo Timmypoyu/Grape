@@ -399,18 +399,17 @@ let translate (globals, functions) =
         | A.Neg                  -> L.build_neg
         | A.Not                  -> L.build_not
       ) e' "tmp" builder
-    | SCall ("print", [e]) | SCall ("printb", [e]) ->
-        L.build_call printf [| int_format_str ; (expr builder e) |] "printf" builder
-    | SCall ("printbig", [e]) ->
-        L.build_call printbig [| (expr builder e) |] "printbig" builder
-    | SCall ("printf", [e]) -> 
-        L.build_call printf [| float_format_str ; (expr builder e) |] "printf" builder
-    | SCall ("prints", [e]) ->
-        L.build_call printf [| str_format_str ; (expr builder e) |] "prints" builder
+    | SCall ("print", [e]) -> 
+        let e' = expr builder e in
+        (match fst e with 
+          Int -> L.build_call printf [| int_format_str; e' |] "printf" builder
+        | Float -> L.build_call printf [| float_format_str; e' |] "printf" builder
+        | Str -> L.build_call printf [| str_format_str; e' |] "prints" builder)
     | SCall ("size", [e]) -> 
-        L.build_call size [|expr builder e|] "size" builder  
-    | SCall ("str_size", [e]) -> 
-        L.build_call str_size [|expr builder e|] "str_size" builder  
+        let e' = expr builder e in
+        (match fst e with
+          List _ -> L.build_call size [|e'|] "size" builder
+        | Str -> L.build_call str_size [|e'|] "str_size" builder)
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     
         let llargs = List.rev (List.map (expr builder) (List.rev args)) in
