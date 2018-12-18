@@ -2,6 +2,6 @@
 fun Int main() {
 String a;
 a = "applejacks";
-print(str_size(a));
+print(size(a));
 return 0;
 }

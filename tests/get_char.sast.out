@@ -2,6 +2,6 @@
 fun Int main() {
 String a;
 (String : a = (String : applejacks));
-(* : prints((String : (String : a)[(Int : 5)])));
+(* : print((String : (String : a)[(Int : 5)])));
 return (Int : 0);
 }
