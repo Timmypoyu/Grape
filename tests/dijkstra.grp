@@ -4,35 +4,39 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int
 	List<Node<Int> > result;
 	List<Node<Int> > nodeList;
 	List<Node<Int> > previous_record; 
-	List<Node<Itn> > neighbor_list;
+	List<Node<Int> > neighbor_list;
 	Int i;
 	Int j;
 	Int x;
-	
+
+
 	nodeList = graph_to_list(iter_graph);
 	Node<Int> current_node = start_node;
 	Int graph_size = size(nodeList);
 	Int count = 0;
-	
+
 	//initializing previous_record with current node
 	while(count < graph_size){
-		previous_record[count] = current_node;  	
+		previous_record = update_at(count, previous_record, current_node);  	
 		count = count + 1;
 	}
-	
+
+
 	//run until all nodes are visited
-	while(size(visited) != size(nodeList){
+
+	while(size(visited) != graph_size){ 
 		neighbor_list = neighbor(current_node);
 		i = size(neighbor_list);
 		j = 0; 
-		
+		//Node<Itn>
 		//iter through neighbor list updating node value
 		while (j < i){
 			next_node = neighbor_list[j];
-			distance = distance(current_node, next_node) + current_node.val;
+			distance = distance(current_node, next_node) + get_val(current_node);
 			
 			//update previous record and distance 			
-			if (next_node.val > distance){
+			if (get_val(next_node) > distance){
+				//TODO
 				next_node.val = distance;
 
 				x = 0;
@@ -40,7 +44,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int
 				//update previous record 
 				while(x < size(nodeList)){
 					if(isEqual(nodeList[x] ,next_node)){
-						previous_record[x] = current_node;
+						previous_record = update_at(x, previous_record, current_node);
 					}
 					x = x+1;
 				}
@@ -49,13 +53,13 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int
 		}
 
 		//add_to visited and change current node
-		add_node_to_listfront(visited, current_node);
+		push_front_list_node(visited, current_node);
 		current_node = minNode(visited, iter_graph);
 	}
 
 	Node<Int> follow = end_node; 
 	while(!node_same(follow, start_node)){
-		result = push_front_list_node(result, follow);
+		push_front_list_node(result, follow);
 		Int temp = 0;
 		while (temp < graph_size){
 			if(node_same(nodeList[temp], follow)){
@@ -64,7 +68,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> x, Node<Int
 			}
 		}	
 
-	result = push_front_list_node(result, start_node);
+	push_front_list_node(result, start_node);
 	return result;
 }
 

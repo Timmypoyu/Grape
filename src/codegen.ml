@@ -131,6 +131,10 @@ let translate (globals, functions) =
       L.var_arg_function_type void_t [|obj_ptr_t; void_ptr_t|] in
   let push_front_list : L.llvalue = 
       L.declare_function "push_front_list" push_front_list_t the_module in
+  let push_front_list_node : L.llvalue = 
+      L.declare_function "push_front_list" push_front_list_t the_module in
+
+
 
   let pop_front_list_t : L.lltype = 
       L.var_arg_function_type void_t [|obj_ptr_t|] in
@@ -147,10 +151,15 @@ let translate (globals, functions) =
   let list_get : L.llvalue = 
       L.declare_function "list_get" list_get_t the_module in
 
+
   let size_t : L.lltype = 
       L.var_arg_function_type i32_t [|obj_ptr_t|] in
   let size : L.llvalue = 
       L.declare_function "size" size_t the_module in
+  let update_at_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t[|i32_t ; obj_ptr_t ; void_ptr_t|] in
+  let update_at : L.llvalue = 
+      L.declare_function "update_at" update_at_t the_module in
 	
   (* string functions*)
 
@@ -197,6 +206,23 @@ let translate (globals, functions) =
       L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
   let get_from : L.llvalue = 
       L.declare_function "get_from" get_from_t the_module in
+
+ let graph_to_list_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let graph_to_list : L.llvalue = 
+      L.declare_function "graph_to_list" graph_to_list_t the_module in
+
+ let neighbor_t : L.lltype = 
+      L.var_arg_function_type obj_ptr_t [|obj_ptr_t|] in
+  let neighbor : L.llvalue = 
+      L.declare_function "neighbor" neighbor_t the_module in
+
+ let distance_t : L.lltype = 
+      L.var_arg_function_type i32_t [|obj_ptr_t; obj_ptr_t|] in
+  let distance : L.llvalue = 
+      L.declare_function "distance" distance_t the_module in
+
+
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -425,7 +451,18 @@ let translate (globals, functions) =
             A.Void -> ""
           | _ -> f ^ "_result") in
         L.build_call fdef (Array.of_list llargs) result builder
-    | SMethod (o, m, args) ->
+    | SCall ("node_same", [e;f]) -> L.build_call node_same [|expr builder e; expr builder f|] "node_same" builder  
+    | SCall ("graph_to_list", [e]) -> L.build_call graph_to_list [|expr builder e|] "graph_to_list" builder  
+    | SCall ("neighbor", [e]) -> L.build_call neighbor [|expr builder e|] "neighbor" builder  
+    | SCall ("distance", [e;f]) -> L.build_call distance [|expr builder e; expr builder f|] "distance" builder  
+     | SCall ("push_front_list_node", [e;f]) -> L.build_call push_front_list [|expr builder e; expr builder f|] "" builder  
+ | SCall ("list_get", [e;f]) -> L.build_call list_get [|expr builder e; expr builder f|] "list_get" builder  
+ | SCall ("update_at", [e;f;g]) -> L.build_call update_at [|expr builder e; expr builder f; expr builder g|] "" builder  
+| SCall ("get_val", [e]) -> let data_ptr = L.build_call get_val [|expr builder e|] "get_val" builder in 
+			let data_ptr = L.build_bitcast data_ptr (L.pointer_type i32_t) "data" builder in
+                	L.build_load data_ptr "data" builder  
+
+	 | SMethod (o, m, args) ->
       let tobj = fst o in
       let o' = expr builder o in
       (match (tobj, m) with

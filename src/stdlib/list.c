@@ -157,7 +157,45 @@ struct List *copy(struct List *list) {
 }
 */
 
+struct List *update_at(int x, struct List *list, void *y) {	
+	if(isEmptyList(list)) {
+		return list;
+	}
 
+	struct ListNode *iter_node = list->head;
+	
+	///if index is wrong, return original list 
+	if(size(list)-1 < x) {
+		return list;
+	}
+
+	if(x ==0){
+		pop_front_list(list);
+		push_front_list(list, y);
+		return list;
+	}
+
+	while (x > 1) {
+		x -= 1;
+		iter_node = iter_node->next;			
+	}
+	
+	
+	struct ListNode *insert_node = (struct ListNode *)malloc(sizeof(struct ListNode));
+	
+	if (insert_node == NULL) {
+		return NULL;
+	}
+	
+	insert_node->data = y;   	
+	insert_node->next = iter_node->next->next; 
+	iter_node->next = insert_node;  		
+
+	return list; 			 
+}
+
+
+/*
 struct List *insert(int x, struct List *list, void *y) {	
 	if(isEmptyList(list)) {
 		return list;
@@ -190,7 +228,7 @@ struct List *insert(int x, struct List *list, void *y) {
 	iter_node->next = insert_node; 
 
 	return list; 			 
-}
+}*/
 
 bool isEqual(struct ListNode *a, struct ListNode *b) {
 	
@@ -226,3 +264,4 @@ struct List *list_remove(struct List *list, void *y) {
 
 	return list;
 }
+

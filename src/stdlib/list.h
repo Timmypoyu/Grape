@@ -32,6 +32,7 @@ struct List *list_remove(struct List *list, void *y);
 
 struct List *insert(int x, struct List *list, void *y);
 
+struct List *update_at(int x, struct List *list, void *y); 
 
 struct ListNode *addAfter(struct List *list, struct ListNode *prevNode, void *data);
 

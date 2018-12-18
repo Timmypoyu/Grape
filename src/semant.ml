@@ -54,7 +54,12 @@ let check (globals, functions) =
 	("graph_to_list", [(Graph (Int, Int), "x")], List (Node Int));      
 	("neighbor", [(Node Int, "x")], List(Node Int));      
 	("distance", [(Node Int, "x"); (Node Int, "y")], Int);
-	("graph_size", [(Graph (Int, Int),  "x")], Int)] 
+	("graph_size", [(Graph (Int, Int),  "x")], Int);
+	("list_get", [(Int, "x"); (List(Node Int), "y")], Node Int); 
+        ("update_at", [(Int, "x"); (List(Node Int), "y"); (Node Int, "z")], List (Node Int)); 
+        ("get_val", [(Node Int, "x")], Int); 
+        ("push_front_list_node", [(Node Int, "x"); (List(Node Int), "y")], Void)] 
+
   in
 
   let built_in_methods = 
