@@ -4,7 +4,7 @@ type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq | An
 
 type uop = Neg | Not
 
-type typ = Int | Float | Bool | Void | Str 
+type typ = Int | Float | Bool | Void | Str | Any
   | Graph of typ * typ
 	| Edge of typ * typ
 	| Node of typ
@@ -25,11 +25,12 @@ type expr =
   | StrLit of string
   | Id of string
   | Prop of expr * string
+  | Method of expr * string * (expr list)
   | Binop of expr * op * expr
   | Unop of uop * expr
   | Assign of string * expr
   | Call of string * expr list 
-  | ListIndex of expr * expr
+  | Index of expr * expr
   | Noexpr
 
 type stmt =
@@ -90,14 +91,17 @@ let rec string_of_expr = function
   | DirEdgeLit(e) -> "-" ^ string_of_expr e ^ "->"
   | GraphLit(e) -> "<<" ^ String.concat ", " (List.map (function lst -> String.concat " " (List.map (function (k, v) -> string_of_expr k ^ " " ^ string_of_expr v) lst ))e) ^ ">>" 
   | ListLit(e) -> "[" ^ String.concat ", " (List.map string_of_expr (List.rev e)) ^ "]" 
-  | ListIndex(e, i) -> string_of_expr e ^ "[" ^ string_of_expr i ^ "]"
+  | Index(e, i) -> string_of_expr e ^ "[" ^ string_of_expr i ^ "]"
   | StrLit(e) -> "\"" ^ e ^ "\""
-  | Call(f, el) -> 
-      f ^ "(" ^ String.concat ", " (List.map string_of_expr el) ^ ")"
+  | Call(f, args) -> 
+      f ^ "(" ^ String.concat ", " (List.map string_of_expr args) ^ ")"
+  | Method(o, f, args) -> 
+      string_of_expr o ^ f ^ "(" ^ String.concat ", " (List.map string_of_expr args) ^ ")"
   | Noexpr -> ""
 
 let rec string_of_typ = function
-    Int -> "Int"
+    Any -> "*"
+  | Int -> "Int"
   | Bool -> "Bool"
   | Void -> "Void"
   | Float -> "Float"

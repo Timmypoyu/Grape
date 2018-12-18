@@ -1,0 +1,9 @@
+
+fun Int main() {
+String a = "hi";
+Node<String> n = 'a';
+prints("hi"[0]);
+prints(a[0]);
+prints(n.val[0]);
+return 0;
+}

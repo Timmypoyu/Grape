@@ -1,24 +1,23 @@
 
 fun Int main() {
-Edge<String> aEdge;
+Edge<String->*> aEdge;
 Node<Int> start = '0';
 String input = "bbbbbbbbbbb";
-Graph<Node<Int>, Edge<String>> dfa = <<start -"b"- '1' -"b"- '0' -"b"- '1' >>;
+Graph<Node<Int>, Edge<String->Int>> dfa = <<start -"b"- '1' -"b"- '0' -"b"- '1' >>;
 Int token = 0;
 Int i = 0;
 Bool found = false;
 String character;
-List<Edge<String>> transitions;
+List<Edge<String->*>> transitions;
 Node<Int> state = start;
 while (token < str_size(input)) {
-character = get_char(token, input);
-transitions = get_outgoing(state);
+character = input[token];
+transitions = dfaoutgoing(state);
 i = 0;
 while (i < size(transitions) and found == false) {
-aEdge = transitions[i];
-if (str_equal(character, aEdge.val))
+if (transitions[i].val == character)
 {
-state = get_to(aEdge);
+state = transitions[i].to;
 found = true;
 }
 i = i + 1;

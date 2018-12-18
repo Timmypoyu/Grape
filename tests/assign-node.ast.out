@@ -2,8 +2,9 @@
 fun Int main() {
 Node<Int> a;
 Node<Int> b;
-a = '0';
+a = '100';
 b = a;
+print(a.val);
 print(b.val);
 return 0;
 }

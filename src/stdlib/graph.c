@@ -26,22 +26,22 @@ struct Edge *init_edge(void *data) {
 	return edge;
 }
 
-void link_edge_from(struct Edge *e, struct Node *from) {
+void link_edge_from(struct Node *from, struct Edge *e) {
 	e->from = from;
-	push_list(from->edges, e);
+	push_list(e, from->edges);
 }
 
-void link_edge_to(struct Edge *e, struct Node *to) {
+void link_edge_to(struct Node *to, struct Edge *e) {
 	e->to = to;
-	push_list(to->edges, e);
+	push_list(e, to->edges);
 }
 
-void add_node(struct Graph *graph, struct Node *node) {
-	push_list(graph->nodes, node);
+void add_node(struct Node *node, struct Graph *graph) {
+	push_list(node, graph->nodes);
 }
 
-void add_edge(struct Graph *graph, struct Edge *edge) {
-	push_list(graph->edges, edge);
+void add_edge(struct Edge *edge, struct Graph *graph) {
+	push_list(edge, graph->edges);
 }
 
 void *get_val(struct Node *node) {
@@ -58,6 +58,23 @@ struct Node *get_from(struct Edge *edge) {
 
 struct List *get_outgoing(struct Node *node) {
     struct List *adj = node->edges;
+    struct List *outgo = init_list();
+    struct ListNode *lnode = adj->head;
+    struct Node *tnode;
+    struct Edge *tedge;
+    while( lnode ) {
+        tedge = (struct Edge *)lnode->data;
+        tnode = (struct Node *)tedge->from;
+        if( tnode == node )
+            push_list(tedge, outgo);
+        lnode = lnode->next;
+    }
+    return outgo;
+}
+
+//---------
+struct List *get_outgoing2(struct Node *node, struct Graph *graph) {
+    struct List *adj = graph->edges;
     struct List *outgo = init_list();
     struct ListNode *lnode = adj->head;
     struct Node *tnode;
@@ -102,7 +119,7 @@ struct List *GraphLeaves(struct Graph *graph) {
 	return leavesList;
 }
 
-struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
+struct List *GraphAdjacent(struct Node *node, struct Graph *graph) {
 	
 	struct List *adjacentList = (struct List *)malloc(sizeof(struct List));
 	struct ListNode *target = (graph->nodes)->head;
@@ -125,7 +142,7 @@ struct List *GraphAdjacent(struct Graph *graph, struct Node *node) {
 
 
 
-
+/*
 // when the node already exists
 void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struct Node *inputFrom, void *value) {
 	
@@ -144,9 +161,9 @@ void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struc
 		}
 		node = node->next;
 	}
-}
+}*/
 
-bool GraphFind(struct Graph *graph, void *value) {
+bool GraphFind(void *value, struct Graph *graph) {
 
     struct ListNode *node = (graph->nodes)->head;
 	

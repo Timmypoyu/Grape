@@ -66,7 +66,7 @@ typ:
   | BOOL                        { Bool }
   | LIST LT typ GT              { List($3) }
   | NODE LT typ GT              { Node($3) }
-  | EDGE LT typ GT              { Edge($3, Void) }
+  | EDGE LT typ GT              { Edge($3, Any) }
   | GRAPH LT typ COMMA typ GT   { Graph(Node($3), Edge($5,$3)) }
 
 stmt_list:
@@ -98,14 +98,16 @@ node_expr:
 
 literal:
     ID                            { Id($1) }
-  | literal DOT ID                { Prop($1, $3) }
   | FALSE                         { BoolLit(false) }
   | TRUE                          { BoolLit(true) }
   | FLOAT_LIT                     { FloatLit($1) }
   | STR_LIT                       { StrLit($1) }
   | INT_LIT                       { IntLit($1) }
   | LPAREN expr RPAREN            { $2 }
-  | literal LBRACK expr RBRACK    { ListIndex($1, $3) }
+  | ID LPAREN actuals_opt RPAREN  { Call($1, $3) }
+  | literal DOT ID                { Prop($1, $3) }
+  | literal LBRACK expr RBRACK    { Index($1, $3) }
+  | literal DOT ID LPAREN actuals_opt RPAREN { Method($1, $3, $5) }
 
 expr:
     literal                 { $1 }
@@ -130,7 +132,6 @@ expr:
   | MINUS expr %prec NEG    { Unop(Neg, $2) }
   | NOT expr                { Unop(Not, $2) }
   | ID ASSIGN expr          { Assign($1, $3) }
-  | ID LPAREN actuals_opt RPAREN  { Call($1, $3) }
   | LBRACK actuals_opt RBRACK     { ListLit($2) }
 
 actuals_opt:

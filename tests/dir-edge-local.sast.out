@@ -1,5 +1,5 @@
 
 fun Int main() {
-Edge<Int->Void> (Edge<Int->Void> : a = (Edge<Int->Void> : -(Int : 5)->));
+Edge<Int->*> (Edge<Int->*> : a = (Edge<Int->*> : -(Int : 5)->));
 return (Int : 0);
 }

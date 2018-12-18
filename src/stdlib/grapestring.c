@@ -5,7 +5,7 @@
 #include <stdbool.h>
 #include "grapestring.h"
 
-char *get_char (int b, char *a) {
+char *get_char (char *a, int b) {
 	
 	if (b >= strlen(a)) {
 		exit(1);

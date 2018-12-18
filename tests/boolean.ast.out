@@ -1,0 +1,10 @@
+
+fun Int main() {
+Bool a;
+a = true;
+if (a)
+{
+prints("Bool works");
+}
+return 0;
+}

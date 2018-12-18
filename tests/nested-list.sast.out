@@ -1,0 +1,10 @@
+
+fun Int main() {
+String (String : hi = (String : hi));
+(* : prints((String : (String : hi)[(Int : 0)])));
+List<List<Int>> (List<List<Int>> : a = (List<List<Int>> : [(List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)]),(List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)]),(List<Int> : [(Int : 1),(Int : 2),(Int : 300),(Int : 4),(Int : 5)]),(List<Int> : [(Int : 1),(Int : 2),(Int : 3),(Int : 4),(Int : 5)])]));
+(* : print((Int : (List<Int> : (List<List<Int>> : a)[(Int : 2)])[(Int : 2)])));
+List<List<Node<Int>>> (List<List<Node<Int>>> : b = (List<List<Node<Int>>> : [(List<Node<Int>> : [(Node<Int> : '(Int : 1)'),(Node<Int> : '(Int : 2)'),(Node<Int> : '(Int : 3)'),(Node<Int> : '(Int : 4)'),(Node<Int> : '(Int : 5)')]),(List<Node<Int>> : [(Node<Int> : '(Int : 1)'),(Node<Int> : '(Int : 2)'),(Node<Int> : '(Int : 3)'),(Node<Int> : '(Int : 4)'),(Node<Int> : '(Int : 5)')]),(List<Node<Int>> : [(Node<Int> : '(Int : 1)'),(Node<Int> : '(Int : 2)'),(Node<Int> : '(Int : 313)'),(Node<Int> : '(Int : 4)'),(Node<Int> : '(Int : 5)')]),(List<Node<Int>> : [(Node<Int> : '(Int : 1)'),(Node<Int> : '(Int : 2)'),(Node<Int> : '(Int : 3)'),(Node<Int> : '(Int : 4)'),(Node<Int> : '(Int : 5)')])]));
+(* : print((Int : (Node<Int> : (List<Node<Int>> : (List<List<Node<Int>>> : b)[(Int : 2)])[(Int : 2)]).val)));
+return (Int : 0);
+}
