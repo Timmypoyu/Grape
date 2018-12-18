@@ -13,13 +13,13 @@ fun Int main() {
                 start  -"s"-  '0'  -"u"-  start  -"p"-  '1'
         >>;
 
-        prints("Hell oWorld ");
+        print("Hell oWorld ");
 
         List<Edge<String> > adjacent = g.outgoing(start);
 
         Int i = 0;
         while (i < size(adjacent)) {
-                prints(adjacent[i].val);
+                print(adjacent[i].val);
                 i = i + 1;
         }
 

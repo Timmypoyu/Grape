@@ -10,7 +10,7 @@ Bool found = false;
 String character;
 List<Edge<String->*>> transitions;
 Node<Int> state = start;
-while (token < str_size(input)) {
+while (token < size(input)) {
 character = input[token];
 transitions = dfaoutgoing(state);
 i = 0;
@@ -24,7 +24,7 @@ i = i + 1;
 }
 if (found == false)
 {
-prints("REJECT");
+print("REJECT");
 return 0;
 }
 found = false;
@@ -32,11 +32,11 @@ token = token + 1;
 }
 if (state.val == 1)
 {
-prints("ACCEPT");
+print("ACCEPT");
 }
 else
 {
-prints("REJECT");
+print("REJECT");
 }
 return 0;
 }

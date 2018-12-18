@@ -2,6 +2,6 @@
 fun Int main() {
 List<String> b;
 b = ["hi", "hello", "hello?", "bye"];
-prints(b[0]);
+print(b[0]);
 return 0;
 }

@@ -1,9 +1,9 @@
 
 fun Int main() {
-(* : prints((String : HI DUDE!)));
+(* : print((String : HI DUDE!)));
 Int (Int : a = (Int : 5));
 (* : print((Int : a)));
 String (String : b = (String : Hi People!));
-(* : prints((String : b)));
+(* : print((String : b)));
 return (Int : a);
 }

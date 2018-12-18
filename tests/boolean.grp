@@ -2,7 +2,7 @@ fun Int main() {
     Bool a;
     a = Yes;
     if(a) {
-        prints("Bool works");
+        print("Bool works");
     }
     return 0;
 }

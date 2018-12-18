@@ -1,4 +1,4 @@
 
 fun Int main() {
-prints("Hello World!");
+print("Hello World!");
 }

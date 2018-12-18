@@ -31,6 +31,14 @@ let check (globals, functions) =
 
   (**** Check functions ****)
 
+  let func_key name args = name
+  in
+
+  let method_key typ name args = match typ with
+      Graph _ -> "graph:" ^ (func_key name args)
+    | _ -> "" 
+  in
+
   (* Collect function declarations for built-in functions: no bodies *)
   let built_in_functions = 
     let add_bind map (name, args, ret) = 
@@ -57,6 +65,7 @@ let check (globals, functions) =
 	("neighbor", [(Node Int, "x")], List(Node Int));      
 	("distance", [(Node Int, "x"); (Node Int, "y")], Int)]      
 in
+
   (* Add function name to symbol table *)
   let function_decls =
     let add_func map fd = 
@@ -90,7 +99,7 @@ in
        the given lvalue type *)
     let rec check_assign lvaluet rvaluet err =
       match (lvaluet, rvaluet) with
-          (Edge (_,_), Edge (a,b)) -> Edge (a,b)
+          (Edge (a,_), Edge (b,c)) -> Edge (check_assign a b err, c)
         | (Node _, Node a) -> Node a
         | (List a, List Any) -> List a
         | (List a, List b) -> List (check_assign a b err)
