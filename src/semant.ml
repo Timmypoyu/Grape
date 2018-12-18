@@ -50,7 +50,11 @@ let check (globals, functions) =
     in List.fold_left add_bind StringMap.empty [ 
       ("print",     [(Int, "x")],   Any);
       ("size",      [(List (Edge (Str, Int)), "x")], Int); 
-    ]      
+    ("node_same", [(Node Int, "x"); (Node Int, "y")], Bool);
+	("graph_to_list", [(Graph (Int, Int), "x")], List (Node Int));      
+	("neighbor", [(Node Int, "x")], List(Node Int));      
+	("distance", [(Node Int, "x"); (Node Int, "y")], Int);
+	("graph_size", [(Graph (Int, Int),  "x")], Int)] 
   in
 
   let built_in_methods = 
