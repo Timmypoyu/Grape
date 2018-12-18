@@ -19,7 +19,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 
 	//initializing previous_record with current node
 	while(count < graph_size){
-		previous_record = update_at(count, previous_record, current_node);  	
+		previous_record = update_at(current_node , previous_record, count);  	
 		count = count + 1;
 	}
 
@@ -45,7 +45,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 				//update previous record 
 				while(x < size(nodeList)){
 					if(node_same(nodeList[x] ,next_node)){
-						previous_record = update_at(x, previous_record, current_node);
+						previous_record = update_at(current_node, previous_record, x);
 					}
 					x = x+1;
 				}

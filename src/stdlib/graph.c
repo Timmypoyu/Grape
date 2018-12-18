@@ -1,21 +1,3 @@
-_list();
-        return node;
-}
-
-struct Graph *init_graph() {
-        struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
-        graph->nodes = init_list();
-        graph->edges = init_list();
-        return graph;
-}
-
-struct Edge *init_edge(void *data) {
-        struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
-        edge->data = data;
-        edge->to = NULL;
-        edge->from = NULL;
-        return edge;
-}
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
