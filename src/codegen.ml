@@ -448,13 +448,6 @@ let translate (globals, functions) =
         (match fst e with
           List _ -> L.build_call size [|e'|] "size" builder
         | Str -> L.build_call str_size [|e'|] "str_size" builder)
-    | SCall (f, args) ->
-        let (fdef, fdecl) = StringMap.find f function_decls in     
-        let llargs = List.rev (List.map (expr builder) (List.rev args)) in
-        let result = (match fdecl.styp with 
-            A.Void -> ""
-          | _ -> f ^ "_result") in
-        L.build_call fdef (Array.of_list llargs) result builder
     | SCall ("node_same", [e;f]) -> L.build_call node_same [|expr builder e; expr builder f|] "node_same" builder  
     | SCall ("graph_to_list", [e]) -> L.build_call graph_to_list [|expr builder e|] "graph_to_list" builder  
     | SCall ("neighbor", [e]) -> L.build_call neighbor [|expr builder e|] "neighbor" builder  
@@ -467,6 +460,14 @@ let translate (globals, functions) =
                 	L.build_load data_ptr "data" builder  
  | SCall ("update_node", [e;f]) -> L.build_call update_node [|expr builder e; expr builder f|] "update_node" builder  
 
+    | SCall (f, args) ->
+        let (fdef, fdecl) = StringMap.find f function_decls in     
+        let llargs = List.rev (List.map (expr builder) (List.rev args)) in
+        let result = (match fdecl.styp with 
+            A.Void -> ""
+          | _ -> f ^ "_result") in
+        L.build_call fdef (Array.of_list llargs) result builder
+    
 	 | SMethod (o, m, args) ->
       let tobj = fst o in
       let o' = expr builder o in
