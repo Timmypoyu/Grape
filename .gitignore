@@ -6,6 +6,7 @@ dist/*
 tests/*.fail
 
 ~$nal_report.docx
+.DS_Store
 
 *.o
 *.s
