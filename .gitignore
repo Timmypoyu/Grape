@@ -5,6 +5,8 @@ src/_build/*
 dist/*
 tests/*.fail
 
+~$nal_report.docx
+
 *.o
 *.s
 *.g
