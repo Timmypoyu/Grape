@@ -441,8 +441,8 @@ let translate (globals, functions) =
         let e' = expr builder e in
         (match fst e with 
           Int -> L.build_call printf [| int_format_str; e' |] "printf" builder
-        | Float -> L.build_call printf [| float_format_str; e' |] "printf" builder
-        | Str -> L.build_call printf [| str_format_str; e' |] "prints" builder)
+        | Str -> L.build_call printf [| str_format_str; e' |] "prints" builder
+        | Float -> L.build_call printf [| float_format_str; e' |] "printf" builder)
     | SCall ("size", [e]) -> 
         let e' = expr builder e in
         (match fst e with
@@ -462,7 +462,7 @@ let translate (globals, functions) =
 
     | SCall (f, args) ->
         let (fdef, fdecl) = StringMap.find f function_decls in     
-        let llargs = List.rev (List.map (expr builder) (List.rev args)) in
+        let llargs = List.rev (List.map (expr builder) args) in
         let result = (match fdecl.styp with 
             A.Void -> ""
           | _ -> f ^ "_result") in
