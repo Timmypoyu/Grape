@@ -123,41 +123,6 @@ void removeAllNodes(struct List *list) {
 		pop_front_list(list);
 	}
 }
-/*
-struct ListNode *addAfter(struct List *list, struct ListNode *prevNode, void *data) {
-    if (prevNode == NULL) { 
-		return addFront(list, data);
-	}
-
-    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
-    
-	if (node == NULL) {
-		return NULL;
-	}
-
-    node->data = data;
-    node->next = prevNode->next;
-    prevNode->next = node;
-    
-	return node;
-}
-*/
-/*
-struct List *copy(struct List *list) {  
-	struct List *new = (struct List *)malloc(sizeof(struct List));
-    struct ListNode *node = list->head;
-	struct ListNode *newNode = NULL;
-	initList(new);
-	
-    while (node) {
-		newNode = addAfter(new, newNode, node->data);
-		node = node->next;
-	}
-	reverseList(new);
-	return new;
-	
-}
-*/
 
 bool isEqual(struct ListNode *a, struct ListNode *b) {
 	

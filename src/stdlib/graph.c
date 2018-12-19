@@ -72,7 +72,6 @@ struct List *get_outgoing(struct Node *node) {
     return outgo;
 }
 
-//---------
 struct List *get_outgoing2(struct Node *node, struct Graph *graph) {
     struct List *adj = graph->edges;
     struct List *outgo = init_list();
@@ -141,27 +140,6 @@ struct List *GraphAdjacent(struct Node *node, struct Graph *graph) {
 }
 
 
-
-/*
-// when the node already exists
-void GraphAddEdge(struct Graph *graph, void *weight, struct Node *inputTo, struct Node *inputFrom, void *value) {
-	
-	struct ListNode *node = (graph->nodes)->head;
-    while (node) {
-		if (node->data == value) { // find the same node and add that edge
-			struct Edge *edge = (struct Edge *)malloc(sizeof(struct Edge));
-			struct Node *graphNode = node->data;
-			edge->data = weight;
-			edge->to = inputTo;
-			edge->from = inputFrom;
-			push_list(graphNode->edges, edge);
-			break;
-		} else {
-			continue;
-		}
-		node = node->next;
-	}
-}*/
 
 bool GraphFind(void *value, struct Graph *graph) {
 
