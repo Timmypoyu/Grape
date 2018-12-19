@@ -89,6 +89,7 @@ expr_opt:
   | expr          { $1 } 
 
 edge_expr:
+  | MINUS MINUS                           { EdgeLit(Noexpr) }
   | MINUS MINUS GT                        { DirEdgeLit(Noexpr) }
   | MINUS literal MINUS GT                { DirEdgeLit($2) }
   | MINUS literal MINUS                   { EdgeLit($2) }
