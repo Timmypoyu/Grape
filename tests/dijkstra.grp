@@ -25,7 +25,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 	Int distance;
 
 	nodeList = graph_to_list(iter_graph);
-        print(nodeList[0].val);
+        print(nodeList[1].val);
         print("g_t_l work");
 	Node<Int> current_node = start_node;
 	Int graph_size = size(nodeList);
@@ -36,12 +36,13 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 	//initializing previous_record with current node
 	while(count < graph_size){
 		previous_record = update_at(current_node , previous_record, count);  	
+                print("here5");
 		count = count + 1;
 	}
 
 	//run until all nodes are visited
 
-	while(size(visited) != graph_size){ 
+	while(size(visited) < graph_size){ 
 		neighbor_list = neighbor(current_node);
 		i = size(neighbor_list);
 		j = 0; 
@@ -49,10 +50,10 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 		//iter through neighbor list updating node value
 		while (j < i){
 			next_node = neighbor_list[j];
-			distance = dist(iter_graph, current_node, next_node) + get_val(current_node);
-			
+			distance = dist(next_node, current_node, iter_graph) + get_val(current_node);
+			print(distance);
 			//update previous record and distance 			
-			if (get_val(next_node) > distance){
+			if (next_node.val > distance){
 				//TODO
 				next_node = update_node(next_node, distance);
 
@@ -71,7 +72,8 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 
 		//add_to visited and change current node
 		push_front_list_node(visited, current_node);
-		current_node = minNode(visited, iter_graph);
+                print(size(visited));
+		current_node = minNode(iter_graph, visited);
 	}
 
 	Node<Int> follow = end_node; 
@@ -104,14 +106,16 @@ fun Node<Int> minNode(List<Node<Int> > visited, List<Node<Int> > nodeList){
 			k = 0;
 			present = 0; 
 			
+                        print("Before visited");
 			while(k < size(visited)){
-				
+				print("In WHile");
 				if(node_same(visited[k], nodeList[j])){
 				    present = 1;
 				}
  
 				k = k + 1; 
 			}
+                        print("after while");
 		//TODO*****
 		if (get_val(nodeList[j]) < min and present == 0){
 			target = nodeList[j];
@@ -141,7 +145,7 @@ fun Int main(){
     print("here1");
     List<Node<Int> > result = graph_to_list(mainGraph);
 
-    result = dijkstra(mainGraph, a, g);
+    result = dijkstra(g, a, mainGraph);
         //don't know how to print a list of nodes
     return 0;
 }
