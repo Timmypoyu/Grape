@@ -37,6 +37,11 @@ void link_edge_to(struct Edge *e, struct Node *to) {
 }
 
 void add_node(struct Graph *graph, struct Node *node) {
+        struct ListNode *ncheck = graph->nodes->head;
+        while( ncheck ){
+                if( ncheck->data == node) return;
+		ncheck = ncheck->next;
+        }
 	push_list(graph->nodes, node);
 }
 

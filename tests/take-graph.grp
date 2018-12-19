@@ -1,0 +1,8 @@
+fun Int gime(Graph<Int, Int> a){
+    return 5;
+}
+
+fun Int main() {
+    Int a = gime(<<'5' -6- '7'>>);
+    return a;
+}

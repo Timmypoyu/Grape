@@ -1,0 +1,8 @@
+fun Int main() {
+    Graph<Int, Int> a;
+    a = give_graph();
+}
+
+fun Graph<Int, Int> give_graph(){
+    return << '5' -6- '7' >>;
+}

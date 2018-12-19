@@ -1,0 +1,10 @@
+fun Int apple() {
+    return peach();
+}
+fun Int peach() {
+    return 3;
+}
+fun Int main() {
+    print(apple());
+    return 0;
+}

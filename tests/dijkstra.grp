@@ -1,5 +1,17 @@
+fun Int dist(Graph<Int, Int> g, Node<Int> source, Node<Int> dest){
+    List<Edge<Int> > outgo = g.outgoing(source);
+    Int i = 0;
+    while( i < size(outgo)){
+        if(node_same(outgo[i].to, dest)){
+            return outgo[i].val;
+        }
+        i = i+1;
+    }
+    return -1;
+} 
 fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node, Node<Int> end_node){
 	
+        print("here3");
 	List<Node<Int> > visited;
 	List<Node<Int> > result;
 	List<Node<Int> > nodeList;
@@ -13,9 +25,13 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 	Int distance;
 
 	nodeList = graph_to_list(iter_graph);
+        print(nodeList[0].val);
+        print("g_t_l work");
 	Node<Int> current_node = start_node;
 	Int graph_size = size(nodeList);
+        print("graph_size work");
 	Int count = 0;
+        print("here4");
 
 	//initializing previous_record with current node
 	while(count < graph_size){
@@ -33,7 +49,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 		//iter through neighbor list updating node value
 		while (j < i){
 			next_node = neighbor_list[j];
-			distance = distance(current_node, next_node) + get_val(current_node);
+			distance = dist(iter_graph, current_node, next_node) + get_val(current_node);
 			
 			//update previous record and distance 			
 			if (get_val(next_node) > distance){
@@ -77,6 +93,7 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 fun Node<Int> minNode(List<Node<Int> > visited, List<Node<Int> > nodeList){
 
 	Node<Int> target; 
+        print("here 2");
 
 	Int min = 10000;
 	Int j = 0;
@@ -121,7 +138,9 @@ fun Int main(){
 			       a -3- c -7- e -4- f -2- g,
 			       d -2- f >>; 
 
-    List<Node<Int> > result;
+    print("here1");
+    List<Node<Int> > result = graph_to_list(mainGraph);
+
     result = dijkstra(mainGraph, a, g);
         //don't know how to print a list of nodes
     return 0;
