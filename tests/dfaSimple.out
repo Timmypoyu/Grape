@@ -1,0 +1,4 @@
+./dist/grape: line 8: ./dist/grape.native: cannot execute binary file: Exec format error
+./dist/stdlib.o: file not recognized: File format not recognized
+collect2: error: ld returned 1 exit status
+chmod: cannot access './out.g': No such file or directory
