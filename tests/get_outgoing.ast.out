@@ -1,0 +1,10 @@
+
+fun Int main() {
+Node<Int> a = '5';
+Graph<Node<Int>, Edge<Int->Int>> graph = <<a -6- '7' >>;
+List<Edge<Int->*>> nodeList = graphoutgoing(a);
+Edge<Int->*> edge = nodeList[0];
+Node<Int> toNode = edge.to;
+print(toNode.val);
+return 0;
+}

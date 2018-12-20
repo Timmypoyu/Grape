@@ -1,0 +1,6 @@
+
+fun Int main() {
+Graph<Node<Int>, Edge<Int->Int>> (Graph<Node<Int>, Edge<Int->Int>> : a = (Graph<Node<Int>, Edge<Int->*>> : <(Node<Int> : '(Int : 7)') (Edge<Int->*> : -(Int : 8)-) (Node<Int> : '(Int : 9)') (Void : )>));
+List<Node<Int>> (List<Node<Int>> : b = (List<Node<Int>> : graph_to_list((Graph<Node<Int>, Edge<Int->Int>> : a))));
+return (Int : 0);
+}

@@ -2,8 +2,10 @@
 fun Int main() {
 Edge<String->*> aEdge;
 Node<Int> (Node<Int> : start = (Node<Int> : '(Int : 0)'));
-String (String : input = (String : bbbbbbbbbbb));
-Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : dfa = (Graph<Node<Int>, Edge<String->*>> : <(Node<Int> : start) (Edge<String->*> : -(String : b)-) (Node<Int> : '(Int : 1)') (Edge<String->*> : -(String : b)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : b)-) (Node<Int> : '(Int : 1)') (Void : )>));
+Node<Int> (Node<Int> : state1 = (Node<Int> : '(Int : 0)'));
+Node<Int> (Node<Int> : accept = (Node<Int> : '(Int : 1)'));
+String (String : input = (String : babbobababboba));
+Graph<Node<Int>, Edge<String->Int>> (Graph<Node<Int>, Edge<String->Int>> : dfa = (Graph<Node<Int>, Edge<String->*>> : <(Node<Int> : start) (Edge<String->*> : -(String : b)-) (Node<Int> : state1) (Edge<String->*> : -(String : o)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : b)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : a)-) (Node<Int> : accept) (Void : ), (Node<Int> : state1) (Edge<String->*> : -(String : a)-) (Node<Int> : '(Int : 0)') (Edge<String->*> : -(String : b)-) (Node<Int> : accept) (Edge<String->*> : -(String : b)-) (Node<Int> : state1) (Void : )>));
 Int (Int : token = (Int : 0));
 Int (Int : i = (Int : 0));
 Bool (Bool : found = (Bool : false));

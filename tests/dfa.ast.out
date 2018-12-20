@@ -2,8 +2,10 @@
 fun Int main() {
 Edge<String->*> aEdge;
 Node<Int> start = '0';
-String input = "bbbbbbbbbbb";
-Graph<Node<Int>, Edge<String->Int>> dfa = <<start -"b"- '1' -"b"- '0' -"b"- '1' >>;
+Node<Int> state1 = '0';
+Node<Int> accept = '1';
+String input = "babbobababboba";
+Graph<Node<Int>, Edge<String->Int>> dfa = <<start -"b"- state1 -"o"- '0' -"b"- '0' -"a"- accept , state1 -"a"- '0' -"b"- accept -"b"- state1 >>;
 Int token = 0;
 Int i = 0;
 Bool found = false;

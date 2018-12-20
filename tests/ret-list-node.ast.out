@@ -1,0 +1,9 @@
+
+fun Graph<Node<Int>, Edge<Int->Int>> give_graph() {
+return <<'5' -6- '7' >>;
+}
+
+fun Int main() {
+Graph<Node<Int>, Edge<Int->Int>> a;
+a = give_graph();
+}

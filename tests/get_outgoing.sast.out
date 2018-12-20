@@ -1,0 +1,10 @@
+
+fun Int main() {
+Node<Int> (Node<Int> : a = (Node<Int> : '(Int : 5)'));
+Graph<Node<Int>, Edge<Int->Int>> (Graph<Node<Int>, Edge<Int->Int>> : graph = (Graph<Node<Int>, Edge<Int->*>> : <(Node<Int> : a) (Edge<Int->*> : -(Int : 6)-) (Node<Int> : '(Int : 7)') (Void : )>));
+List<Edge<Int->*>> (List<Edge<Int->Int>> : nodeList = (List<Edge<Int->Int>> : (Graph<Node<Int>, Edge<Int->Int>> : graph)outgoing((Node<Int> : a))));
+Edge<Int->*> (Edge<Int->*> : edge = (Edge<Int->*> : (List<Edge<Int->*>> : nodeList)[(Int : 0)]));
+Node<Int> (Node<*> : toNode = (Node<*> : (Edge<Int->*> : edge).to));
+(* : print((Int : (Node<Int> : toNode).val)));
+return (Int : 0);
+}

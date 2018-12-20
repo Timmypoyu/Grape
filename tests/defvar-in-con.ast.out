@@ -1,0 +1,12 @@
+
+fun Int main() {
+Int a = 3;
+Int b;
+if (a == 3)
+{
+b = 5;
+}
+Int c = 35;
+print(b);
+print(c);
+}

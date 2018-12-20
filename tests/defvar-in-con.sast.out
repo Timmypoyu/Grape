@@ -1,0 +1,12 @@
+
+fun Int main() {
+Int (Int : a = (Int : 3));
+Int b;
+if ((Bool : (Int : a) == (Int : 3)))
+{
+(Int : b = (Int : 5));
+}
+Int (Int : c = (Int : 35));
+(* : print((Int : b)));
+(* : print((Int : c)));
+}

@@ -1,0 +1,13 @@
+
+fun Int main() {
+(* : print((Int : apple())));
+return (Int : 0);
+}
+
+fun Int peach() {
+return (Int : 3);
+}
+
+fun Int apple() {
+return (Int : peach());
+}

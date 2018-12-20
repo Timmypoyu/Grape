@@ -1,0 +1,9 @@
+fun Int main(){
+    Node<Int> a = '5';
+    Graph<Int, Int> graph = << a -6- '7' >>;
+    List<Edge<Int> > nodeList = graph.outgoing(a);
+    Edge<Int> edge= nodeList[0];
+    Node<Int> toNode = edge.to;
+    print(toNode.val);
+    return 0;
+}

@@ -1,0 +1,6 @@
+
+fun Int main() {
+Graph<Node<Int>, Edge<Int->Int>> a = <<'7' -8- '9' >>;
+List<Node<Int>> b = graph_to_list(a);
+return 0;
+}

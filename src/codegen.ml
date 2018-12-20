@@ -310,9 +310,10 @@ let translate (globals, functions) =
       | (A.Edge (_, t), "to") ->
           L.build_call get_to [|o'|] "to" builder
       | (A.Edge (_, t), "from") ->
-          let dest_ptr = L.pointer_type (ltype_of_typ t) in
+          L.build_call get_from [|o'|] "from" builder
+          (*let dest_ptr = L.pointer_type (ltype_of_typ t) in
           let data_ptr = L.build_call get_from [|o'|] "from" builder in  
-          L.build_bitcast data_ptr dest_ptr "data" builder
+          L.build_bitcast data_ptr dest_ptr "data" builder*)
       | (_, _) -> raise (Failure "no such property"))
 
     | SAssign (s, e) -> let e' = expr builder e in
@@ -452,7 +453,7 @@ let translate (globals, functions) =
     | SCall ("graph_to_list", [e]) -> L.build_call graph_to_list [|expr builder e|] "graph_to_list" builder  
     | SCall ("neighbor", [e]) -> L.build_call neighbor [|expr builder e|] "neighbor" builder  
     | SCall ("distance", [e;f]) -> L.build_call distance [|expr builder e; expr builder f|] "distance" builder  
-     | SCall ("push_front_list_node", [e;f]) -> L.build_call push_front_list [|expr builder e; expr builder f|] "" builder  
+    | SCall ("push_front_list_node", [e;f]) -> L.build_call push_front_list [|expr builder e; expr builder f|] "" builder
  | SCall ("list_get", [e;f]) -> L.build_call list_get [|expr builder e; expr builder f|] "list_get" builder  
  | SCall ("update_at", [e;f;g]) -> L.build_call update_at [|expr builder e; expr builder f; expr builder g|] "" builder  
 | SCall ("get_val", [e]) -> let data_ptr = L.build_call get_val [|expr builder e|] "get_val" builder in 

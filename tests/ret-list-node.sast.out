@@ -1,0 +1,1 @@
+Fatal error: exception Failure("return gives Graph<Node<Int>, Edge<Int->*>> expected Graph<Node<Int>, Edge<Int->Int>> in <<'5' -6- '7' >>")

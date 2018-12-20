@@ -181,7 +181,10 @@ bool GraphFind(struct Graph *graph, void *value) {
 }
 
 struct Node *  update_node(int val, struct Node * a){
-	a->data = &val; 
+	free(a->data);
+        void *ptr = malloc(sizeof(int));
+        *((int*)ptr) = val;	
+	a->data = ptr; 
 	return a; 
 }
 
@@ -195,7 +198,11 @@ struct List *neighbor(struct Node *node){
 	struct List *edgelist = node->edges;
 	struct ListNode *target = edgelist->head;
 	while (target) {
-		push_list(list, ((struct Edge *)(target->data))->to);
+		if(((struct Edge *)(target->data))->to != node){
+		    push_list(list, (void *)((struct Edge *)(target->data))->to);
+		} else {
+		    push_list(list, (void *)((struct Edge *)(target->data))->from);
+		}
 		target = target->next;
 	}
 	return list;

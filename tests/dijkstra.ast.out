@@ -1,0 +1,180 @@
+
+fun Int main() {
+Node<Int> a = '0';
+Node<Int> b = '10000';
+Node<Int> c = '10000';
+Node<Int> d = '10000';
+Node<Int> e = '10000';
+Node<Int> f = '10000';
+Node<Int> g = '10000';
+List<Node<Int>> nodes = [a, b, c, d, e, f, g];
+Graph<Node<Int>, Edge<Int->Int>> mainGraph = <<a -2- b -5- d -3- g , a -3- c -7- e -4- f -2- g , d -2- f >>;
+Graph<Node<Int>, Edge<Int->Int>> mainGraph2 = <<g -3- d -5- b -2- a , g -2- f -4- e -7- c -3- a , f -2- d >>;
+List<Node<Int>> result;
+result = dijkstra(g, a, mainGraph);
+print("Shortest Path:");
+Int i = 0;
+Int j = 0;
+Int reSz = size(result);
+while (i < reSz) {
+j = 0;
+while (j < size(nodes)) {
+if (node_same(result[i], nodes[j]))
+{
+if (j == 0)
+{
+print("A");
+}
+if (j == 1)
+{
+print("B");
+}
+if (j == 2)
+{
+print("C");
+}
+if (j == 3)
+{
+print("D");
+}
+if (j == 4)
+{
+print("E");
+}
+if (j == 5)
+{
+print("F");
+}
+if (j == 6)
+{
+print("G");
+}
+j = 10000;
+}
+j = j + 1;
+}
+i = i + 1;
+}
+print("Total cost");
+print(result[reSz - 1].val);
+return 0;
+}
+
+fun Node<Int> minNode(visited, nodeList) {
+Node<Int> target;
+Int min = 10000;
+Int j = 0;
+Int k;
+Int present;
+Bool found = false;
+while (j < size(nodeList)) {
+k = 0;
+present = 0;
+while (k < size(visited)) {
+if (node_same(nodeList[j], visited[k]))
+{
+present = 1;
+}
+k = k + 1;
+}
+if (nodeList[j].val < min and present == 0)
+{
+target = nodeList[j];
+min = nodeList[j].val;
+found = true;
+}
+j = j + 1;
+}
+if (found == true)
+{
+return target;
+}
+return '85043210';
+}
+
+fun List<Node<Int>> dijkstra(iter_graph, start_node, end_node) {
+List<Node<Int>> visited = [];
+List<Node<Int>> result = [];
+List<Node<Int>> nodeList;
+List<Node<Int>> previous_record = [];
+List<Node<Int>> neighbor_list;
+Node<Int> next_node;
+Node<Int> dummy = '999';
+Int i;
+Int j;
+Int x;
+Int k;
+Int present;
+Int visSz;
+Int temp;
+Int distance;
+nodeList = graph_to_list(iter_graph);
+Node<Int> current_node = start_node;
+Int graph_size = size(nodeList);
+Int count = 0;
+push_front_list_node(previous_record, start_node);
+while (count < graph_size - 1) {
+push_front_list_node(previous_record, dummy);
+count = count + 1;
+}
+while (size(visited) < graph_size and current_node.val != 85043210) {
+neighbor_list = neighbor(current_node);
+i = size(neighbor_list);
+j = 0;
+while (j < i) {
+present = 0;
+k = 0;
+next_node = neighbor_list[j];
+while (k < size(visited)) {
+if (node_same(next_node, visited[k]))
+{
+present = 1;
+}
+k = k + 1;
+}
+distance = dist(next_node, current_node, iter_graph) + current_node.val;
+if (next_node.val > distance and present == 0)
+{
+next_node = update_node(distance, next_node);
+x = 0;
+while (x < size(nodeList)) {
+if (node_same(next_node, nodeList[x]))
+{
+previous_record = update_at(x, previous_record, current_node);
+}
+x = x + 1;
+}
+}
+j = j + 1;
+}
+push_front_list_node(visited, current_node);
+current_node = minNode(nodeList, visited);
+}
+Node<Int> follow = end_node;
+while (not node_same(start_node, follow)) {
+push_front_list_node(result, follow);
+temp = 0;
+while (temp < graph_size) {
+if (node_same(follow, nodeList[temp]))
+{
+follow = previous_record[temp];
+}
+temp = temp + 1;
+}
+}
+push_front_list_node(result, start_node);
+return result;
+}
+
+fun Int dist(g, source, dest) {
+List<Edge<Int->*>> outgo = goutgoing(source);
+Int i = 0;
+while (i < size(outgo)) {
+if (node_same(dest, outgo[i].to))
+{
+return outgo[i].val;
+}
+i = i + 1;
+}
+return 100000;
+}

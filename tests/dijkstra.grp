@@ -7,54 +7,62 @@ fun Int dist(Graph<Int, Int> g, Node<Int> source, Node<Int> dest){
         }
         i = i+1;
     }
-    return -1;
+    return 100000;
 } 
 fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node, Node<Int> end_node){
 	
-        print("here3");
-	List<Node<Int> > visited;
-	List<Node<Int> > result;
+	List<Node<Int> > visited = [];
+	List<Node<Int> > result = [];
 	List<Node<Int> > nodeList;
-	List<Node<Int> > previous_record; 
+	List<Node<Int> > previous_record = []; 
 	List<Node<Int> > neighbor_list;
 	Node<Int> next_node;
+        Node<Int> dummy = '999';
 	Int i;
 	Int j;
 	Int x;
+        Int k;
+        Int present;
+        Int visSz;
 	Int temp;
 	Int distance;
 
 	nodeList = graph_to_list(iter_graph);
-        print(nodeList[1].val);
-        print("g_t_l work");
 	Node<Int> current_node = start_node;
 	Int graph_size = size(nodeList);
-        print("graph_size work");
 	Int count = 0;
-        print("here4");
 
 	//initializing previous_record with current node
-	while(count < graph_size){
-		previous_record = update_at(current_node , previous_record, count);  	
-                print("here5");
+        
+        push_front_list_node(start_node, previous_record);
+	while(count < graph_size-1){
+		push_front_list_node(dummy, previous_record);  	
 		count = count + 1;
 	}
 
 	//run until all nodes are visited
 
-	while(size(visited) < graph_size){ 
+	while(size(visited) < graph_size and current_node.val != 85043210){ 
 		neighbor_list = neighbor(current_node);
 		i = size(neighbor_list);
+                
 		j = 0; 
 
 		//iter through neighbor list updating node value
 		while (j < i){
+                        present = 0;
+                        k=0;
 			next_node = neighbor_list[j];
-			distance = dist(next_node, current_node, iter_graph) + get_val(current_node);
-			print(distance);
+                 	while(k < size(visited)){
+			    if(node_same(visited[k], next_node)){
+                 	        present = 1;
+        		    }
+ 
+	                    k = k + 1; 
+                        }
+			distance = dist(iter_graph, current_node, next_node) + current_node.val;
 			//update previous record and distance 			
-			if (next_node.val > distance){
-				//TODO
+			if (next_node.val > distance and present == 0){
 				next_node = update_node(next_node, distance);
 
 				x = 0;
@@ -71,61 +79,64 @@ fun List<Node<Int> > dijkstra( Graph<Int, Int> iter_graph, Node<Int> start_node,
 		}
 
 		//add_to visited and change current node
-		push_front_list_node(visited, current_node);
-                print(size(visited));
-		current_node = minNode(iter_graph, visited);
+		push_front_list_node(current_node, visited);
+
+		current_node = minNode(visited , nodeList);
+                
 	}
 
-	Node<Int> follow = end_node; 
+
+        Node<Int> follow = end_node; 
 	while( not(node_same(follow, start_node))){
-		push_front_list_node(result, follow);
+		push_front_list_node(follow, result);
 		temp = 0;
 		while (temp < graph_size){
 			if(node_same(nodeList[temp], follow)){
 				follow = previous_record[temp];
-				}
-			temp = temp + 1;
 			}
-		}	
+		temp = temp + 1;
+		}
+	}	
 
-	push_front_list_node(result, start_node);
+	push_front_list_node(start_node, result);
 	return result;
 }
 
 fun Node<Int> minNode(List<Node<Int> > visited, List<Node<Int> > nodeList){
 
 	Node<Int> target; 
-        print("here 2");
 
 	Int min = 10000;
 	Int j = 0;
 	Int k;
 	Int present;
+        Bool found = No;
 	while ( j < size(nodeList) ){
 
-			k = 0;
-			present = 0; 
+		k = 0;
+		present = 0; 
 			
-                        print("Before visited");
-			while(k < size(visited)){
-				print("In WHile");
-				if(node_same(visited[k], nodeList[j])){
-				    present = 1;
-				}
- 
-				k = k + 1; 
+		while(k < size(visited)){
+			if(node_same(visited[k], nodeList[j])){
+			    present = 1;
 			}
-                        print("after while");
-		//TODO*****
-		if (get_val(nodeList[j]) < min and present == 0){
+ 
+			k = k + 1; 
+		}
+
+		if (nodeList[j].val < min and present == 0){
 			target = nodeList[j];
-			min = get_val(nodeList[j]);
+			min = nodeList[j].val;
+                        found = Yes;
 		}
 
 		j = j + 1; 
 	}
 
-    return target; 
+        if(found == Yes) {
+                return target; 
+        }
+        return '85043210';
 }
 
 fun Int main(){
@@ -138,15 +149,42 @@ fun Int main(){
     Node<Int> f = '10000';
     Node<Int> g = '10000';
 
-    Graph<Int, Int> mainGraph = << a -2- b -5- d -3- g , 
+    List<Node<Int> > nodes = [a,b,c,d,e,f,g];
+    Graph<Int, Int> mainGraph = << a -2- b -5- d -3- g, 
 			       a -3- c -7- e -4- f -2- g,
-			       d -2- f >>; 
+			       d -2- f>>; 
+    
+    Graph<Int, Int> mainGraph2 = << g -3- d -5- b -2- a,
+                               g -2- f -4- e -7- c -3- a,
+                               f -2- d>>;
 
-    print("here1");
-    List<Node<Int> > result = graph_to_list(mainGraph);
+    List<Node<Int> > result;
 
-    result = dijkstra(g, a, mainGraph);
-        //don't know how to print a list of nodes
+    result = dijkstra(mainGraph, a, g);
+    print("Shortest Path:");
+    Int i = 0;
+    Int j = 0;
+    Int reSz = size(result);
+
+    while(i < reSz){
+        j=0;
+        while( j < size(nodes)){
+            if(node_same(nodes[j], result[i])){
+                if(j==0) { print("A"); }
+                if(j==1) { print("B"); }
+                if(j==2) { print("C"); }
+                if(j==3) { print("D"); }
+                if(j==4) { print("E"); }
+                if(j==5) { print("F"); }
+                if(j==6) { print("G"); }
+                j = 10000;
+            } 
+            j = j + 1;
+        }
+        i = i+1;
+    }
+    print("Total cost");
+    print(result[reSz-1].val);
     return 0;
 }
 

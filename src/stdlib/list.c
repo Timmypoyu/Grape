@@ -165,31 +165,19 @@ struct List *update_at(int x, struct List *list, void *y) {
 	struct ListNode *iter_node = list->head;
 	
 	///if index is wrong, return original list 
-	if(size(list)-1 < x) {
+	if( x >= size(list) ) {
+                fprintf(stderr, "List Index out of bounds: given %d for list of size %d\n",x,size(list));
+                exit(-1);
+        }
+
+	if(x == 0){
+		iter_node->data = y;
 		return list;
 	}
 
-	if(x ==0){
-		pop_front_list(list);
-		push_front_list(list, y);
-		return list;
-	}
-
-	while (x > 1) {
-		x -= 1;
-		iter_node = iter_node->next;			
-	}
+	for( int i = 0 ; i!=x ; i++ ) iter_node = iter_node->next;
 	
-	
-	struct ListNode *insert_node = (struct ListNode *)malloc(sizeof(struct ListNode));
-	
-	if (insert_node == NULL) {
-		return NULL;
-	}
-	
-	insert_node->data = y;   	
-	insert_node->next = iter_node->next->next; 
-	iter_node->next = insert_node;  		
+	iter_node->data = y;   	
 
 	return list; 			 
 }
