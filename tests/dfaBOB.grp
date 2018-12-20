@@ -1,0 +1,42 @@
+fun Int main() {
+
+        /// Grape Presentation: 
+                language : {h,i,a,b,c,o}
+        ///
+
+        Node<Bool> start = 'No';
+        Node<Bool> reject = 'No';
+        Node<Bool> accept = 'Yes';
+
+        Graph<Bool,String> endB = << 
+                start -"a"- start -"c"- start -"h"- 
+                start -"i"- start -"o"- start -"b"- accept,
+                accept -"a"- start,
+		accept -"c"- start,
+		accept -"h"- start,
+                accept -"i"- start,
+		accept -"o"- start,
+		accept -"b"- accept >>;
+        print(dfa(endB, start, "hibob"));
+
+        Graph<Bool,String> anyB = << 
+                start -"a"- start -"c"- start -"h"- 
+                start -"i"- start -"o"- start -"b"-
+                accept -"a"- accept -"b"- accept -"c"- accept -"h"- 
+                accept -"i"- accept -"o"- accept >>;
+        print(dfa(anyB, start, "hibob"));
+
+        Graph<Bool, String> greeting = << 
+                start -"h"- 'No' -"i"- 
+                accept -"a"- accept -"b"- accept -"c"- accept -"h"- 
+                accept -"i"- accept -"o"- accept >>;
+
+	String message = "histeve";
+
+        Bool greetsBob = dfa(greeting, start, message) and
+                         dfa(anyB, start, message) and
+                         dfa(endB, start, message);
+
+	if (greetsBob) { print("What's up bob!"); } 
+	else { print("Who are you?"); }
+}

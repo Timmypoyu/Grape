@@ -1,0 +1,13 @@
+fun Int main() {
+    Node<Bool> start = 'No';
+    Node<Bool> oneA = 'No';
+    Node<Bool> twoA = 'Yes';
+
+    Graph<Bool, String> twoAs = <<
+	start -"b"- start -"a"- oneA
+	-"b"- oneA -"a"- twoA -"b"- twoA
+	-"a"- 'No'
+    >>;
+
+    print(dfa(twoAs, start, "bbbbbabbb"));
+}
