@@ -12,11 +12,11 @@ do
     AST_RESULT=$(eval "$GRAPENATIVE -a $TEST" 2>&1)
     SAST_RESULT=$(eval "$GRAPENATIVE -s $TEST" 2>&1)
 
-    rm $FAILFILE;
     OUTFILE="${TEST%.*}.out"
     FAILFILE="${TEST%.*}.fail"
     AST_OUTFILE="${TEST%.*}.ast.out"
     SAST_OUTFILE="${TEST%.*}.sast.out"
+    rm $FAILFILE;
 
     if [ ! -f $OUTFILE ]; then
         echo "NO OUT" && echo "$RESULT" > $OUTFILE;
