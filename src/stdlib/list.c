@@ -102,60 +102,11 @@ void pop_list(struct List *list) {
 	reverseList(list);
 }	
 
-
-/* 
- * I don't think we need to have a traverse function
-void traverseList(struct List *list, void (*f)(void *)) {
-    struct Node *node = list->head;
-    while (node) {
-		f(node->data);
-		node = node->next;
-    }
-}
-*/
-
-
-
 void removeAllNodes(struct List *list) {
     while (!isEmptyList(list)) {
 		pop_front_list(list);
 	}
 }
-/*
-struct ListNode *addAfter(struct List *list, struct ListNode *prevNode, void *data) {
-    if (prevNode == NULL) { 
-		return addFront(list, data);
-	}
-
-    struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
-    
-	if (node == NULL) {
-		return NULL;
-	}
-
-    node->data = data;
-    node->next = prevNode->next;
-    prevNode->next = node;
-    
-	return node;
-}
-*/
-/*
-struct List *copy(struct List *list) {  
-	struct List *new = (struct List *)malloc(sizeof(struct List));
-    struct ListNode *node = list->head;
-	struct ListNode *newNode = NULL;
-	initList(new);
-	
-    while (node) {
-		newNode = addAfter(new, newNode, node->data);
-		node = node->next;
-	}
-	reverseList(new);
-	return new;
-	
-}
-*/
 
 struct List *update_at(int x, struct List *list, void *y) {	
 	if(isEmptyList(list)) {
@@ -181,42 +132,6 @@ struct List *update_at(int x, struct List *list, void *y) {
 
 	return list; 			 
 }
-
-
-/*
-struct List *insert(int x, struct List *list, void *y) {	
-	if(isEmptyList(list)) {
-		return list;
-	}
-
-	struct ListNode *node = (struct ListNode *)malloc(sizeof(struct ListNode));
-	
-	if (node == NULL) {
-		return NULL;
-	}
-
-	struct ListNode *iter_node = list->head;
-	struct ListNode *insert_node = (struct ListNode *) y;   
-	
-	///size 
-	int i = size(list);
-
-	///if index is wrong, return original list 
-	if(size(list) - 1 < x) {
-		return list;
-	}
-
-	if (x > 0) {
-		x -= 1;
-		iter_node = iter_node->next;			
-	}
-	
-	insert_node->data = iter_node->next->data; 
-	insert_node->next = iter_node->next;
-	iter_node->next = insert_node; 
-
-	return list; 			 
-}*/
 
 bool isEqual(struct ListNode *a, struct ListNode *b) {
 	
