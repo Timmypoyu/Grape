@@ -1,0 +1,323 @@
+111555e 2018-12-19 James Kolsby fix: function args (HEAD -> presentation)
+53618f7 2018-12-19 James Kolsby fix: args were reversed... (origin/presentation)
+227b857 2018-12-18 James Kolsby feat: added new LRM
+26b7680 2018-12-18 Nick Krasnoff Cooler dfa algorithm
+62a3d1b 2018-12-18 Nick Krasnoff tests and no dup nodes
+ccf0ccd 2018-12-18 Nick Krasnoff Missing distance
+ee75832 2018-12-18 Tim added graph functions
+61004c5 2018-12-18 Nick Krasnoff feat: Correctly reordered SCALL
+9447015 2018-12-18 Nick Krasnoff Dijkstra.grp now has: Fatal error: exception Failure('unrecognized function update_node')
+c89cc74 2018-12-18 Tim debugging dijkstra
+264c034 2018-12-18 Tim added: some functions needed for dijkstra
+406bfd0 2018-12-17 Tim feat:add node_same
+9529f28 2018-12-18 root add function to semant and change dij(not done)
+3e81a84 2018-12-17 Nick Krasnoff Merge branch 'presentation' of https://github.com/jrkolsby/Grape into presentation
+2e86fec 2018-12-17 Nick Krasnoff modified test script and added Dijkstra
+ff17f47 2018-12-17 James Kolsby fix: grplib
+2efba40 2018-12-17 James Kolsby fix: update tests
+6c264f3 2018-12-17 James Kolsby fix: tests
+4fbe253 2018-12-17 James Kolsby fix: func_decl keys
+af8e1cc 2018-12-17 James Kolsby feat: overloading size and print
+8386915 2018-12-16 James Kolsby feat: fixed test cases (develop)
+ab1537d 2018-12-15 James Kolsby fix: assign semantics
+a2211a7 2018-12-15 Nick Krasnoff Merge branch 'develop' of https://github.com/jrkolsby/Grape into develop
+96452a4 2018-12-15 Nick Krasnoff additional test cases
+2235b91 2018-12-15 James Kolsby fix: dfa
+c91f590 2018-12-15 Nick Krasnoff Merge branch 'develop' of https://github.com/jrkolsby/Grape into develop
+d8c25d5 2018-12-15 Nick Krasnoff Semant case for empty lists
+ab1cdc1 2018-12-15 James Kolsby fix: tests
+4605280 2018-12-15 James Kolsby fix: get_outgoing2
+9e635a2 2018-12-15 Nick Krasnoff Fixed tests
+afa30d7 2018-12-15 James Kolsby fix: reference pointers
+30000aa 2018-12-15 James Kolsby fix: nested lists
+a85db8a 2018-12-15 James Kolsby fix: data_value
+d9774b3 2018-12-15 James Kolsby fix: multi-prop works
+efb99a3 2018-12-15 James Kolsby fix: list index
+640c379 2018-12-15 James Kolsby broken: outgoing
+8809f79 2018-12-15 James Kolsby feat: char index. broken: methods
+34c3b25 2018-12-15 James Kolsby feat: nested props / indexes
+eb911ff 2018-12-14 James Kolsby feat: grape lib, string equals
+bfbf216 2018-12-14 James Kolsby feat: properties
+05b4be4 2018-12-14 James Kolsby feat: list index overloading
+23b3e40 2018-12-13 James Kolsby feat: list index
+2298d00 2018-12-13 James Kolsby fix: directed edges
+f40f12a 2018-12-13 James Kolsby feat: new edge syntax
+cabf3c0 2018-12-13 James Kolsby fix: ast and sast strings and tests
+f1a5d1c 2018-12-13 HyunBin Yoo feat: debugged all graph functions & implemented GraphFind function
+86d0d3f 2018-12-13 James Kolsby feat: ignore fail files
+b2eecb5 2018-12-13 James Kolsby Merge branch 'master' of https://github.com/jrkolsby/Grape
+1791323 2018-12-13 James Kolsby Merge pull request #1 from jrkolsby/declarations
+0733b5c 2018-12-13 James Kolsby fix: tests (origin/declarations, declarations)
+d5fcfc4 2018-12-12 James Kolsby fix: tests
+74e3820 2018-12-12 James Kolsby fix: parse conflicts
+1d1ddd3 2018-12-12 James Kolsby fix: dfa.grp
+e201e1f 2018-12-12 Nick Krasnoff Working DFA test
+ef244a4 2018-12-12 James Kolsby temp: needs empty declaration
+d8e7457 2018-12-12 James Kolsby feat: declarations
+1e03dbd 2018-12-12 James Kolsby temp: added declaration
+57fe1f4 2018-12-12 James Kolsby fix: dfa.grp
+56f1923 2018-12-12 James Kolsby temp: needs empty declaration
+b08da96 2018-12-12 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+b380e33 2018-12-12 HyunBin Yoo feat: commented out remove
+5ff9174 2018-12-12 Nick Krasnoff Working DFA test
+9a9d20a 2018-12-12 James Kolsby feat: declarations
+0e569a8 2018-12-12 James Kolsby temp: added declaration
+dae5546 2018-12-12 James Kolsby fix: dfa.grp
+b6712c1 2018-12-12 Nick Krasnoff Dfa testing
+92b2389 2018-12-12 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+9ae49c1 2018-12-12 Tim str_equal
+7e9418c 2018-12-12 Nick Krasnoff Refixed get_outgoing
+6eea7e5 2018-12-12 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+0a27ad1 2018-12-12 HyunBin Yoo feat: added str_equal
+db107d2 2018-12-12 Nick Krasnoff Added test files
+01e677c 2018-12-12 Tim get_char sig
+b95b23f 2018-12-12 Tim scall errors
+d297d47 2018-12-12 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+09bd4e7 2018-12-12 Tim str_size error
+829b13a 2018-12-12 Nick Krasnoff Modified dfa test
+3ad04ad 2018-12-12 Tim temp 2 dfa
+0efe531 2018-12-12 Tim temp comit for dfa
+628f294 2018-12-12 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+94c6b28 2018-12-12 HyunBin Yoo feat: working on graph functions
+7c09312 2018-12-12 HyunBin Yoo feat: string length
+85f0de7 2018-12-12 Tim dfa test session
+44eaf4f 2018-12-12 Nick Krasnoff Modified dfa.grp test
+c8fd58e 2018-12-12 Nick Krasnoff Merge branch 'master' of https://github.com/jrkolsby/Grape
+0aee78c 2018-12-12 Nick Krasnoff updated test; get_outgoing finds when a node points to itself
+8e3a983 2018-12-12 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+8da79bc 2018-12-12 Tim semant declarations
+f362902 2018-12-12 HyunBin Yoo deleted
+f798af7 2018-12-12 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+0c93bdd 2018-12-12 HyunBin Yoo feat: deleted print
+5d1e36f 2018-12-12 Nick Merge branch 'master' of https://github.com/jrkolsby/Grape
+2b29209 2018-12-12 Nick Add edges to node's list of edges
+dde7c32 2018-12-12 HyunBin Yoo added the header file
+6b5daf9 2018-12-12 HyunBin Yoo renamed string file
+ccc5e37 2018-12-12 HyunBin Yoo feat: string function
+fa4770f 2018-12-12 Nick Fixed typo in graph.c
+cf11320 2018-12-12 Nick Merge branch 'master' of https://github.com/jrkolsby/Grape
+eaf7c7c 2018-12-12 Nick C functions to access Nodes and Edges
+1912017 2018-12-12 James Kolsby fix: dfa test case
+37ff0aa 2018-12-12 James Kolsby feat: dfa test
+d6cc30f 2018-12-12 Nick C for getting nodes and edges in .h
+74112ff 2018-12-12 Nick C for getting nodes and edges
+6d06ab4 2018-12-12 Tim add get str and get int funciton to list
+0326707 2018-12-11 Nick Krasnoff Added C code to get element from a list
+c355387 2018-12-10 James Kolsby fix: graph init
+18b45a6 2018-12-09 Nick Krasnoff Fixed List creation and Makefiles now compile with debug info
+50bc7b2 2018-12-09 Tim not fixed: list type, infinite loop when ./out.g
+968b79d 2018-12-09 Tim change push_list return and type list in codegen
+bd27ba7 2018-12-09 Nick Krasnoff Changed list.grp test case
+503c5be 2018-12-09 Tim fixed typing of list in codegen
+2a051b0 2018-12-06 Tim feat: list type in codegen
+e4aea9d 2018-12-06 Tim merge conflict
+7929b30 2018-12-06 Tim codegen.ml
+b2af8ec 2018-12-06 HyunBin Yoo missed types.h
+1c8877d 2018-12-06 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+9487ed3 2018-12-06 HyunBin Yoo feat adding node and edge to graph
+b1115e0 2018-12-06 James Kolsby feat: add edge codegen
+f9c2928 2018-12-06 HyunBin Yoo forgot to push list.h
+4a9b8d5 2018-12-06 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+09e1979 2018-12-06 HyunBin Yoo fixed errors
+cac5f27 2018-12-06 James Kolsby feat: init_graph
+4a35830 2018-12-06 HyunBin Yoo feat: list implementation
+fd9b22e 2018-12-06 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+9ddbb8b 2018-12-06 HyunBin Yoo feat: basic graph
+e80b9d7 2018-12-06 James Kolsby feat: node, edge, graph function calls
+1cd9dcc 2018-12-06 James Kolsby feat: ID in graph
+dd9389b 2018-12-06 Tim fixed: edge type
+d00ba05 2018-12-06 HyunBin Yoo fixed error in graph.c
+614f7f1 2018-12-04 HyunBin Yoo feat: function prototypes for graph node value and edge
+df1e086 2018-12-04 HyunBin Yoo feat: GraphInitNode
+aa85177 2018-12-04 James Kolsby fix: migrated tests to dist
+0e988f9 2018-12-04 James Kolsby fixed gitignore again
+eabd7b2 2018-12-04 James Kolsby fix: run context
+1eddd80 2018-12-04 James Kolsby fixed untracked files
+a68b5e4 2018-12-04 James Kolsby feat: refactored stdlib
+6a3253e 2018-12-03 James Kolsby fix: makefile
+045763e 2018-12-03 James Kolsby feat: dist refactor
+5073fde 2018-12-03 James fix: link tests to c library
+69c3c78 2018-12-03 James feat: linking
+b7ff82a 2018-12-03 James feat: node_init
+90a5c2b 2018-12-03 James Kolsby feat: refactor README
+8db9bd1 2018-12-03 James Kolsby fix: typos and merlin
+a269ba2 2018-12-03 HyunBin Yoo feat: implemented leaves, adjacent in C
+c40793a 2018-12-03 HyunBin Yoo feat implemented graph functions in C
+16158ac 2018-12-01 Nick Krasnoff Semantically checked Graphs
+1e29650 2018-12-01 Nick Krasnoff Semant for Graph, Assign tries int = Node<Int>
+48eb59e 2018-12-01 Tim Fix(undone): parser Graphlit order fixed, Graph in semant bad
+0b2d1ba 2018-11-30 Tim fixed: edge case for graph in semant
+ece49b2 2018-11-30 Tim feat: check edge case in semant
+a04e707 2018-11-30 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+16a08b2 2018-11-30 Nick Krasnoff Compile grape c file
+a3e4427 2018-11-30 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+4d5a12c 2018-11-30 Nick Krasnoff Changed semant built in decls format
+a818e96 2018-11-30 Nick Krasnoff Added Graph in Semant: now compiles
+39f6156 2018-11-30 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+435bec7 2018-11-30 Tim feat: add to codegen and grape.c
+7dc1a7d 2018-11-30 Nick Krasnoff Reremoved dict
+e5fbd68 2018-11-30 James Kolsby temp
+311457d 2018-11-30 Nick Krasnoff Removed colon from scanner
+645c41b 2018-11-30 Nick Krasnoff Merge branch 'master' of https://github.com/jrkolsby/Grape
+c4f8050 2018-11-30 Nick Krasnoff Removed Dicts
+e04ce99 2018-11-29 Tim added SList and SNode type
+f175850 2018-11-29 Tim fix: reformatted c library, and add to Readme
+bde9061 2018-11-29 HyunBin Yoo revised README
+c9490fc 2018-11-29 HyunBin Yoo feat: added graph function for root
+c827b06 2018-11-29 HyunBin Yoo feat: added function prototypes for graph funcitons
+4be9e31 2018-11-29 HyunBin Yoo feat: compilable grape.c
+4ffa89a 2018-11-29 HyunBin Yoo feat: added structs for graph implementation
+2716146 2018-11-29 HyunBin Yoo feat: copy funtion in C
+4195544 2018-11-29 HyunBin Yoo fixed a typo in grape.c
+31d3b5c 2018-11-29 HyunBin Yoo fixed READMD
+a484c66 2018-11-28 HyunBin Yoo feat: list copy in C
+2d3da7d 2018-11-28 HyunBin Yoo feat: list copy in C
+e137a9c 2018-11-28 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+69a34e7 2018-11-28 Tim feat: list functions in c
+6616339 2018-11-28 HyunBin Yoo removed dictionary
+56094f7 2018-11-28 HyunBin Yoo combined two c files
+0df6cb8 2018-11-28 HyunBin Yoo git removed
+b5de2fe 2018-11-26 Nick Krasnoff Graph types pretty print
+245e61d 2018-11-26 Nick Krasnoff Graph types in ast/parser
+1a272b2 2018-11-26 HyunBin Yoo added comment in list library
+62d4868 2018-11-26 HyunBin Yoo renamed two C library files
+84f5fbd 2018-11-26 HyunBin Yoo found this implementation of dictionary in C
+7fecc4b 2018-11-26 HyunBin Yoo added reverse function
+bde50e9 2018-11-26 HyunBin Yoo C library for list
+02fde42 2018-11-26 HyunBin Yoo graphlit
+2ae22a9 2018-11-22 James feat: function tests
+ffc65f2 2018-11-20 James fix: testing suite
+27d8924 2018-11-18 Tim fixed: parser.mly semant.ml in dictlit
+2a9dd71 2018-11-18 Tim fixed some ast, sast stuff
+bc0d880 2018-11-18 Tim fixed: parser and ast/sast
+34ead86 2018-11-15 James feat: broken test script
+2e334c6 2018-11-15 James feat: GRAPE V0
+99902ed 2018-11-15 James feat: parser
+6a7fee6 2018-11-15 James fixes
+63244fb 2018-11-14 HyunBin Yoo fixed: Failure
+b984e5c 2018-11-14 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+25108b3 2018-11-14 Tim fixed: semant error
+e858aa9 2018-11-14 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+5111110 2018-11-14 HyunBin Yoo fixed: raise error for unimplemented
+72aa61d 2018-11-14 Nick Krasnoff feat: Declare and Assign only as Statement
+3b1246b 2018-11-14 James Kolsby fix: Node types
+a0ea84d 2018-11-14 Tim fixed: script
+07bdd05 2018-11-14 James Kolsby fix: scripts
+35ea92a 2018-11-14 James Kolsby fix: run dev and init
+36f8554 2018-11-14 Nick Krasnoff Merge branch 'master' of https://github.com/jrkolsby/PLTProject
+501c75d 2018-11-14 Nick Krasnoff scanner.mll: Removed IN
+01d2d8f 2018-11-14 Nick Krasnoff parser.mly: Added DQUOT
+7e1d748 2018-11-14 James Kolsby fix: codegen coverage (james-devops)
+0847011 2018-11-14 James Kolsby infra: ./run command
+db0730f 2018-11-14 HyunBin Yoo removed unnecessary files
+b861327 2018-11-13 Tim feat: dict and possibly graph type checking
+42daf57 2018-11-13 Tim fixed: semant merge conflict
+0f080a5 2018-11-13 HyunBin Yoo feat: implemented each
+ea5193b 2018-11-14 James Kolsby temp
+6677fd4 2018-11-14 James Kolsby feat: update makefile
+4da6e00 2018-11-13 Tim feat: type checking listlit
+6c46b2a 2018-11-13 HyunBin Yoo fixed: Edgelit in semant.ml
+c269f2f 2018-11-13 Tim fixed: list type func
+e049c20 2018-11-13 Tim working: semant list type checking
+ecda991 2018-11-13 James Kolsby feat: list typechecking
+ca0e6c2 2018-11-13 Nick Krasnoff Merge branch 'master' of https://github.com/jrkolsby/PLTProject
+25d48bb 2018-11-13 Nick Krasnoff prints: String printing in codegen.ml
+1a6f4b1 2018-11-13 Tim fixed ast.ml has no typed graph
+b42ed0a 2018-11-13 Tim fixed: typing
+dc11deb 2018-11-13 Tim fixed: semant changed
+87602e1 2018-11-14 James fix: Node semantic checking
+ff7ea32 2018-11-13 Nick Krasnoff Merge branch 'master' of https://github.com/jrkolsby/PLTProject
+8a2eb98 2018-11-13 Nick Krasnoff Updated docker env scripts
+0832492 2018-11-13 James Kolsby refactor: new tests
+0058ad4 2018-11-13 Tim feat: add typ
+7e312c9 2018-11-13 James Kolsby feat: added string_of_typ
+2ae87b8 2018-11-13 James Kolsby fix: pretty printing
+1a250fd 2018-11-13 Tim fixed: rid of Templates
+bfb6d72 2018-11-13 Tim fix: add stuff to pretty print in sast
+ea84a41 2018-11-13 Tim feat: update all existing data types in ast
+f366115 2018-11-12 Nick Krasnoff Added String type to codegen
+64015b9 2018-11-06 Tim fixed: typo in ast.ml
+9fac844 2018-11-06 Tim fixed: typo in mehir scripts, clear all conflicts
+b0e900b 2018-11-06 Tim fixed: typo in mehir scripts, clear all conflicts
+50e0b2d 2018-11-06 James Kolsby refactor: SFloatLit and SIntLit
+22759b8 2018-11-05 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+6f5bbfa 2018-11-05 Tim fixed: edge
+a740064 2018-11-05 James Kolsby feat: README changes
+58bceb3 2018-11-05 HyunBin Yoo completed function
+ad8f1a4 2018-11-05 HyunBin Yoo changed function declaration
+398dcf2 2018-11-05 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+9348d40 2018-11-05 Tim fixed: conflicts with dean
+016c3d0 2018-11-05 James Kolsby refactor: removed .sh from scripts
+ced01ee 2018-11-05 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+113aba2 2018-11-05 HyunBin Yoo changed
+68815db 2018-11-05 James Kolsby refactor: moved menhir script
+22e3200 2018-11-05 James Kolsby feat: decimal syntax
+f160627 2018-11-05 James Kolsby feat: floats
+56697d4 2018-11-05 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+8718b98 2018-11-05 Tim fixed: expr_opt in stmt
+c86f8b5 2018-11-05 James Kolsby feat: make menhir
+60fc38e 2018-11-05 Tim fixed expr_opt in parser.mly
+51d823b 2018-11-05 Nick Krasnoff Merge branch 'master' of https://github.com/jrkolsby/PLTProject
+5e4fcdb 2018-11-05 Nick Krasnoff merge
+fcb85a8 2018-11-05 James Kolsby fix: make parser
+de6afbd 2018-11-05 Nick Krasnoff Dict in parser/ast
+153318c 2018-11-05 HyunBin Yoo changed
+2018235 2018-11-05 James Kolsby feat: SAST.ml
+d5efc67 2018-11-05 Tim fixed: typo in ast.ml
+dd4c541 2018-11-05 James Kolsby feat: documentation
+4de7d49 2018-11-05 James Kolsby fix: Makefile compilation (broken)
+c7465cf 2018-11-05 Tim feat: added giraph whole folder for reference
+b0b3d9c 2018-11-05 Tim feat: add Exp, Float, Dist to ast, and fixed typo
+05f9880 2018-11-05 Tim feat: added AMP syntax
+43e2f15 2018-11-04 Tim added: menhir shellscript
+cbcb18f 2018-11-04 Tim fix: edge declaration is now with underscore
+c03b89e 2018-11-04 Tim fix typo in parser.mly and update README.md
+a0d8407 2018-11-04 Tim feat: add giraph to git
+055279e 2018-11-02 Tim feat: add script to attach container
+2cd69ea 2018-11-02 James Kolsby fix: Makefile
+85be8a3 2018-11-02 Tim thinking: edge template not working
+c46f982 2018-11-02 James Kolsby feat: README changes
+ab57a5f 2018-11-01 James Kolsby feat: codegen, semant, grape
+1dc100f 2018-11-01 James Kolsby refactor: scripts folder
+f285808 2018-11-01 James Kolsby refactor: docs folder
+3c49921 2018-11-01 James Kolsby feat: Added dev environment
+ea92f7f 2018-11-01 Tim feat: list expr
+7580199 2018-11-01 Tim fixed: conflict
+dce1b9e 2018-11-01 Tim feat: allExpr to encompass node/edgeexpr, implemented template (not working for edges)
+baee0fc 2018-11-01 HyunBin Yoo Merge branch 'master' of https://github.com/jrkolsby/Grape
+4958169 2018-11-01 HyunBin Yoo fixed
+979577e 2018-11-01 Tim Merge branch 'master' of https://github.com/jrkolsby/Grape
+cef616a 2018-11-01 Tim feat: vdecl with value in a single line
+265d950 2018-11-01 HyunBin Yoo fixed
+b2eb4a5 2018-11-01 Tim feat: added additional operators
+7806b35 2018-10-29 Nick Changes with Dean
+c7e6424 2018-10-29 Tim fix: format in README.md
+3796648 2018-10-25 Tim feat: add square bracket, ampersand to scanner, parser but no syntax
+3c49a76 2018-10-25 Nick Krasnoff fixed typo in parser.mly
+cb25e27 2018-10-25 James Kolsby feat: 'of' types
+82d8006 2018-10-22 Timmypoyu Feat: update Readme.md
+b92add6 2018-10-15 James Kolsby feat: assignment bindings
+8b6e2b9 2018-10-15 James Kolsby feat: finished graph initialization
+1534bfd 2018-10-15 Tim fix: merge conflicts
+96f7355 2018-10-15 Tim add grapg_list
+c12c296 2018-10-15 James Kolsby feat: graph syntax
+affd51a 2018-10-15 James Kolsby feat: comment scanning
+3e857c3 2018-10-15 James Kolsby feat: graph syntax
+c4035bd 2018-10-15 James Kolsby feat: scanner updates
+5232991 2018-10-15 James Kolsby feat: Node and Edge types
+4ae9ef9 2018-10-15 Tim changed comment to three backslash
+73dc0e0 2018-10-14 James Kolsby refactor: moved reference
+0c8641e 2018-10-14 James Kolsby feat: Graph templating in LRM
+9c960f6 2018-10-13 James Kolsby refactor: moved MicroC to root
+d3a24a2 2018-10-13 James Kolsby feat: Started LRM
+1476cbd 2018-10-13 James Kolsby feat: string literals
+1ec95df 2018-10-13 James Kolsby feat: primitive types
+14417c3 2018-10-13 James Kolsby feat: microc parser and scanner
+9c29232 2018-10-13 Nick Krasnoff Added calculator Makefile
+20fc371 2018-10-13 James Kolsby fix merge
+f990a9c 2018-10-13 James Kolsby fix: deleted files
+21a5cd0 2018-10-13 Nick Krasnoff Merge branch 'master' of https://github.com/jrkolsby/PLTProject
+d9cee65 2018-10-13 Nick Krasnoff Added microc source
+80d5dac 2018-10-13 James Kolsby fix: refactor
+3f3e27e 2018-10-13 James Kolsby feat: proposal
+d902c90 2018-09-07 x first commit

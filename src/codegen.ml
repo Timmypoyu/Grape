@@ -443,6 +443,7 @@ let translate (globals, functions) =
         (match fst e with 
           Int -> L.build_call printf [| int_format_str; e' |] "printf" builder
         | Str -> L.build_call printf [| str_format_str; e' |] "prints" builder
+        | Bool -> L.build_call printf [| int_format_str; e' |] "printb" builder
         | Float -> L.build_call printf [| float_format_str; e' |] "printf" builder)
     | SCall ("size", [e]) -> 
         let e' = expr builder e in

@@ -1,0 +1,13 @@
+
+fun Int main() {
+Node<Bool> start = 'false';
+Graph<Node<Bool>, Edge<String->Bool>> aba = <<start -"a"- 'false' -"b"- 'false' -"a"- 'true' >>;
+if (dfa("aba", start, aba))
+{
+print("YAY");
+}
+else
+{
+print("nay");
+}
+}

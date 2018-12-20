@@ -1,0 +1,10 @@
+fun Int main() {
+        Node<Bool> start = 'No';
+        Graph<Bool,String> aba = <<
+                start -"a"- 'No' -"b"- 'No' -"a"- 'Yes' >>;
+        if (dfa(aba, start, "aba")) {
+                print("YAY");
+        } else {
+                print("nay");
+        }
+}
